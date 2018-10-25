@@ -19,3 +19,7 @@ shares will be most profitable.
 # Week 4
 
 Starting work on project proposal.
+
+# Week 5
+
+Finished first draft of project proposal and emailed it for feed back to supervisor.
