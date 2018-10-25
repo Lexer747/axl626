@@ -29,3 +29,15 @@ analysis of risk, and then determines a ratio with human interaction. They essen
 offer a higher quality investment as they claim larger returns with lower risk, hence
 charging higher fees. But it comes with the obvious drawbacks and advantages of working with
 a human.
+
+---
+
+Hence their might be scope for my project to exist, if I can do what the automated solutions
+do but better or with lower fees it would be a viable tool for actual use. This is probably
+too ambitious for 1 person to try and compete with full teams of professional developers.
+But I believe by narrowing the scope of the possible investments to just the stocks in the
+database, I believe a viable solution would be feasible with this restriction.
+
+## Ethics considerations
+
+Not applicable, this project does not have any major ethical concerns.
