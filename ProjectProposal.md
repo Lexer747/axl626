@@ -41,3 +41,33 @@ database, I believe a viable solution would be feasible with this restriction.
 ## Ethics considerations
 
 Not applicable, this project does not have any major ethical concerns.
+
+## Timescales And Planning
+
+Before Term 1 end
+
+- Basic Prototype
+    * reads in the csv files
+    * basic options for asset allocation
+    * options for risk
+- Basic Report (not all of this needs to be fleshed out)
+    * Literature review
+        * find some relevant sites and papers about portfolio allocation
+    * Abstract
+        * succinct and self standing summary of the project
+    * Git repo location, bibliography
+    * Details
+        * Analysis and specification
+        * Design
+        * Implemntation and testing
+        * UI
+        * Project management
+        * Evaluation
+    * Conclusion
+    
+Submission
+
+* 1 page explanation of how to set up and run the project, included in the report
+* Cut down to less than 60 pages
+* Finish project itself, with as much polish as possible
+* Then complete report
