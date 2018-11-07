@@ -35,7 +35,7 @@ of balance. A human may still keep the stock, but this could lead to a greater r
 less great reward.
 
 There does exist some websites which claim to do this role. One example is https://www.wealthfront.com
-which when i faux used to test it. I had a questionnaire, which asked me about the following 
+which when I faux used to test it. I had a questionnaire, which asked me about the following 
 topics:
 
 * Primary reason for investing?
