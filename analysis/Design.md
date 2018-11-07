@@ -22,7 +22,7 @@ Features:
 
 Mock Ups:
 
-![](images/Open_screen.png)
+![](images/Open_Screen.png)
 
 ![](images/Pie_Chart.png)
 
