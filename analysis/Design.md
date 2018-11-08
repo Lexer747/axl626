@@ -18,7 +18,7 @@ Features:
     - Variance, show worst case and best case scenarios
     - Navigate the analyzed stocks to see the determined risk and reward for each stock
 
-## UI
+## GUI
 
 Mock Ups:
 
@@ -41,4 +41,6 @@ on option could show all stocks even the ones not invested in. The same is true 
 chart, hovering for more information and showing included stocks.
 
 ---
+
+## Deciding which technologies to use
 

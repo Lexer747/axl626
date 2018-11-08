@@ -86,7 +86,7 @@ desired market, and use that to invest their money.
 ## Feature Analysis
 
 These are the features which are most required to make a system similar to or what already
-exists. 
+exists.
 
 Features:
 
@@ -103,3 +103,9 @@ Features:
     - Expected returns as a graph from the current date
     - Variance, show worst case and best case scenarios
     - Navigate the analyzed stocks to see the determined risk and reward for each stock
+
+## Identifying Complex problems
+
+Finding the risk of stocks should be hard:
+
+Will do reading.
