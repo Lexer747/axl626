@@ -52,14 +52,14 @@ Before Term 1 end
     * options for risk
 - Basic Report (not all of this needs to be fleshed out)
     * Literature review
-        * find some relevant sites and papers about portfolio allocation
+        * find some relevant sites and papers about portfolio allocation, 4-5 papers
     * Abstract
         * succinct and self standing summary of the project
     * Git repo location, bibliography
     * Details
         * Analysis and specification
         * Design
-        * Implemntation and testing
+        * Implementation and testing
         * UI
         * Project management
         * Evaluation

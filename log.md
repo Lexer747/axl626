@@ -23,3 +23,13 @@ Starting work on project proposal.
 # Week 5
 
 Finished first draft of project proposal and emailed it for feed back to supervisor.
+
+# Week 6
+
+Did reading around the topic. Discussions on portfolio allocation, as well as existing
+solutions to this problem.
+
+# Week 7
+
+GUI design, and high level analysis completed. Started agile process.
+
