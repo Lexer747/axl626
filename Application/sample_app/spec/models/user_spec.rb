@@ -16,6 +16,7 @@ describe User do
   it {should respond_to(:password)} #from has_secure_password
   it {should respond_to(:password_confirmation)} #from has_secure_password
   it {should respond_to(:authenticate)} #from has_secure_password
+  it {should respond_to(:remeber_token)}
 
   it {should be_valid} #calls .valid? on the object
 
