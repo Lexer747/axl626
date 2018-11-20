@@ -16,9 +16,14 @@ describe User do
   it {should respond_to(:password)} #from has_secure_password
   it {should respond_to(:password_confirmation)} #from has_secure_password
   it {should respond_to(:authenticate)} #from has_secure_password
-  it {should respond_to(:remeber_token)}
+  it {should respond_to(:remember_token)}
 
   it {should be_valid} #calls .valid? on the object
+
+  describe "remember token" do
+    before {@user.save}
+    it {expect(@user.remember_token).not_to be_blank}
+  end
 
   describe "when null name passed" do
     before {@user.name = " "}

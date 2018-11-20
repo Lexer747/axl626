@@ -8,4 +8,18 @@ class User < ApplicationRecord
   validates :password, length: {minimum: 8}, allow_nil: false #add 2 more validations to password
 
   before_save {self.email = email.downcase} #save all emails in our db as lowercase
+  before_create :create_remember_token
+
+  def User.new_remember_token
+    SecureRandom.urlsafe_base64
+  end
+
+  def User.digest(token)
+    Digest::SHA1.hexdigest(token.to_s)
+  end
+
+  private
+    def create_remember_token
+      self.remember_token = User.digest(User.new_remember_token)
+    end
 end
