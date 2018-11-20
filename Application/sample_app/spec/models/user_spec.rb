@@ -1,6 +1,5 @@
 require 'rails_helper'
 require 'spec_helper'
-require 'capybara/rails'
 
 describe User do
   before do

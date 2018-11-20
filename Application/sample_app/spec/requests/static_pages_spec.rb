@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'capybara/rails'
 
 RSpec.describe "StaticPages" do
   subject {page}

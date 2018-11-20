@@ -1,7 +1,8 @@
 <% if @user.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-danger fade in">
-      <b>Failed to sign up! </b><%= pluralize(@user.errors.count, "error") %>:
+      <b><%= error %> </b>
+      <%= pluralize(@user.errors.count, "error") %>:
     </div>
     <ul>
     <% @user.errors.full_messages.each do |msg| %>

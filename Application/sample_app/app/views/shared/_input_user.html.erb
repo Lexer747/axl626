@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="span6 offset3">
+    <%= render 'shared/error_messages', error: error %>
+    <%= form_for @user, :html => {:class => "form"} do |f| %>
+      <div class="form-group">
+        <%= f.label :name, class: "control-label"%>
+        <%= f.text_field :name, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :email, class: "control-label" %>
+        <%= f.text_field :email, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :password, class: "control-label" %>
+        <%= f.password_field :password, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirmation", class: "control-label" %>
+        <%= f.password_field :password_confirmation, class: "form-control" %>
+      </div>
+      <%= f.submit confirm, class: "btn btn-large btn-primary" %>
+    <% end %>
+  </div>
+</div>
