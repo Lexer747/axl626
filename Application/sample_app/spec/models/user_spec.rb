@@ -94,4 +94,13 @@ describe User do
       specify {expect(invalid_auth).to eq false}
     end
   end
+
+  describe "with admin rights" do
+    before do
+      @user.save!
+      @user.toggle!(:admin)
+    end
+
+    it {should be_admin}
+  end
 end

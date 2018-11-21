@@ -91,5 +91,16 @@ describe "Authentication" do
         it { expect(response).to redirect_to(root_url) }
       end
     end
+
+    describe "ad non-admin user" do
+      let(:user) {FactoryBot.create(:user)}
+      let(:non-admin) {FactoryBot.create(:user)}
+      before {sign_in non-admin, no_capybara: true}
+
+      describe "submitting a DELETE request to the User#destroy action" do
+        before {delete user_path(user)}
+        it {expect(response).to redirect_to(root_url)}
+      end
+    end
   end
 end
