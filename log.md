@@ -31,5 +31,13 @@ solutions to this problem.
 
 # Week 7
 
-GUI design, and high level analysis completed. Started agile process.
+GUI design, and high level analysis completed. Started agile process. Also coded ruby on rails sample app.
 
+# Week 8
+
+Work on rails app, almost fully featured now. Simply need to adapt it to the actual app.
+
+# Week 9
+
+Literature review, after meeting with supervisor, project proposal finally feels accepted.
+Lots of work due to be done over Christmas as decided this week.
