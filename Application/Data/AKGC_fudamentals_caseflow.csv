@@ -1,0 +1,5 @@
+year,period,acquisitions,cashincometaxespaid,cashinterestpaid,increasedecreaseinoperatingcapital,issuanceofcommonequity,issuanceofdebt,netcashfromcontinuingfinancingactivities,netcashfromcontinuinginvestingactivities,netcashfromcontinuingoperatingactivities,netcashfromfinancingactivities,netcashfrominvestingactivities,netcashfromoperatingactivities,netchangeincash,netincome,netincomecontinuing,noncashadjustmentstonetincome,paymentofdividends,purchaseofplantpropertyandequipment,saleofinvestments
+2012,Q1,-100000.0,0.0,0.0,165267.0,165000.0,52203.0,217203.0,-169596.0,-24156.0,217203.0,-169596.0,-24156.0,23451.0,-195123.0,-195123.0,5700.0,0.0,-69596.0,0.0
+2011,Q3,,,,131168.0,102500.0,,102500.0,,-94952.0,102500.0,,-94952.0,7548.0,-202854.0,-202854.0,-23266.0,,,
+2011,Q2,,,,-22262.0,,,,,1744.0,,,1744.0,1744.0,62006.0,62006.0,-38000.0,,,
+2011,Q1,0.0,0.0,0.0,22262.0,0.0,0.0,,,-1744.0,0.0,0.0,-1744.0,-1744.0,-62006.0,-62006.0,38000.0,0.0,0.0,0.0
