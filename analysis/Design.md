@@ -47,6 +47,3 @@ chart, hovering for more information and showing included stocks.
 After much deliberation I have decided, to base my design on a simple MVC pattern. An SQL based Model
 controlled by some abstraction layer, acting as a server side scripting language. Which is then displayed
 using a Javascript front-end displayed on a browser.
-
-Since i have experience with Haskell i am going to use it as the back-end interface which is the layer
-of abstraction on top of the SQL which the Javascript makes requests too.

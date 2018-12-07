@@ -155,6 +155,8 @@ a sample trade sequence:
 Note how the loss profit is different on each trade, hence Kelly's fraction to bet would be
 incorrect. And starting with an arbitrary f of 0.1.
 
+TWR = *N* Π i=1 {1 + *f* (- trade<sub>*i*</sub> / biggest loss)}
+
 `N` | i                 | TWR
 ----|-------------------|---
 1   |1 + 0.1 * (-9/-17) | 1.0529
@@ -165,7 +167,7 @@ incorrect. And starting with an arbitrary f of 0.1.
 6   |1 + 0.1 * (5/-17)  | 0.9706
 7   |1 + 0.1 * (3/-17)  | 0.9824
 8   |1 + 0.1 * (17/-17) | 0.9000
---  |                   | = 1.1081
+Π   |                   | = 1.1081
 
 Geometric mean = exp((1/8) ln(1.1081)) = 1.0129
 
@@ -185,7 +187,7 @@ so we should now calculate the mean with a different f; say 0.9.
 6   |1 + 0.9 * (5/-17)  | 0.7352
 7   |1 + 0.9 * (3/-17)  | 0.8411
 8   |1 + 0.9 * (17/-17) | 0.0099
---  |                   | = 0.3936
+Π   |                   | = 0.3936
 
 As we can see the TWR is much lower so we know that it is a worse f to use for betting. Hence
 we know a better f exists inside the 2 bounds. Solving for f by iteration:
