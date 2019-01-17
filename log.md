@@ -41,3 +41,7 @@ Work on rails app, almost fully featured now. Simply need to adapt it to the act
 
 Literature review, after meeting with supervisor, project proposal finally feels accepted.
 Lots of work due to be done over Christmas as decided this week.
+
+# Week 10 + Christmas
+
+More literature review. Some rough prototyping of the stats.

@@ -8,6 +8,9 @@
 
 1. Kelly Criterion: You Don't Know the half of it (https://blogs.cfainstitute.org/investor/2018/06/14/the-kelly-criterion-you-dont-know-the-half-of-it/)
 
+1. A Random Walk Down Wall Street (Book  ISBN: 039-3-06245-7file:///C:/Users/Lexer/Downloads/A-Random-Walk-Down-Wall-Street.pdf)
+
+1. S&P Dow Jones (www.spindices.com/idsenhancedfactsheet/file.pdf?calcFrequency=M&force_download=true&hostIdentifier=48190c8c-42c4-46af-8d1a-0cd5db894797&indexId=340 file:///C:/Users/Lexer/Downloads/fs-sp-500.pdf)
 
 ## Kelly Criterion
 
@@ -155,7 +158,7 @@ a sample trade sequence:
 Note how the loss profit is different on each trade, hence Kelly's fraction to bet would be
 incorrect. And starting with an arbitrary f of 0.1.
 
-TWR = *N* Π i=1 {1 + *f* (- trade<sub>*i*</sub> / biggest loss)}
+TWR = *N* Π i=1 {1 + *f<sub>i</sub>* (- trade<sub>*i*</sub> / biggest loss)}
 
 `N` | i                 | TWR
 ----|-------------------|---
@@ -384,3 +387,39 @@ algorithms to solve the model for the set of f. Since once again its a evaluatio
 with a large set of inputs which can adjusted to find the optimum set of inputs which best
 performs according to the function.
 
+## Random Walks
+
+There is a competing train of the thought to the one described by the narrative above. And
+even though it appears to have a large theoretical, and practical support, it is still an
+ongoing debate among economists as to which train of thought is better or even if either
+is correct.
+
+As described in the book [A Random Walk Down Wall Street] it uses key economic historical
+events and many studies to describe how investing and trading are a futile game, compared
+to compound interest, or using an Index like S&P 500. Which simply is a summation of the top
+500 stocks in the US stock market.
+
+Instead of applying mathematics and statistics to your stock purchasing its contrary the very
+nature of randomness, which is that humans look for patterns in all things. True randomness
+seems to be against the very nature of what it is to be human, which is why there is still
+contention as to the ideas in the book. The idea that if you examine stock prices in a given
+period you can always find a system that would produce a positive return.
+
+A system which will always work and produce a positive return, and be mathematically sound.
+I.e. it will work infinitely. Is an impossibility. We do not have an infinite amount of
+time to test our systems on infinite data.
+
+However, as much as I like the argument presented in the book and the complete contrast to
+statistically minded way to analyze stocks. Ultimately a stock is buying a piece of
+an actual business something which is valued on how it provides a product or service.
+And looking back at businesses it becomes easier to see how the value of its stock
+is directly related to the people in it, manning the ship.
+
+And for me, the only way to me to reason to myself
+that statistics, and analysis are still useful. Is that a market is a system of people,
+which is something I don't believe we will ever fully understand. But, statistics and
+short term analysis can give us insights as to how it might work. Its too easy - for me
+at least - to accept that we our powerless and nothing we can do in the long will change
+that we can't beat randomness. Hence why trying to 'game' the system by using short term
+analysis to find businesses which happen to be doing well right now, for short term
+returns, is the only option we have against randomness.

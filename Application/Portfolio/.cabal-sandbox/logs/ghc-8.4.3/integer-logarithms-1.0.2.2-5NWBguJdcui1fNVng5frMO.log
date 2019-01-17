@@ -1,0 +1,7 @@
+Installing library in C:\Users\Lexer\Documents\Uni\FYP\axl626\Application\Portfolio\.cabal-sandbox\x86_64-windows-ghc-8.4.3\integer-logarithms-1.0.2.2-5NWBguJdcui1fNVng5frMO
+ogarithms\Compat.hs, dist\dist-sandbox-bfac61d7\build\GHC\Integer\Logarithms\Compat.o )
+[2 of 4] Compiling Math.NumberTheory.Logarithms ( src\Math\NumberTheory\Logarithms.hs, dist\dist-sandbox-bfac61d7\build\Math\NumberTheory\Logarithms.o )
+[3 of 4] Compiling Math.NumberTheory.Powers.Integer ( src\Math\NumberTheory\Powers\Integer.hs, dist\dist-sandbox-bfac61d7\build\Math\NumberTheory\Powers\Integer.o )
+[4 of 4] Compiling Math.NumberTheory.Powers.Natural ( src\Math\NumberTheory\Powers\Natural.hs, dist\dist-sandbox-bfac61d7\build\Math\NumberTheory\Powers\Natural.o )
+ignoring (possibly broken) abi-depends field for packages
+cabal: Leaving directory 'C:\Users\Lexer\AppData\Local\Temp\cabal-tmp-8061\integer-logarithms-1.0.2.2'
