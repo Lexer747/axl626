@@ -237,7 +237,7 @@ where:
 * *m* = The number of combinations for all the trades and bets, i.e. for each *n* which has *x*
     outcomes, then its: *n* Π *i*=1 {*x*<sub>*i*</sub>} (*x* is normally 2, win and lose)
 
-HPR<sub>*k*</sub> = (1 + (*n* Σ *i*=1 {f<sub>*i*</sub> * (-PL<sub>*k,i*</sub> / BL<sub>*i*</sub>) }) )<sup>Prob<sub>*k*</sub></sup>
+HPR<sub>*k*</sub> = (1 + (*n* Σ *i*=1 {f<sub>*k*</sub> * (-PL<sub>*k,i*</sub> / BL<sub>*i*</sub>) }) )<sup>Prob<sub>*k*</sub></sup>
 
 where:
 * f<sub>*i*</sub> = The optimal f for that *i*, where f > 0
@@ -249,7 +249,7 @@ Prob<sub>*k*</sub> = (*n* - 1 Π *i*=1 {*n* Π *j*=*i*+1 { P(*i<sub>k</sub>* | *
 
 This can be combined into one larger equation:
 
-G(f<sub>*1*</sub>...f<sub>*n*</sub>) = (*m* Π *k*=1 {(1 + *n* Σ *i*=1 {f<sub>*i*</sub> * (-PL<sub>*k,i*</sub> / BL<sub>*i*</sub>)})<sup>Prob<sub>*k*</sub></sup>})<sup>(1 / *m* Σ *k*=1 {Prob<sub>k</sub>})
+G(f<sub>*1*</sub>...f<sub>*n*</sub>) = (*m* Π *k*=1 {(1 + *n* Σ *i*=1 {f<sub>*k*</sub> * (-PL<sub>*k,i*</sub> / BL<sub>*i*</sub>)})<sup>Prob<sub>*k*</sub></sup>})<sup>(1 / *m* Σ *k*=1 {Prob<sub>k</sub>})
 
 [The Handbook of Portfolio Mathematics]
 
