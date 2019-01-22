@@ -28,31 +28,26 @@ makeHPR_help []     bl acc = HPR {trades = acc, maxLoss = bl}
 makeAllHPR :: [Fundamental] -> [HPR]
 makeAllHPR = map (makeHPR . getData)
 
---HPR_k = (1 + (n Σ i=1 {f_i * (-PL_k,i / BL_i) }) ) ^ Prob_k
-calcHPR_k :: Double -> Double -> HPR -> Double
-calcHPR_k f prob_k set = let inner (pl,_) = f * (pl / (maxLoss set)) in
-                         let total = sum $ map inner (trades set) in
-                         (1 + total) ** prob_k
-
---Prob_k = (n - 1 Π i=1 {n Π j=i+1 { P(i_k | j_k) }}) ^ (1 / (n - 1)) 
---calcProb_k :: 
-
 calcMean :: [Double] -> Double -> Double
 calcMean xs len = (sum xs) / len
 
+--standard deviation = sqrt(variance)
 calcVariance :: [Double] -> Double -> Double -> Double
 calcVariance xs len mean = let inner x = (x - mean) ** 2 in
                            let total = sum $ map inner xs in
                            total / (len - 1)
+
+generateP :: [Double] -> 
 
 makeG :: [HPR] -> G
 makeG xs = G {
         stocks = xs,
         m = fromIntegral $ length xs,
         n = (\x -> getN xs (fromIntegral x)),
-        setPL = (\_ _ -> Nothing),
-        setBL = (\_ -> Nothing),
-        setF = getF (fromIntegral $ length xs)
+        setPL = (\k i -> getPL xs k i),
+        setBL = (\i -> getBL xs i),
+        setF = getF (fromIntegral $ length xs),
+        setP = (\_ _ _ -> Nothing)
     }
 
 getN :: [HPR] -> Integer -> Maybe Integer
@@ -65,7 +60,25 @@ getF m k = if (k > m)
               then Nothing
               else Just 0.5
 
---getPL :: [HPR] -> 
+getPL :: [HPR] -> Integer -> Integer -> Maybe Double
+getPL []     _ _ = Nothing
+getPL (x:_)  0 i = getPL_help (trades x) i
+getPL (_:xs) k i = getPL xs (k - 1) i
+
+getPL_help :: [(Double,String)] -> Integer -> Maybe Double
+getPL_help []        _ = Nothing
+getPL_help ((x,_):_) 0 = Just x
+getPL_help (_:xs)    i = getPL_help xs (i - 1)
+
+getBL :: [HPR] -> Integer -> Maybe Double
+getBL []     _ = Nothing
+getBL (x:_)  0 = Just $ maxLoss x
+getBL (_:xs) k = getBL xs k
+
+-- P(ik | jk)
+-- Probability of the scenario i having the k outcome given
+-- the probability of the scenario j having the k outcome
+getP :: [HPR] 
 
 findMinMaxDate :: [HPR] -> (String, String)
 findMinMaxDate []     = error "no HPR's to compare"
@@ -85,4 +98,4 @@ findMinMaxDate_help ((_,x):xs) (curMin, curMax) =
 
 test = do
             p <- checkForErrors parseAll
-            return $ makeAllHPR p
+            return $ makeG $ makeAllHPR p

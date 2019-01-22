@@ -106,6 +106,8 @@ Features:
 
 ## Identifying Complex problems
 
-Finding the risk of stocks should be hard:
+Finding the risk of a stock. Using correlation and variance to find the risk
+of each stock.
 
-Will do reading.
+Given a stock in the format of a series of trades.
+

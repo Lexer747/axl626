@@ -13,6 +13,7 @@ data G = G {
         setPL :: Integer -> Integer -> Maybe Double,
         setBL :: Integer -> Maybe Double,
         setF :: Integer -> Maybe Double,
+        setP :: Integer -> Integer -> Integer -> Maybe Double,
         n :: Integer -> Maybe Integer, -- n 0 = length $ trades (stocks !! 0)
         m :: Integer -- m = length stocks
     }
