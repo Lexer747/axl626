@@ -4,6 +4,7 @@ import qualified Data.Vector as V
 
 import CSV
 import Types
+import SemiDate
 
 --given an input, strip out unnecessary data
 getData :: Fundamental -> [BaseData]
@@ -51,15 +52,36 @@ makeG xs = G {
         n = (\x -> getN xs (fromIntegral x)),
         setPL = (\_ _ -> Nothing),
         setBL = (\_ -> Nothing),
-        setF = (\k -> Nothing)
+        setF = getF (fromIntegral $ length xs)
     }
 
 getN :: [HPR] -> Integer -> Maybe Integer
 getN []     _ = Nothing
-getN (x:xs) 0 = Just $ fromIntegral $ length $ trades x
-getN (x:xs) n = getN xs n
+getN (x:_)  0 = Just $ fromIntegral $ length $ trades x
+getN (_:xs) k = getN xs (k - 1)
 
-getF
+getF :: Integer -> Integer -> Maybe Double
+getF m k = if (k > m)
+              then Nothing
+              else Just 0.5
+
+--getPL :: [HPR] -> 
+
+findMinMaxDate :: [HPR] -> (String, String)
+findMinMaxDate []     = error "no HPR's to compare"
+findMinMaxDate (x:xs) = foldr findMinMaxDate_help (i,i) ys
+    where (_,i) = head $ trades x
+          ys       = map trades (x:xs)
+
+findMinMaxDate_help :: [(Double,String)] -> (String, String) -> (String, String)
+findMinMaxDate_help []         (curMin, curMax) = (curMin, curMax)
+findMinMaxDate_help ((_,x):xs) (curMin, curMax) = 
+    if sortDate (>) x curMax
+        then findMinMaxDate_help xs (curMin, x)
+        else if sortDate (<) x curMin
+                then findMinMaxDate_help xs (x, curMax)
+                else findMinMaxDate_help xs (curMin,curMax)
+
 
 test = do
             p <- checkForErrors parseAll

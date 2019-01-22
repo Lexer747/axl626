@@ -240,7 +240,7 @@ where:
 HPR<sub>*k*</sub> = (1 + (*n* Σ *i*=1 {f<sub>*k*</sub> * (-PL<sub>*k,i*</sub> / BL<sub>*i*</sub>) }) )<sup>Prob<sub>*k*</sub></sup>
 
 where:
-* f<sub>*i*</sub> = The optimal f for that *i*, where f > 0
+* f<sub>*k*</sub> = The optimal f for that *i*, where f > 0
 * PL<sub>*k,i*</sub> = The outcome profit or loss for the *i*th trade/bet associated with the
     *k*th outcome
 * BL<sub>*i*</sub> = The worst outcome of trade/bet

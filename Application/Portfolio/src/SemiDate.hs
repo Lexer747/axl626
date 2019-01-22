@@ -27,3 +27,20 @@ almostEq :: (Eq a, Enum a) => Integer -> a -> a -> Bool
 almostEq 0 x y             = x == y
 almostEq _ x y | x == y    = True
 almostEq n x y | otherwise = almostEq (n - 1) (succ x) y
+
+--sort dates:
+--if f x y then false 
+--else !(f x y) || (== x y) then true
+sortDate :: CompareFunc -> String -> String -> Bool
+sortDate f x y =
+    if compareYear f x y
+        then True
+        else if compareYear (==) x y
+                 then if compareMonth f x y
+                          then True
+                          else if compareMonth (==) x y
+                                   then if compareDay f x y
+                                            then True
+                                            else False
+                                   else False
+                 else False
