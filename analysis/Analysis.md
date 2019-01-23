@@ -109,5 +109,149 @@ Features:
 Finding the risk of a stock. Using correlation and variance to find the risk
 of each stock.
 
-Given a stock in the format of a series of trades.
+Given a stock in the format of a series of trades. How do we compute
+the risk of the stock. Simply put over the entire lifespan of the stock
+its risk is simply its variance. A higher variance is a riskier stock.
+
+But we want to find the risk of a stock, in a set of stocks, given the
+variance of each one. And how correlated it is to the other stocks.
+
+How do we go about defining this mathematically?
+
+## Mathematical risk definition
+
+Lets start with an example, here are 2 stocks, which have some correlation.
+
+`N` | X<sub>1</sub> | Y<sub>1</sub> | p<sub>1</sub>
+----|---|-------|-------
+1   |50 |59     |9
+2   |50 |68     |18
+3   |50 |57     |7
+4   |50 |51     |1
+5   |50 |60     |10
+6   |50 |45     |-5
+7   |50 |47     |-3
+8   |50 |33     |-17
+
+---
+
+`N` | X<sub>2</sub> | Y<sub>2</sub> | p<sub>2</sub>
+----|---|-------|-------
+1   |50 |61     |11
+2   |50 |60     |10
+3   |50 |57     |7
+4   |50 |67     |17
+5   |   |       |
+6   |50 |70     |20
+7   |50 |19     |-31
+8   |   |       |
+
+I have deliberately put some empty spots in the second stock, to more
+accurately depict the real world. And here the `N` value represents a
+date, i.e. the same time the trade occurred.
+
+First we have too choose a window size, and a weight to give the correlation.
+The window is so that data that is either too old or too futuristic
+doesn't impact the calculation for a specific risk at a date.
+
+P<sub>i</sub>(>0) = (1/σ<sub>i</sub>) *  φ (μ<sub>i</sub> / σ<sub>i</sub>)
+
+R<sub>1, 2</sub>(`N`) = P<sub>1</sub> * P<sub>2</sub> * w
+
+where:
+
+* p<sub>i</sub> = the variable representing the ith stock
+* W = window size
+* w = weight applied to the correlation
+* σ<sub>i</sub> = the standard deviation for p<sub>i</sub> based around the
+window, = Var(`N` - (W / 2), p<sub>i</sub>, W)
+* Var(x, y, z) = the variance function, takes a central point (x) of a
+variable (y), and a window size (z)
+* μ<sub>i</sub> = the mean of p<sub>i</sub> based around the window
+* φ (x) = the normal distribution function
+
+Var(x, y, z) = ((x + (z / 2)) Σ i=(x - (z / 2)) {(y<sub>i</sub> - **y<sub>z</sub>**)<sup>2</sup>}) / z
+
+where:
+
+* **y<sub>z</sub>** = the mean of the variable y given a window of z
+* y<sub>i</sub> = the profit of the trade at ith value
+
+---
+
+Sample with:
+
+* `N` = 4
+* W = 6
+* w = 0.5
+
+---
+We want to find:  
+* R<sub>1, 2</sub>(4)
+
+So we need to compute this intermediate values:  
+* P<sub>1</sub> and P<sub>2</sub>
+
+Which requires finding the variance and mean of both variables:  
+Var(4, p<sub>1</sub>, 6)  
+((4 + (6 / 2)) Σ i=(4 - (6 / 2) {(y<sub>i</sub> - **y<sub>6</sub>**)<sup>2</sup>}) / 6  
+
+> **y<sub>6</sub>** = (9 + 18 + 7 + 1 + 10 + -5 + -3) / 7  
+> **y<sub>6</sub>** = 5.286...
+
+(7 Σ i=1 {(y<sub>i</sub> - 5.286)<sup>2</sup>}) / 6  
+
+ i | y | =
+---|---|---
+1 |(9 - 5.286 )<sup>2</sup>|13.793796 
+2 |(18 - 5.286)<sup>2</sup>|161.645796
+3 |(7 - 5.286 )<sup>2</sup>|2.937796  
+4 |(1 - 5.286 )<sup>2</sup>|18.369796 
+5 |(10 - 5.286)<sup>2</sup>|22.221796 
+6 |(-5 - 5.286)<sup>2</sup>|105.801796
+7 |(-3 - 5.286)<sup>2</sup>|68.657796 
+  | | | Σ = 393.428572
+
+Var(4, p<sub>1</sub>, 6) = 393.428572 / 6 = 65.571...
+
+Other variance:  
+Var(4, p<sub>2</sub>, 6)  
+((4 + (6 / 2)) Σ i=(4 - (6 / 2) {(y<sub>i</sub> - **y<sub>6</sub>**)<sup>2</sup>}) / 6  
+
+> **y<sub>6</sub>** = (11 + 10 + 7 + 17 + *missing data* + 20 + -31) / 7  
+> **y<sub>6</sub>** = (11 + 10 + 7 + 17 + 20 + -31) / 6  
+> **y<sub>6</sub>** = 5.666...
+
+(7 Σ i=1 {(y<sub>i</sub> - 5.666)<sup>2</sup>}) / 6  
+
+i | y | =
+---|---|---
+1 |(11- 5.666 )<sup>2</sup>|28.451556
+2 |(10 - 5.666)<sup>2</sup>|18.783556
+3 |(7 - 5.666 )<sup>2</sup>|1.779556
+4 |(17 - 5.666 )<sup>2</sup>|128.459556
+5 |(*missing data* - 5.666)<sup>2</sup>| *missing data* 
+6 |(20 - 5.666)<sup>2</sup>|205.463556
+7 |(-31 - 5.666)<sup>2</sup>|1344.395556
+  | | | Σ = 1727.333336
+  
+Var(4, p<sub>2</sub>, 6) = 1727.333336 / 5 = 345.466...
+
+---
+
+Back to:  
+> P<sub>1</sub> = (1/σ<sub>1</sub>) *  φ (μ<sub>1</sub> / σ<sub>1</sub>)  
+> P<sub>1</sub> = (1/√65.571) *  φ (5.286 / √65.571)  
+> P<sub>1</sub> = (0.123) *  φ (0.653)  
+> P<sub>1</sub>(>0) = 0.7431
+>
+> P<sub>2</sub> = (1/σ<sub>2</sub>) *  φ (μ<sub>2</sub> / σ<sub>2</sub>)  
+> P<sub>2</sub> = (1/√345.466) *  φ (5.666 / √345.466)  
+> P<sub>2</sub> = (0.0538) *  φ (0.305)  
+> P<sub>2</sub>(>0) = 0.6198
+
+And finally:
+> R<sub>1, 2</sub>(`N`) = P<sub>1</sub> * P<sub>2</sub> * w  
+> R<sub>1, 2</sub>(4) = 0.7431 * 0.6198 * 0.5  
+> R<sub>1, 2</sub>(4) = 0.230
 

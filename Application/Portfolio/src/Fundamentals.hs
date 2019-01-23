@@ -28,17 +28,6 @@ makeHPR_help []     bl acc = HPR {trades = acc, maxLoss = bl}
 makeAllHPR :: [Fundamental] -> [HPR]
 makeAllHPR = map (makeHPR . getData)
 
-calcMean :: [Double] -> Double -> Double
-calcMean xs len = (sum xs) / len
-
---standard deviation = sqrt(variance)
-calcVariance :: [Double] -> Double -> Double -> Double
-calcVariance xs len mean = let inner x = (x - mean) ** 2 in
-                           let total = sum $ map inner xs in
-                           total / (len - 1)
-
-generateP :: [Double] -> 
-
 makeG :: [HPR] -> G
 makeG xs = G {
         stocks = xs,
@@ -78,7 +67,9 @@ getBL (_:xs) k = getBL xs k
 -- P(ik | jk)
 -- Probability of the scenario i having the k outcome given
 -- the probability of the scenario j having the k outcome
-getP :: [HPR] 
+--getP :: [HPR] 
+
+
 
 findMinMaxDate :: [HPR] -> (String, String)
 findMinMaxDate []     = error "no HPR's to compare"

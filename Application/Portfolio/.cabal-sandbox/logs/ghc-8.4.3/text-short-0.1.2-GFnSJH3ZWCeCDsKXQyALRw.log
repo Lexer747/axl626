@@ -1,8 +1,0 @@
-Installing library in C:\Users\Lexer\Documents\Uni\FYP\axl626\Application\Portfolio\.cabal-sandbox\x86_64-windows-ghc-8.4.3\text-short-0.1.2-GFnSJH3ZWCeCDsKXQyALRw
--bfac61d7\build\PrimOps.o )
-[2 of 5] Compiling Data.Text.Short.Internal ( src\Data\Text\Short\Internal.hs, dist\dist-sandbox-bfac61d7\build\Data\Text\Short\Internal.o )
-[3 of 5] Compiling Data.Text.Short.Unsafe ( src\Data\Text\Short\Unsafe.hs, dist\dist-sandbox-bfac61d7\build\Data\Text\Short\Unsafe.o )
-[4 of 5] Compiling Data.Text.Short  ( src\Data\Text\Short.hs, dist\dist-sandbox-bfac61d7\build\Data\Text\Short.o )
-[5 of 5] Compiling Data.Text.Short.Partial ( src\Data\Text\Short\Partial.hs, dist\dist-sandbox-bfac61d7\build\Data\Text\Short\Partial.o )
-ignoring (possibly broken) abi-depends field for packages
-cabal: Leaving directory 'C:\Users\Lexer\AppData\Local\Temp\cabal-tmp-8061\text-short-0.1.2'
