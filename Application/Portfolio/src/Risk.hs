@@ -19,4 +19,5 @@ calcVariance xs mean = let inner = map (\x -> (x - mean) ** 2) xs in
                        (sum inner) / (fromIntegral $ length xs)
 
 getSameMonthAndYear :: String -> String -> Bool
-getSameMonthAndYear 
+getSameMonthAndYear = findBasedOnDate [((==),Year),((==), Month)] (&&)
+
