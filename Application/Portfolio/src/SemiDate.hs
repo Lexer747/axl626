@@ -41,6 +41,7 @@ compareDay f (_:_:_:_:_:_:_:_:x1:x2:_) (_:_:_:_:_:_:_:_:y1:y2:_) = f x y
 compareDay _ _ _ = False
 
 --Roughly equal check, the first arg determines how far out it can be and still be equal
+-- almostEq 0 = (==)
 almostEq :: (Eq a, Enum a) => Integer -> a -> a -> Bool
 almostEq 0 x y             = x == y
 almostEq _ x y | x == y    = True
