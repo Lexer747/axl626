@@ -18,11 +18,11 @@ checkAlmostEqYear :: Integer -> String -> String -> Bool
 checkAlmostEqYear i = findBasedOnDate [((almostEq i),Year)] (&&)
 
 selectData :: (String -> String -> Bool) -> [HPR] -> String -> [[Double]]
-selectData f xs base = map (\h -> selectDataSingle f h base) xs
+selectData f xs baseDate = map (\h -> selectDataSingle f h baseDate) xs
 
 selectDataSingle :: (String -> String -> Bool) -> HPR -> String -> [Double]
-selectDataSingle f h base = mapMaybe g (trades h)
-    where g (x,d) = case (f base d) of
+selectDataSingle f h baseDate = mapMaybe g (trades h)
+    where g (x,d) = case (f baseDate d) of
                         True -> Just x
                         False -> Nothing
 
@@ -30,4 +30,8 @@ calcP :: [Double] -> Double
 calcP xs = complCumulative (normalDistr mean (sqrt var)) 0
     where mean = calcMean xs
           var  = calcVariance xs mean
+
+appliedP :: HPR -> Integer -> String -> Double
+appliedP hpr i baseDate = calcP toCalc
+    where toCalc = selectDataSingle (checkAlmostEqYear i) hpr baseDate
 

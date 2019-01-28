@@ -1,4 +1,9 @@
-module CSV where
+module CSV 
+    (
+    Fundamental,
+    parseAll,
+    checkForErrors
+    ) where
 
 import Data.Csv
 import Data.ByteString.Lazy.Char8 (pack)
@@ -12,9 +17,9 @@ path :: String
 path = "C:\\Users\\Lexer\\Documents\\Uni\\FYP\\axl626\\Application\\Data"
 
 --The format we are expecting CSV to be in
-fileHeader :: String
-fileHeader = "date,adj_close,adj_factor,adj_high,adj_low,adj_open,adj_volume\
-         \,close,ex_dividend,high,low,open,split_ratio,volume"
+--fileHeader :: String
+--fileHeader = "date,adj_close,adj_factor,adj_high,adj_low,adj_open,adj_volume\
+--         \,close,ex_dividend,high,low,open,split_ratio,volume"
 
 -- The acceptable haskell type representing our CSV
 type Fundamental = V.Vector (String, String, String, String, String, String, String, String,String, String, String, String, String, String)
@@ -39,17 +44,17 @@ prependPath = ((path ++ "\\") ++)
 
 --check if we had any parse errors reading the file, catastrophically fail with
 --the error message if we did
-checkForErrors :: IO [Either String Fundamental] -> IO [Fundamental]
+checkForErrors :: IO [(String, String, Either String Fundamental)] -> IO [(String, String, Fundamental)]
 checkForErrors parsed = 
     do
-        p <- parsed
-        let errors = [a | Left a <- p]
+        parse <- parsed
+        let errors = [a | (_,_,Left a) <- parse]
         case errors of
-            [] -> return $ [a | Right a <- p]
+            [] -> return $ [(p,n,a) | (p,n,Right a) <- parse]
             _  -> error $ show errors
 
 -- Actually read the files and store them as haskell types
-parseAll :: IO [Either String Fundamental]
+parseAll :: IO [(String, String, Either String Fundamental)]
 parseAll = do
                 f <- filterFiles files --get all the files
                 sequence $ map extractCsv f
@@ -57,4 +62,4 @@ parseAll = do
                 --useful for all the IO wrapped file reads
     where extractCsv file = do
                                r <- readFile $ prependPath file
-                               return $ parseCsv r
+                               return $ ((prependPath file),file,parseCsv r)
