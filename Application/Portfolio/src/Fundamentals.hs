@@ -29,12 +29,14 @@ makeHPR_help (p,n,[])     bl acc = HPR {path = p, name = n,trades = acc, maxLoss
 makeAllHPR :: [(String, String, Fundamental)] -> [HPR]
 makeAllHPR = map (makeHPR . getData)
 
-getBL :: HPR -> Maybe Double
+getBL :: HPR -> Double
 getBL hpr = case xs of
-                [] -> Nothing
-                xs' -> Just $ foldr1 min [x | (x,_) <- xs']
+                [] -> error "empty list"
+                xs' -> foldr1 min [x | (x,_) <- xs']
     where xs = (trades hpr)
 
+innerG :: HPR -> Double -> Double
+innerG = undefined
 
 
 

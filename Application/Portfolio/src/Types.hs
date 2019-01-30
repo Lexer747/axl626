@@ -11,7 +11,27 @@ data HPR = HPR {
         trades :: [(Double, String)], 
         maxLoss :: Double
     }
-    deriving (Show, Eq, Ord)
+
+instance Eq HPR where
+    (==) x y = (name x) == (name y)
+
+instance Show HPR where
+    show h = (name h) ++ " @ " ++ (path h) ++ "\n BL:" ++ (show $ maxLoss h) ++ "\n" ++ (show $ trades h) ++ "\n"
+
+type Correlations = [(HPR,HPR,Double)]
+
+getValue :: Eq a => a -> [(a,b)] -> b -> b
+getValue x ((a,b):_) _ | (x == a) = b
+getValue x (_:bs) b               = getValue x bs b
+getValue _ [] b                 = b
+
+getValue2 :: Eq a => a -> a -> [(a,a,b)] -> b -> b
+getValue2 x y ((a,a',b):_) _ | (x == a) && (y == a') = b
+getValue2 x y ((a,a',b):_) _ | (x == a') && (y == a) = b
+getValue2 x y (_:bs) b                               = getValue2 x y bs b
+getValue2 _ _ [] b                                   = b
+
+
 
 {-
 data G = G {

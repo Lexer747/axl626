@@ -53,21 +53,8 @@ almostEq n x y | otherwise = almostEq (n - 1) (succ x) y
 -- single bool
 findBasedOnDate :: [(CompareFunc, Date)] -> (Bool -> Bool -> Bool) -> String -> String -> Bool
 findBasedOnDate [] _ _ _ = error "findBasedOnDate called with no compare functions"
-findBasedOnDate fs combine x y = my_fold combine compared
+findBasedOnDate fs combine x y = foldr1 combine compared
     where compared = map (\(f,d) -> applyBasedOnDate f d x y) fs
-
--- A fold with no base case
--- mathematically incorrect, but useful for lists of bools, where the base case is hard
--- to determine
-my_fold :: (a -> a -> a) -> [a] -> a
-my_fold _ []     = error "fold called with empty list"
-my_fold _ (x:[]) = x
-my_fold f (x:x':xs) = my_fold_help (x':xs) f (f x x')
-
-my_fold_help :: [a] -> (a -> a -> a) -> a -> a
-my_fold_help []        _ _   = error "fold called with 0 args"
-my_fold_help (x:[])    f acc = f x acc
-my_fold_help (x:xs) f acc = my_fold_help xs f (f x acc)
 
 -- Pattern match the date to the correct compare function
 applyBasedOnDate :: CompareFunc -> Date -> String -> String -> Bool
