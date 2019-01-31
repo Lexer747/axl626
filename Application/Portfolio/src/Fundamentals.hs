@@ -35,12 +35,17 @@ getBL hpr = case xs of
                 xs' -> foldr1 min [x | (x,_) <- xs']
     where xs = (trades hpr)
 
-innerG :: HPR -> Double -> Double
-innerG = undefined
+--HPRk = (1 + (n Σ i=1 {fk * (-PLk,i / BLi) }) ) ^ Probk
+innerG :: Integer -> String -> Double -> Double -> HPR -> Double
+innerG i baseDate probk f hpr = final ** probk
+    where final = 1 + (sum $ map inner (selectDataSingle (checkAlmostEqYear i) hpr baseDate))
+          inner x = f * (x / (maxLoss hpr))
 
-
-
+fullG :: Integer -> String -> Correlations -> [(Double,HPR)] -> Double
+fullG i baseDate cs hprs = (product $ map inner hprs)
+    where inner (f,h) = innerG i baseDate probk f h
+          probk = probK [x | (_,x) <- hprs] cs i baseDate
 
 test = do
-            p <- checkForErrors parseAll
-            return $ makeAllHPR p
+        p <- checkForErrors parseAll
+        return $ fullG 1 "1999-xx-xx" [] $ zip (repeat 0.3) (makeAllHPR p)

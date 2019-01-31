@@ -39,7 +39,7 @@ appliedP :: HPR -> Integer -> String -> Double
 appliedP hpr i baseDate = calcP toCalc
     where toCalc = selectDataSingle (checkAlmostEqYear i) hpr baseDate
 
---Probk = (n - 1 Π i=1 {n Π j=i+1 { P(ik | jk) }}) (1 / (n - 1)) 
+--Probk = (n - 1 Π i=1 {n Π j=i+1 { P(ik | jk) }}) ^ (1 / (n - 1)) 
 probK :: [HPR] -> Correlations -> Integer -> String -> Double
 probK hprs cs i baseDate = inner ** (1 / (n - 1))
     where ps = map (\hpr -> (hpr,appliedP hpr i baseDate)) hprs
