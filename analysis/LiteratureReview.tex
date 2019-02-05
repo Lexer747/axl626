@@ -2,6 +2,8 @@
 \usepackage{mathtools}
 \begin{document}
 
+\section{Literature Review}
+
 \section{Kelly Criterion}
 
 Kelly criterion is a well known concept for the most optimal way to grow a budget from a given
@@ -10,8 +12,18 @@ is mathematically proven to be optimal. Based on the paper which under the guise
 formally defines the optimal growth rate of a betting function with a fixed probability and
 payout.\newline
 
-\( k = (bp - (1 - p)) / b \)
+\[ k = \frac{(b \cdot p - (1 - p))}{b} \]
 
+where:\newline
+\(k =\) The best size as a fraction of your portfolio\newline
+\(b =\) The net odds on the wager. i.e. your win \(b + wager staked\) \newline
+\(p =\) The probability of winning
 
+This has one clear difference to real stocks and investment which is that you are assumed to lose 100\% of your wager upon a loss. 
+Which while technically true in the worst case for a stock or bond investment. Is more often than not, not what happens. 
+Typically you lose a smaller percentage than 100\%. Hence there is an adapted formula: \cite{Alon}
+
+\bibliography{LiteratureReview}
+\bibliographystyle{plain}
 
 \end{document}

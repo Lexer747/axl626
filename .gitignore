@@ -1,2 +1,8 @@
 Data.zip
+
+# Latex related files:
 *.pdf
+*.log
+*.aux
+*.bbl
+*.blg
