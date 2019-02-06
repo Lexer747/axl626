@@ -1,28 +1,58 @@
 \documentclass[12pt]{article}
 \usepackage{mathtools}
+
+\title{Literature Review}
+\author{Alex Lewis}
+\date{\today}
+
 \begin{document}
-
-\section{Literature Review}
-
+\maketitle
 \section{Kelly Criterion}
 
 Kelly criterion is a well known concept for the most optimal way to grow a budget from a given
 gamble. In the case where there is a positive expectation gamble, then using the Kelly criterion
 is mathematically proven to be optimal. Based on the paper which under the guise of networking
 formally defines the optimal growth rate of a betting function with a fixed probability and
-payout.\newline
+payout.
 
-\[ k = \frac{(b \cdot p - (1 - p))}{b} \]
+\[ k = \frac{(b \times p - (1 - p))}{b} \]
 
 where:\newline
 \(k =\) The best size as a fraction of your portfolio\newline
 \(b =\) The net odds on the wager. i.e. your win \(b + wager staked\) \newline
-\(p =\) The probability of winning
+\(p =\) The probability of winning\newline
 
-This has one clear difference to real stocks and investment which is that you are assumed to lose 100\% of your wager upon a loss. 
-Which while technically true in the worst case for a stock or bond investment. Is more often than not, not what happens. 
-Typically you lose a smaller percentage than 100\%. Hence there is an adapted formula: \cite{Alon}
+This has one clear difference to real stocks and investment which is that you are assumed to 
+lose 100\% of your wager upon a loss. Which while technically true in the worst case for a 
+stock or bond investment. Is more often than not, not what happens. Typically you lose a 
+smaller percentage than 100\%. Hence there is an adapted formula: \cite{Alon}
 
+\[ k = \frac{p - (1 - p)}{\frac{W}{L}}\]
+
+where:\newline
+\(k =\) The best size as a fraction of your portfolio\newline
+\(p =\) The probability of winning\newline
+\(W =\) Is the amount of winnings\newline
+\(L =\) Is the amount of losses\newline
+
+\subsection{Example}
+
+Say we have a gamble \(X\) with the following properties:
+
+\[P(X) = 0.6\]
+
+And \(X\) pays out \(1.2\times\) the stake. Win 20\%. And in the case \(1 - P(X) = 0.4\) \(X\) 
+only takes \(0.8\times\) of the stake, instead of all of it. Lose 20\%. It should be apparent 
+that \(X\) is a good investment. Heres its expected value in case you had doubts:
+
+\[E(X) = 0.6 \times 1.2 + 0.4 \times 0.8 = 1.04\]
+
+Hence the expected value of \(X\) is a return of 4\%. And if plug that into the Kelly formula
+, it will tell us how much of portfolio we should bet to see optimal growth.
+
+\[k = \frac{0.6 - (1 - 0.6)}{\frac{0.2}{0.2}} = 0.2\]
+
+\pagebreak
 \bibliography{LiteratureReview}
 \bibliographystyle{plain}
 
