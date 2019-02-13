@@ -21,431 +21,495 @@
 \maketitle
 \section{Kelly Criterion}
 
-Kelly criterion is a well known concept for the most optimal way to grow a budget from a given
-gamble. In the case where there is a positive expectation gamble, then using the Kelly 
-criterion is mathematically proven to be optimal. Based on the paper which under the guise 
-of networking formally defines the optimal growth rate of a betting function with a fixed 
-probability and payout.
+    Kelly criterion is a well known concept for the most optimal way to grow a budget from a 
+    given gamble. In the case where there is a positive expectation gamble, then using the 
+    Kelly criterion is mathematically proven to be optimal. Based on the paper which under
+    the guise of networking formally defines the optimal growth rate of a betting function
+    with a fixed probability and payout.
 
-\begin{equation}\label{eq:KellyOriginal}
-    k = \frac{(b \times p - (1 - p))}{b} 
-\end{equation}
+    \begin{equation}\label{eq:KellyOriginal}
+        k = \frac{(b \times p - (1 - p))}{b} 
+    \end{equation}
 
-where:
-\begin{flalign*}
-k &= \text{The best size as a fraction of your portfolio} &&\\
-b &= \text{The net odds on the wager. i.e. your win } b + wager staked &&\\
-p &= \text{The probability of winning} &&
-\end{flalign*}
+    where:
+    \begin{flalign*}
+        k &= \text{The best size as a fraction of your portfolio} &&\\
+        b &= \text{The net odds on the wager. i.e. your win } b + wager staked &&\\
+        p &= \text{The probability of winning} &&
+    \end{flalign*}
 
-The equation \ref{eq:KellyOriginal} is from the famous paper by Kelly in 1956 \cite{Kelly}.
-Much work has been done to adapt the formula and make it more relevant to current economics.
-Firstly the equation \ref{eq:KellyOriginal} has one clear difference to real stocks and 
-investment which is that you are assumed to lose 100\% of your wager upon a loss. Which 
-while technically true in the worst case for a stock or bond investment. Is more often than 
-not, not what happens. Typically you lose a smaller percentage than 100\%. Hence there is an 
-adapted formula: {(From the article by Alon\cite{Alon})}
+    The equation \ref{eq:KellyOriginal} is from the famous paper by Kelly in 1956 \cite{Kelly}.
+    Much work has been done to adapt the formula and make it more relevant to current economics.
+    Firstly the equation \ref{eq:KellyOriginal} has one clear difference to real stocks and 
+    investment which is that you are assumed to lose 100\% of your wager upon a loss. Which 
+    while technically true in the worst case for a stock or bond investment. Is more often than 
+    not, not what happens. Typically you lose a smaller percentage than 100\%. Hence there is
+    an adapted formula: {(From the article by Alon\cite{Alon})}
 
-\begin{equation}\label{eq:KellyWinLoss}
-    k = \frac{p - (1 - p)}{\frac{W}{L}}
-\end{equation}
+    \begin{equation}\label{eq:KellyWinLoss}
+        k = \frac{p - (1 - p)}{\frac{W}{L}}
+    \end{equation}
 
-where:
-\begin{flalign*}
-k &= \text{The best size as a fraction of your portfolio} &&\\
-p &= \text{The probability of winning} &&\\
-W &= \text{Is the amount of winnings} &&\\
-L &= \text{Is the amount of losses} &&
-\end{flalign*}
+    where:
+    \begin{flalign*}
+        k &= \text{The best size as a fraction of your portfolio} &&\\
+        p &= \text{The probability of winning} &&\\
+        W &= \text{Is the amount of winnings} &&\\
+        L &= \text{Is the amount of losses} &&
+    \end{flalign*}
 
 \subsection{Example}
 
-Say we have a gamble \(X\) with the following properties:
+    Say we have a gamble \(X\) with the following properties:
 
-\[P(X) = 0.6\]
+    \[P(X) = 0.6\]
 
-And \(X\) pays out \(1.2\times\) the stake. Win 20\%. And in the case \(1 - P(X) = 0.4\) \(X\) 
-only takes \(0.8\times\) of the stake, instead of all of it. Lose 20\%. It should be apparent 
-that \(X\) is a good investment. Heres its expected value in case you had doubts:
+    And \(X\) pays out \(1.2\times\) the stake. Win 20\%. And in the case \(1 - P(X) = 0.4\)
+    \(X\) only takes \(0.8\times\) of the stake, instead of all of it. Lose 20\%. It should
+    be apparent that \(X\) is a good investment. Heres its expected value in case you had
+    doubts:
 
-\[E(X) = 0.6 \times 1.2 + 0.4 \times 0.8 = 1.04\]
+    \[E(X) = 0.6 \times 1.2 + 0.4 \times 0.8 = 1.04\]
 
-Hence the expected value of \(X\) is a return of 4\%. And if plug that into the Kelly formula
-, it will tell us how much of portfolio we should bet to see optimal growth. Subbing in our
-values into equation \ref{eq:KellyWinLoss}:
+    Hence the expected value of \(X\) is a return of 4\%. And if plug that into the Kelly
+    formula, it will tell us how much of portfolio we should bet to see optimal growth.
+    Subbing in our values into equation \ref{eq:KellyWinLoss}:
 
-\[k = \frac{0.6 - (1 - 0.6)}{\frac{0.2}{0.2}} = 0.2\]
+    \[k = \frac{0.6 - (1 - 0.6)}{\frac{0.2}{0.2}} = 0.2\]
 
-Hence we should bet 20\% of our portfolio on the next trade. The problem with this approach 
-is that its a ratio. So if our gamble is more volatile (or equally any stock) and a win is 
-200\% and a loss is 200\%, then the ratio between wins and losses is the same. But even though 
-the investment is \(10\times\) more volatile, it still has the same kelly value:
+    Hence we should bet 20\% of our portfolio on the next trade. The problem with this approach 
+    is that its a ratio. So if our gamble is more volatile (or equally any stock) and a win is 
+    200\% and a loss is 200\%, then the ratio between wins and losses is the same. But even
+    though the investment is \(10\times\) more volatile, it still has the same kelly value:
 
-\[k = \frac{0.6 - (1 - 0.6)}{\frac{2}{2}} = 0.2\]
+    \[k = \frac{0.6 - (1 - 0.6)}{\frac{2}{2}} = 0.2\]
 
 \subsection{The Correct Kelly Formula}
 
-\begin{equation}\label{eq:KellyCorrect}
-    k = \frac{p}{L} - \frac{1 - p}{W}
-\end{equation}
+    \begin{equation}\label{eq:KellyCorrect}
+        k = \frac{p}{L} - \frac{1 - p}{W}
+    \end{equation}
 
-Equation \ref{eq:KellyCorrect} is also from Alon\cite{Alon}. As you can see this no longer 
-has the ratio of wins and losses as the denominator, so substituting into equation 
-\ref{eq:KellyCorrect}:
+    Equation \ref{eq:KellyCorrect} is also from Alon\cite{Alon}. As you can see this no longer 
+    has the ratio of wins and losses as the denominator, so substituting into equation 
+    \ref{eq:KellyCorrect}:
 
-\[k = \frac{0.6}{0.2} - \frac{1 - 0.6}{0.2} = 1\]
+    \[k = \frac{0.6}{0.2} - \frac{1 - 0.6}{0.2} = 1\]
 
-As you can see, this Kelly value says to put 100\% of your portfolio on the bet. Which might 
-seem a bit ridiculous but this is why people generally use a fraction of Kelly value, as even 
-though it is mathematically the fastest way to grow a portfolio from a given gamble. It can 
-be daunting to invest that much.
+    As you can see, this Kelly value says to put 100\% of your portfolio on the bet. Which
+    might seem a bit ridiculous but this is why people generally use a fraction of Kelly
+    value, as even though it is mathematically the fastest way to grow a portfolio from a
+    given gamble. It can be daunting to invest that much.
 
-\[k = \frac{0.6}{2} - \frac{1 - 0.6}{2} = 0.1\]
+    \[k = \frac{0.6}{2} - \frac{1 - 0.6}{2} = 0.1\]
 
-But as we can see from the above calculation with a Win of 200\% and a loss of 200\%, it 
-correctly adjusts the bet size so that only 10\% of the portfolio is invested. Whereas the 
-other Kelly formula would not to change the bet size.
+    But as we can see from the above calculation with a Win of 200\% and a loss of 200\%, it 
+    correctly adjusts the bet size so that only 10\% of the portfolio is invested. Whereas the 
+    other Kelly formula would not to change the bet size.
 
 \section{Kelly Criterion Application}
 
-Kelly Criterion as concept is a great theoretical achievement, such a simple formula so
-perfectly describes how to play a system in order to gain the most from it. But alas
-stocks and trades are themselves not a repeatable and positive mathematical expectation game.
-Hence why we need to adapt the equations so that we can try to apply them to the real world.
+    Kelly Criterion as concept is a great theoretical achievement, such a simple formula so
+    perfectly describes how to play a system in order to gain the most from it. But alas
+    stocks and trades are themselves not a repeatable and positive mathematical expectation
+    game. Hence why we need to adapt the equations so that we can try to apply them to the
+    real world.
 
 \subsection{Optimal F}
 
-\begin{displayquote}
-    'For any given independent trials situation where you have an edge (i.e. positive 
-    expectation, see Kelly Criterion for an example) there exists an optimal fixed fraction (
-    f) between 0 and 1 as a divisor of your biggest loss to bet on each event.'\cite{Ralph}
-\end{displayquote}
+    \begin{displayquote}
+        'For any given independent trials situation where you have an edge (i.e. positive 
+        expectation, see Kelly Criterion for an example) there exists an optimal fixed fraction (
+        f) between 0 and 1 as a divisor of your biggest loss to bet on each event.'\cite{Ralph}
+    \end{displayquote}
 
-As it turns out this optimal f is similar to what Kelly describes in his paper. And as Ralph 
-proceeds, he explains how Kelly criterion is a perfect solution for fixed size gambles with 
-fixed wins and losses.
+    As it turns out this optimal f is similar to what Kelly describes in his paper. And as Ralph 
+    proceeds, he explains how Kelly criterion is a perfect solution for fixed size gambles with 
+    fixed wins and losses.
 
-But then the book reaches the a different conclusion, it goes on to state that trades where 
-the win or loss is always changing {(like the stock market)} then Kelly formula does find the 
-correct optimal f. This lends to reason as it is a dream like world where we have a fixed 
-unchanging trade with a set win loss ratio.
+    But then the book reaches the a different conclusion, it goes on to state that trades where 
+    the win or loss is always changing {(like the stock market)} then Kelly formula does find the 
+    correct optimal f. This lends to reason as it is a dream like world where we have a fixed 
+    unchanging trade with a set win loss ratio.
 
-So instead the book proposes finding the optimal f by instead using the geometric mean. We 
-can use the estimated geometric mean because it is basically the same, while being much less 
-computation:
+    So instead the book proposes finding the optimal f by instead using the geometric mean. We 
+    can use the estimated geometric mean because it is basically the same, while being much less 
+    computation:
 
-\begin{equation}\label{eq:TWR}
-    TWR = \displaystyle\prod^{N}_{i=1}1 + f \times \frac{- trade_i}{biggest loss}
-\end{equation}
-\begin{equation}\label{eq:GeoMean}
-    Geometric Mean = exp(\frac{1}{N} \times Ln(TWR))
-\end{equation}
+    \begin{equation}\label{eq:TWR}
+        TWR = \displaystyle\prod^{N}_{i=1}1 + f \times \frac{- trade_i}{biggest loss}
+    \end{equation}
+    \begin{equation}\label{eq:GeoMean}
+        Geometric Mean = exp(\frac{1}{N} \times Ln(TWR))
+    \end{equation}
 
-where:
-\begin{flalign*}
-f &= \text{The optimal f} &&\\
-N &= \text{The number of trades} &&\\
-trade_i &= \text{The profit loss of the} i^{th} \text{trade from the set of trades} &&\\
-biggest loss &= \text{The biggest loss from the set of trades} &&\\
-exp(x) &= \text{The exponential function} &&\\
-Ln(x) &= \text{The natural logarithm function} &&
-\end{flalign*}
+    where:
+    \begin{flalign*}
+    f &= \text{The optimal f} &&\\
+    N &= \text{The number of trades} &&\\
+    trade_i &= \text{The profit loss of the} i^{th} \text{trade from the set of trades} &&\\
+    biggest loss &= \text{The biggest loss from the set of trades} &&\\
+    exp(x) &= \text{The exponential function} &&\\
+    Ln(x) &= \text{The natural logarithm function} &&
+    \end{flalign*}
 
-Equation from Ralph Vince's book\cite{Ralph}.
-To maximize our profit from a set of trades we want to optimize for the highest possible 
-geometric mean. Since f is a free standing variable which cannot be made the subject of the 
-equation we can only use iteration to find a good estimate.
+    Equation from Ralph Vince's book\cite{Ralph}.
+    To maximize our profit from a set of trades we want to optimize for the highest possible 
+    geometric mean. Since f is a free standing variable which cannot be made the subject of the 
+    equation we can only use iteration to find a good estimate.
 
-\subsubsection{Example of Finding the optimal F}
+    \subsubsection{Example of Finding the optimal F}
 
-Given we trade \(N\) stocks buy buying them at point X and selling them at point Y we have a 
-sample trade sequence:
+    Given we trade \(N\) stocks buy buying them at point X and selling them at point Y we have a 
+    sample trade sequence:
 
-\begin{center}
-\begin{tabular}{ |c|c|c|c| } 
- \hline
-    \(N\) & X & Y & profit \\
-    \hline
-    1 & 50 & 59 & 9   \\
-    2 & 50 & 68 & 18  \\
-    3 & 50 & 57 & 7   \\
-    4 & 50 & 51 & 1   \\
-    5 & 50 & 60 & 10  \\
-    6 & 50 & 45 & -5  \\
-    7 & 50 & 47 & -3  \\
-    8 & 50 & 33 & -17 \\
- \hline
-\end{tabular}
-\end{center}
+    \begin{center}
+    \begin{tabular}{ |c|c|c|c| } 
+     \hline
+        \(N\) & X & Y & profit \\
+        \hline
+        1 & 50 & 59 & 9   \\
+        2 & 50 & 68 & 18  \\
+        3 & 50 & 57 & 7   \\
+        4 & 50 & 51 & 1   \\
+        5 & 50 & 60 & 10  \\
+        6 & 50 & 45 & -5  \\
+        7 & 50 & 47 & -3  \\
+        8 & 50 & 33 & -17 \\
+     \hline
+    \end{tabular}
+    \end{center}
 
-Note how the loss profit is different on each trade, hence Kelly's fraction to bet would be 
-incorrect. Now calculation with an arbitrary f of 0.1.
+    Note how the loss profit is different on each trade, hence Kelly's fraction to bet would be 
+    incorrect. Now calculation with an arbitrary f of 0.1.
 
-Using the equation \ref{eq:TWR}
+    Using the equation \ref{eq:TWR}
 
-\begin{center}
-\begin{tabular}{ |c|c|c|c| } 
- \hline
-    \(N\) & \(i\) & TWR \\
-    \hline
-    1 & 1 + 0.1 * (-9/-17)  & 1.0529 \\
-    2 & 1 + 0.1 * (-18/-17) & 1.1059 \\
-    3 & 1 + 0.1 * (-7/-17)  & 1.0412 \\
-    4 & 1 + 0.1 * (-1/-17)  & 1.0059 \\
-    5 & 1 + 0.1 * (-10/-17) & 1.0588 \\
-    6 & 1 + 0.1 * (5/-17)   & 0.9706 \\
-    7 & 1 + 0.1 * (3/-17)   & 0.9824 \\
-    8 & 1 + 0.1 * (17/-17)  & 0.9000 \\
-    \hline
-    & & \(\prod = 1.1081\)\\
- \hline
-\end{tabular}
-\end{center}
+    \begin{center}
+    \begin{tabular}{ |c|c|c|c| } 
+     \hline
+        \(N\) & \(i\) & TWR \\
+        \hline
+        1 & 1 + 0.1 * (-9/-17)  & 1.0529 \\
+        2 & 1 + 0.1 * (-18/-17) & 1.1059 \\
+        3 & 1 + 0.1 * (-7/-17)  & 1.0412 \\
+        4 & 1 + 0.1 * (-1/-17)  & 1.0059 \\
+        5 & 1 + 0.1 * (-10/-17) & 1.0588 \\
+        6 & 1 + 0.1 * (5/-17)   & 0.9706 \\
+        7 & 1 + 0.1 * (3/-17)   & 0.9824 \\
+        8 & 1 + 0.1 * (17/-17)  & 0.9000 \\
+        \hline
+        & & \(\prod = 1.1081\)\\
+     \hline
+    \end{tabular}
+    \end{center}
 
-Note: Since the geometric mean is exponential dependent on the \(TWR\), we can just skip that
-step.
+    Note: Since the geometric mean is exponential dependent on the \(TWR\), we can just skip that
+    step.
 
-But this does not tell us the optimal fraction to bet, we simply chose a random fraction 
-0.1, so we should now calculate the mean with a different f; say 0.9.
+    But this does not tell us the optimal fraction to bet, we simply chose a random fraction 
+    0.1, so we should now calculate the mean with a different f; say 0.9.
 
-\begin{center}
-\begin{tabular}{ |c|c|c|c| } 
- \hline
-    \(N\) & \(i\) & TWR \\
-    \hline
-    1 & 1 + 0.9 * (-9/-17)  & 1.4764 \\
-    2 & 1 + 0.9 * (-18/-17) & 1.9529 \\
-    3 & 1 + 0.9 * (-7/-17)  & 1.3705 \\
-    4 & 1 + 0.9 * (-1/-17)  & 1.0529 \\
-    5 & 1 + 0.9 * (-10/-17) & 1.5294 \\
-    6 & 1 + 0.9 * (5/-17)   & 0.7352 \\
-    7 & 1 + 0.9 * (3/-17)   & 0.8411 \\
-    8 & 1 + 0.9 * (17/-17)  & 0.0099 \\
-    \hline
-    & & \(\prod = 0.3936\)\\
- \hline
-\end{tabular}
-\end{center}
+    \begin{center}
+    \begin{tabular}{ |c|c|c|c| } 
+     \hline
+        \(N\) & \(i\) & TWR \\
+        \hline
+        1 & 1 + 0.9 * (-9/-17)  & 1.4764 \\
+        2 & 1 + 0.9 * (-18/-17) & 1.9529 \\
+        3 & 1 + 0.9 * (-7/-17)  & 1.3705 \\
+        4 & 1 + 0.9 * (-1/-17)  & 1.0529 \\
+        5 & 1 + 0.9 * (-10/-17) & 1.5294 \\
+        6 & 1 + 0.9 * (5/-17)   & 0.7352 \\
+        7 & 1 + 0.9 * (3/-17)   & 0.8411 \\
+        8 & 1 + 0.9 * (17/-17)  & 0.0099 \\
+        \hline
+        & & \(\prod = 0.3936\)\\
+     \hline
+    \end{tabular}
+    \end{center}
 
-As we can see the \(TWR\) is much lower so we know that it is a worse f to use for betting. Hence
-we know a better f exists inside the 2 bounds. Solving for f by iteration:
+    As we can see the \(TWR\) is much lower so we know that it is a worse f to use for betting. Hence
+    we know a better f exists inside the 2 bounds. Solving for f by iteration:
 
-Optimal \(f = 0.237\)
+    Optimal \(f = 0.237\)
 
-as the \(TWR = 1.212\)
+    as the \(TWR = 1.212\)
 
 \section{Portfolio Diversification}
 
-Finding the optimal f, or the fraction to bet is only a small part of actually determining 
-how to spread out a bank roll over multiple markets. At the end of day portfolio allocation 
-is about the mathematics of a system, rather than a single trade or bet. Consider a 2:1 coin 
-game which has favorable mathematically expectation, the optimal f is 0.25.
+    Finding the optimal f, or the fraction to bet is only a small part of actually determining 
+    how to spread out a bank roll over multiple markets. At the end of day portfolio allocation 
+    is about the mathematics of a system, rather than a single trade or bet. Consider a 2:1
+    coin game which has favorable mathematically expectation, the optimal f is 0.25.
 
-But consider simultaneously playing 2 games, {(for simplicity another 2:1 coin game)} the 
-optimal f becomes a function of correlation between both games. As if these games are not 
-independent events, much like stocks on the market are not. Then the outcome of the first 
-game affecting the second game, or vice versa. Will affect the optimal f.
+    But consider simultaneously playing 2 games, {(for simplicity another 2:1 coin game)} the 
+    optimal f becomes a function of correlation between both games. As if these games are not 
+    independent events, much like stocks on the market are not. Then the outcome of the first 
+    game affecting the second game, or vice versa. Will affect the optimal f.
 
-Thinking of the optimal f as a single point, inside a space of trades/bets. When we have 
-only a single trade/bet, we are doing calculations in a 2D space, and we have a line which 
-represents out optimal f. However as the number of trades/bets increases we gain another 
-dimension for each one.
+    Thinking of the optimal f as a single point, inside a space of trades/bets. When we have 
+    only a single trade/bet, we are doing calculations in a 2D space, and we have a line which 
+    represents out optimal f. However as the number of trades/bets increases we gain another 
+    dimension for each one.
 
-Therefore instead a f which lies on a line, it lies on a plane, or a 3D object, and etc. If 
-the f suddenly becomes a multi variable coordinate which must be exactly correct. If a 
-single axis is out then you can miss the hill of positive growth, even if every other axis 
-lined up.
+    Therefore instead a f which lies on a line, it lies on a plane, or a 3D object, and etc. If 
+    the f suddenly becomes a multi variable coordinate which must be exactly correct. If a 
+    single axis is out then you can miss the hill of positive growth, even if every other axis 
+    lined up.
 
-This means we need to define a new function to find the individual f's for all the bets, but 
-with relation to each other.
+    This means we need to define a new function to find the individual f's for all the bets,
+    but with relation to each other.
 
 \subsection{Mathematical Definition}
 
-\begin{equation}\label{eq:G}
-    G(f_1...f_n) = \left( \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)}
-\end{equation}
-\begin{equation}\label{eq:HPR_k}
-    HPR_k = \left( 1 +  \displaystyle\sum^{n}_{i=1} f_k \times \frac{- PL_{k,i}}{BL_k} \right) ^{Prob_k}
-\end{equation}
-\begin{equation}\label{eq:Prob_k}
-    Prob_k = \left( \displaystyle\prod_{n - 1}^{i=1} P(i_k | j_k)\right)^{\frac{1}{n - 1}}
-\end{equation}
+    \begin{equation}\label{eq:G}
+        G(f_1...f_n) = \left( \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)}
+    \end{equation}
+    \begin{equation}\label{eq:HPR_k}
+        HPR_k = \left( 1 +  \displaystyle\sum^{n}_{i=1} f_k \times \frac{- PL_{k,i}}{BL_k} \right) ^{Prob_k}
+    \end{equation}
+    \begin{equation}\label{eq:Prob_k}
+        Prob_k = \left( \displaystyle\prod^{n - 1}_{i=1} P(i_k | j_k)\right)^{\frac{1}{n - 1}}
+    \end{equation}
 
-where:
-\begin{flalign*}
-n &= \text{The number of trades or bets in the} k^{th}\text{set} &&\\
-m &= \text{The number of combinations for all trades and bets, i.e. for each } n \text{ which has }x \text{ outcomes then } &&\\
-& \Big( m = \prod^{n}_{i=1} x_i (x \text{ is 2 for a bet, win and lose. Or 1 for a trade, the value gained}) \Big) &&\\
-f_k &= \text{The optimal } f \text{for that }k^{th} \text{set, where } f > 0 &&\\
-PL_{k,i} &= \text{The outcome for the } i^{th} \text{trade or bet associated with the } k^{th} \text{set} &&\\
-BL_k &= \text{The worst trade or bet for the } k^{th} \text{set} &&\\
-P(i_k | j_k) &= \text{Roughly it is the risk of }i^{th} \text{trade or bet associated with the } k^{th} \text{set given the risk of the } &&\\
-& j^{th} \text{trade or bet associated with the} k^{th} \text{set. Which is easy to calculate for coins, but I will explain} &&\\
-& \text{later how it is calculated for actual stocks} &&
-\end{flalign*}
+    where:
+    \begin{flalign*}
+    n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
+    m &= \text{The number of combinations for all trades and bets, i.e. for each } n \text{ which has }x \text{ outcomes then } &&\\
+    & \Big( m = \prod^{n}_{i=1} x_i \text{ : }(x \text{ is 2 for a bet, win and lose. Or 1 for a trade, the value gained}) \Big) &&\\
+    f_k &= \text{The optimal } f \text{ for that }k^{th} \text{ set, where } f > 0 &&\\
+    PL_{k,i} &= \text{The outcome for the } i^{th} \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
+    BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
+    P(i_k | j_k) &= \text{Roughly it is the risk of }i^{th} \text{ trade or bet associated with the } k^{th} \text{ set given the risk of the } &&\\
+    & j^{th} \text{ trade or bet associated with the } k^{th} \text{ set. Which is easy to calculate for coins, but I will explain} &&\\
+    & \text{later how it is calculated for actual stocks} &&
+    \end{flalign*}
 
-This equation is also from Ralph's Book \cite{Ralph}.
+    This equation is also from Ralph's Book \cite{Ralph}.
 
 \subsubsection{Example applying the Mathematical Formula}
 
-Applying \(G\) to a setting in which we actually want to optimize how we bet our 
-portfolio. Say we have 3 coins, Coin 1, Coin 2, Coin 3. Each one has 2 outcomes, and for 
-simplicity we assume that the correlation coefficients are zero. I.e. each coin is independent.
-And modeling the risk more simply than a stock.
+    Applying \(G\) to a setting in which we actually want to optimize how we bet our 
+    portfolio. Say we have 3 coins, Coin 1, Coin 2, Coin 3. Each one has 2 outcomes, and for 
+    simplicity we assume that the correlation coefficients are zero. I.e. each coin is
+    independent. And modeling the risk more simply than a stock.
 
-This means we need to find 3 f values \(f_1, f_2, f_3\) to result in the greatest growth. Or 
-the  3 f's which result in the greatest \(G\).
+    This means we need to find 3 f values \(f_1, f_2, f_3\) to result in the greatest growth.
+    Or the  3 f's which result in the greatest \(G\).
 
-Re-writing \(HPR_k\) to:
+    Re-writing \(HPR_k\) to:
 
-\begin{align*}
-HPR_k &= (1 + C)^{Prob_k} \\
-C &= \displaystyle\sum^{n}_{i=1}f_i \times (- PL_{k,i} / BL_i)
-\end{align*}
+    \begin{align*}
+    HPR_k &= (1 + C)^{Prob_k} \\
+    C &= \displaystyle\sum^{n}_{i=1}f_i \times (- PL_{k,i} / BL_i)
+    \end{align*}
 
-We can calculate \(C\). Given that \(BL\) is the same for each coin, say -1, and the \(PL\) 
-is -1. I.e. when we lose we gain -£1, when we loss our biggest loss is -£1. This is because 
-\(k=1\) so this the first outcome, where it lands tails. If we were to win then \(PL\) would 
-be 2, as we are playing a 2:1 game.
+    We can calculate \(C\). Given that \(BL\) is the same for each coin, say -1, and the \(PL\) 
+    is -1. I.e. when we lose we gain -£1, when we loss our biggest loss is -£1. This is because 
+    \(k=1\) so this the first outcome, where it lands tails. If we were to win then \(PL\)
+    would be 2, as we are playing a 2:1 game.
 
-Once again we have to use \(f_i\) without knowing what it is, so pick a random start of 0.1. 
-And \(n\) is 3 since we have 3 coins.
+    Once again we have to use \(f_i\) without knowing what it is, so pick a random start of
+    0.1. And \(n\) is 3 since we have 3 coins.
 
-\begin{flalign*}
-C &= (0.1 * (- -1 / -1)) + (0.1 * (- -1 / -1)) + (0.1 * (- -1 / -1)) &&\\
-C &= (0.1 * -1) + (0.1 * -1) + (0.1 * -1) &&\\
-C &= -0.3 &&\\
-HPR_k &= (1 + -0.3)^{Prob_k} &&\\
-HPR_k &= (0.7)^{Prob_k} &&
-\end{flalign*}
+    \begin{flalign*}
+    C &= (0.1 * (- -1 / -1)) + (0.1 * (- -1 / -1)) + (0.1 * (- -1 / -1)) &&\\
+    C &= (0.1 * -1) + (0.1 * -1) + (0.1 * -1) &&\\
+    C &= -0.3 &&\\
+    HPR_k &= (1 + -0.3)^{Prob_k} &&\\
+    HPR_k &= (0.7)^{Prob_k} &&
+    \end{flalign*}
 
-Now we need to calculate equation \ref{eq:Prob_k} so we can find \(Prob_k\). And I'll
-emphasize again, this calculation will be a simplification of what we will actually do
-with a real stock, since we are dealing with coins in this example.
+    Now we need to calculate equation \ref{eq:Prob_k} so we can find \(Prob_k\). And I'll
+    emphasize again, this calculation will be a simplification of what we will actually do
+    with a real stock, since we are dealing with coins in this example.
 
-\begin{center}
-\begin{tabular}{ |c|c|c|c| } 
- \hline
-    \(i\) & \(j\) & \(k\) & \(P(i_k | j_k)\) \\
-    \hline
-    1 & 2 & 1 & \(P(0.5 \cap 0.5) = 0.25\)\\
-    1 & 3 & 1 & \(P(0.5 \cap 0.5) = 0.25\)\\
-    2 & 3 & 1 & \(P(0.5 \cap 0.5) = 0.25\)\\
-    \hline
-    & & & \(\prod = 0.015625\)\\
- \hline
-\end{tabular}
-\end{center}
+    \begin{center}
+    \begin{tabular}{ |c|c|c|c| } 
+     \hline
+        \(i\) & \(j\) & \(k\) & \(P(i_k | j_k)\) \\
+        \hline
+        1 & 2 & 1 & \(P(0.5 \cap 0.5) = 0.25\)\\
+        1 & 3 & 1 & \(P(0.5 \cap 0.5) = 0.25\)\\
+        2 & 3 & 1 & \(P(0.5 \cap 0.5) = 0.25\)\\
+        \hline
+        & & & \(\prod = 0.015625\)\\
+     \hline
+    \end{tabular}
+    \end{center}
 
-\begin{flalign*}
-Prob_k &= 0.015625^{\frac{1}{3 - 1}} &&\\
-Prob_k &= 0.015625^{0.5} &&\\
-Prob_k &= 0.125 &&
-\end{flalign*}
+    \begin{flalign*}
+    Prob_k &= 0.015625^{\frac{1}{3 - 1}} &&\\
+    Prob_k &= 0.015625^{0.5} &&\\
+    Prob_k &= 0.125 &&
+    \end{flalign*}
 
-Now we can calculate \(HPR_k\) where \(k = 1\):
+    Now we can calculate \(HPR_k\) where \(k = 1\):
 
-\begin{flalign*}
-HPR_k &= (1 + C)^{Prob_k} &&\\
-HPR_k &= (0.7)^{0.125} &&\\
-HPR_k &= 0.95639490757 &&
-\end{flalign*}
+    \begin{flalign*}
+    HPR_k &= (1 + C)^{Prob_k} &&\\
+    HPR_k &= (0.7)^{0.125} &&\\
+    HPR_k &= 0.95639490757 &&
+    \end{flalign*}
 
-Hence to find \(G\) we need to find all the values of \(HPR_k\):
+    Hence to find \(G\) we need to find all the values of \(HPR_k\):
 
-\begin{center}
-\begin{tabular}{ |c|c|c|c| } 
- \hline
-    \(k\) & \(C\) & \(Prob_k\) & \(HPR_k\) \\
-    \hline
-    1 & -0.3 & 0.125 & 0.9564 \\
-    2 & 0.0  & 0.125 & 1.0333 \\
-    3 & 0.0  & 0.125 & 1.0000 \\
-    4 & 0.3  & 0.125 & 1.0000 \\
-    5 & 0.0  & 0.125 & 1.0333 \\
-    6 & 0.3  & 0.125 & 1.0000 \\
-    7 & 0.3  & 0.125 & 1.0333 \\
-    8 & 0.6  & 0.125 & 1.0605 \\
- \hline
-\end{tabular}
-\end{center}
+    \begin{center}
+    \begin{tabular}{ |c|c|c|c| } 
+     \hline
+        \(k\) & \(C\) & \(Prob_k\) & \(HPR_k\) \\
+        \hline
+        1 & -0.3 & 0.125 & 0.9564 \\
+        2 & 0.0  & 0.125 & 1.0333 \\
+        3 & 0.0  & 0.125 & 1.0000 \\
+        4 & 0.3  & 0.125 & 1.0000 \\
+        5 & 0.0  & 0.125 & 1.0333 \\
+        6 & 0.3  & 0.125 & 1.0000 \\
+        7 & 0.3  & 0.125 & 1.0333 \\
+        8 & 0.6  & 0.125 & 1.0605 \\
+     \hline
+    \end{tabular}
+    \end{center}
 
-Subbing the values into \(G\):
+    Subbing the values into \(G\):
 
-\begin{flalign*}
-G(0.1, 0.1, 0.1) &= \left( \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)} &&\\
-G(0.1, 0.1, 0.1) &= (0.9564 \times 1 \times 1 \times 1.0333 \times 1 \times 1.0333 \times 1.0333 \times 1.0605 ) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)} &&\\
-G(0.1, 0.1, 0.1) &= (1.1190) ^{ \left( \displaystyle\frac{1}{(0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125)} \right)} &&\\
-G(0.1, 0.1, 0.1) &= (1.1190) ^{ \left( \displaystyle\frac{1}{(0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125)} \right)} &&\\
-G(0.1, 0.1, 0.1) &= (1.1190) ^{1} &&\\
-G(0.1, 0.1, 0.1) &= 1.1190 &&
-\end{flalign*}
+    \begin{flalign*}
+    G(0.1, 0.1, 0.1) &= \left( \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)} &&\\
+    G(0.1, 0.1, 0.1) &= (0.9564 \times 1 \times 1 \times 1.0333 \times 1 \times 1.0333 \times 1.0333 \times 1.0605 ) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)} &&\\
+    G(0.1, 0.1, 0.1) &= (1.1190) ^{ \left( \displaystyle\frac{1}{(0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125)} \right)} &&\\
+    G(0.1, 0.1, 0.1) &= (1.1190) ^{ \left( \displaystyle\frac{1}{(0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125)} \right)} &&\\
+    G(0.1, 0.1, 0.1) &= (1.1190) ^{1} &&\\
+    G(0.1, 0.1, 0.1) &= 1.1190 &&
+    \end{flalign*}
 
-Now to finish we should iterate over the set of \(f_i\) to find the largest \(G\), but after
-inspection we can see to iterate over all values of \(f\) would scale incredibly badly
-the number of calculations goes up far too fast.
+    Now to finish we should iterate over the set of \(f_i\) to find the largest \(G\), but after
+    inspection we can see to iterate over all values of \(f\) would scale incredibly badly
+    the number of calculations goes up far too fast.
 
-And if you've been anywhere near AI for past few years, optimizing \(f\) for the largest 
-\(G\) is a classical problem which is often solved by neural networks or genetic algorithms. 
-Its gradient descent. Given an array of inputs, and a evaluation function, find the best 
-array of inputs to score the best in the evaluation function. In our case, the array is \(f\)
-, and our function is \(G\).
+    And if you've been anywhere near AI for past few years, optimizing \(f\) for the largest 
+    \(G\) is a classical problem which is often solved by neural networks or genetic
+    algorithms. Its gradient descent. Given an array of inputs, and a evaluation function,
+    find the best array of inputs to score the best in the evaluation function. In our case,
+    the array is \(f\), and our function is \(G\).
 
-But for completeness Ralph\cite{Ralph} shows how if you do find the best \(f\) for 3 coin
-games, its different than just applying Kelly to each game individually. And the \(f\)
-chosen by this method outperforms the basic Kelly formula.
+    But for completeness Ralph\cite{Ralph} shows how if you do find the best \(f\) for 3 coin
+    games, its different than just applying Kelly to each game individually. And the \(f\)
+    chosen by this method outperforms the basic Kelly formula.
+
+\section{Calculating Risk}
+
+    Here we are actually constructing the risk calculation for a stock in a more concrete form.
+    So must operate under some assumptions and natural patterns of a stock. 
+
+    Proposed Model of a Stock: 
+    \begin{itemize}
+        \item{Open {\&} Close values for a given arbitrary time period}
+        \item{A ratio of correlation to other stocks; see Ralph \cite{Ralph} for reasoning}
+        \item{Holes of Open {\&} Close values may occur}
+    \end{itemize}
+
+    Calculating the profit{\/}loss of a stock at time period is now trivial and useful.
+    Renaming the change in value at each time period \(i\) to \(PL_i\) we can find
+    statistical facts about the stock.
+
+    \begin{align}
+        \bar{PL} &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
+        \sigma^2 &= \frac{\sum^{i}_{n=1} (PL_n - \bar{PL})^2}{i} \label{eq:StockVar}
+    \end{align}
+
+    Using this data we can transform a stock into a distribution which we can use to estimate
+    the likely hood of the next \(PL_i\) being above a certain value. In our case we transform
+    the normal distribution using equations \ref{eq:StockMean} and \ref{eq:StockVar} to find
+    the mean and variance of the stock, and hence change the normal distribution. Then it is
+    simple enough to use tables to find probabilities we want.
+
+    Accounting for holes in the data, and the fact that older data may not be as relevant. Is
+    Currently overlooked if we were just going to
+
+    simulated annealing 
+    
+
+\section{Machine Learning And Finding \(G\)}
+
+    Equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k} can be combined into one equation:
+
+    \begin{equation}\label{eq:FullG}
+        G(f_1...f_n) = \left( \displaystyle\prod^{m}_{k=1} \Bigg( 1 + \displaystyle\sum^{n}_{i=1} f_k \times \Big( \frac{- PL_{k,i} }{BL_k}\Big) \Bigg)^{\Bigg( \displaystyle\prod^{n - 1}_{i=1}  P(i_k | j_k) \Bigg) ^ {\frac{1}{n - 1}}} \right) ^ {\left( {1 \div {\displaystyle\sum^{m}_{k=1} \Bigg( \displaystyle\prod^{n - 1}_{i=1}  P(i_k | j_k) \Bigg) ^ {\frac{1}{n - 1}}}} \right)}
+    \end{equation}
+
+    where:
+    \begin{flalign*}
+    n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
+    m &= \text{The number of combinations for all trades and bets} &&\\
+    f_k &= \text{The optimal } f \text{ for that }k^{th} \text{set, where } f > 0 &&\\
+    PL_{k,i} &= \text{The outcome for the } i^{th} \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
+    BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
+    P(i_k | j_k) &= \text{The risk of }i^{th} \text{ trade or bet associated with the } k^{th} \text{ set given the risk of the } &&\\
+    & j^{th} \text{ trade or bet associated with the } k^{th} \text{ set.} &&
+    \end{flalign*}
+
+    Inside this function we actually have 3 other functions which are needed to compute \(G\).
+    As described \(PL_{k,i}\), \(BL_k\) and \(P(i_k | j_k)\) are all their own functions, which
+    use stocks, and other variables to be calculated. This is not an issue when it comes to
+    calculating the value of \(G\) as we know all these variables. But it becomes an issue if
+    want to differentiate \(G\) with respect to \(f\). I believe it would be possible to
+    differentiate this equation using the chain rule, but then it becomes differentiated with
+    respect to a single \(f\).
 
 \section{Portfolio Optimization}
 
-This model of \(G\) is just one method, another model is suggested by Zachariah
-\cite{Zachariah} in which the author combines the same model proposed above, with the 
-addition of a risk model in which each trade or bet when combined forms a linear correlation 
-using an estimation technique which can then be used to find the variance of the system.
+    This model of \(G\) is just one method, another model is suggested by Zachariah
+    \cite{Zachariah} in which the author combines the same model proposed above, with the 
+    addition of a risk model in which each trade or bet when combined forms a linear correlation 
+    using an estimation technique which can then be used to find the variance of the system.
 
-I shall leave the specific implementation of this model to the reader if they wish to 
-understand the latest and greatest models currently in use. This model also uses genetic 
-algorithms to solve the model for the set of f. Since once again its a evaluation function, 
-with a large set of inputs which can adjusted to find the optimum set of inputs which best 
-performs according to the function.
+    I shall leave the specific implementation of this model to the reader if they wish to 
+    understand the latest and greatest models currently in use. This model also uses genetic 
+    algorithms to solve the model for the set of f. Since once again its a evaluation function, 
+    with a large set of inputs which can adjusted to find the optimum set of inputs which best 
+    performs according to the function.
 
-But Later in my report I discuss my approach to handling risk, which goes in a different
-direction to Zachariah.
+    But Later in my report I discuss my approach to handling risk, which goes in a different
+    direction to Zachariah.
+
 
 \section{Random Walks}
 
-There is a competing train of the thought to the one described by the narrative above. And 
-even though it appears to have a large theoretical, and practical support, it is still an 
-ongoing debate among economists as to which train of thought is better or even if either is 
-correct.
+    There is a competing train of the thought to the one described by the narrative above. And 
+    even though it appears to have a large theoretical, and practical support, it is still an 
+    ongoing debate among economists as to which train of thought is better or even if either is 
+    correct.
 
-As described in the book 'A Random Walk Down Wall Street' by Burton\cite{Burton} it uses key 
-economic historical events and many studies to describe how investing and trading are a 
-futile game, compared to compound interest, or using an Index like S\&P 500. Which simply is 
-a summation of the top 500 stocks in the US stock market.
+    As described in the book 'A Random Walk Down Wall Street' by Burton \cite{Burton} it uses
+    key economic historical events and many studies to describe how investing and trading are
+    a futile game, compared to compound interest, or using an Index like S\&P 500. Which
+    simply is a summation of the top 500 stocks in the US stock market.
 
-Instead of applying mathematics and statistics to your stock purchasing its contrary the 
-very nature of randomness, which is that humans look for patterns in all things. True 
-randomness seems to be against the very nature of what it is to be human, which is why there 
-is still contention as to the ideas in the book. The idea that if you examine stock prices 
-in a given period you can always find a system that would produce a positive return.
+    Instead of applying mathematics and statistics to your stock purchasing its contrary the 
+    very nature of randomness, which is that humans look for patterns in all things. True 
+    randomness seems to be against the very nature of what it is to be human, which is why
+    there is still contention as to the ideas in the book. The idea that if you examine stock
+    prices in a given period you can always find a system that would produce a positive return.
 
-A system which will always work and produce a positive return, and be mathematically sound. 
-I.e. it will work infinitely. Is an impossibility. We do not have an infinite amount of time 
-to test our systems on infinite data.
+    A system which will always work and produce a positive return, and be mathematically sound. 
+    I.e. it will work infinitely. Is an impossibility. We do not have an infinite amount of
+    time to test our systems on infinite data.
 
-However, as much as I like the argument presented in the book and the complete contrast to 
-statistically minded way to analyze stocks. Ultimately a stock is buying a piece of an 
-actual business something which is valued on how it provides a product or service. And 
-looking back at businesses it becomes easier to see how the value of its stock is directly 
-related to the people in it, manning the ship.
+    However, as much as I like the argument presented in the book and the complete contrast to 
+    statistically minded way to analyze stocks. Ultimately a stock is buying a piece of an 
+    actual business something which is valued on how it provides a product or service. And 
+    looking back at businesses it becomes easier to see how the value of its stock is directly 
+    related to the people in it, manning the ship.
 
-And for me, the only way to me to reason to myself that statistics, and analysis are still 
-useful. Is that a market is a system of people, which is something I don't believe we will 
-ever fully understand. But, statistics and short term analysis can give us insights as to 
-how it might work. Its too easy - for me at least - to accept that we our powerless and 
-nothing we can do in the long will change that we can't beat randomness. Hence why trying to 
-'game' the system by using short term analysis to find businesses which happen to be doing 
-well right now, for short term returns, is the only option we have against randomness.
+    And for me, the only way to me to reason to myself that statistics, and analysis are still 
+    useful. Is that a market is a system of people, which is something I don't believe we will 
+    ever fully understand. But, statistics and short term analysis can give us insights as to 
+    how it might work. It's too easy - for me at least - to accept that we our powerless and 
+    nothing we can do in the long run will change that we can't beat randomness. Hence why
+    trying to 'game' the system by using short term analysis to find businesses which happen
+    to be doing well right now, for short term returns, is the only option we have against
+    randomness.
 
 \pagebreak
 \bibliography{LiteratureReview}
