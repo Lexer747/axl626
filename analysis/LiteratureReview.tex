@@ -117,24 +117,24 @@
 
 \subsection{Optimal F}
 
-    \begin{displayquote}
-        'For any given independent trials situation where you have an edge (i.e. positive 
-        expectation, see Kelly Criterion for an example) there exists an optimal fixed fraction (
-        f) between 0 and 1 as a divisor of your biggest loss to bet on each event.'\cite{Ralph}
-    \end{displayquote}
+    \begin{displayquote}[\cite{Ralph}] \textit {
+        For any given independent trials situation where you have an edge (i.e. positive 
+        expectation, see Kelly Criterion for an example) there exists an optimal fixed
+        fraction (f) between 0 and 1 as a divisor of your biggest loss to bet on each event.
+    } \end{displayquote}
 
-    As it turns out this optimal f is similar to what Kelly describes in his paper. And as Ralph 
-    proceeds, he explains how Kelly criterion is a perfect solution for fixed size gambles with 
-    fixed wins and losses.
+    As it turns out this optimal \(f\) is similar to what Kelly describes in his paper. 
+    And as Ralph proceeds, he explains how Kelly criterion is a perfect solution for 
+    fixed size gambles with fixed wins and losses.
 
     But then the book reaches the a different conclusion, it goes on to state that trades where 
-    the win or loss is always changing {(like the stock market)} then Kelly formula does find the 
-    correct optimal f. This lends to reason as it is a dream like world where we have a fixed 
-    unchanging trade with a set win loss ratio.
+    the win or loss is always changing {(like the stock market)} then Kelly formula does find
+    the correct optimal f. This lends to reason as it is a dream like world where we have a
+    fixed unchanging trade with a set win loss ratio.
 
-    So instead the book proposes finding the optimal f by instead using the geometric mean. We 
-    can use the estimated geometric mean because it is basically the same, while being much less 
-    computation:
+    So instead the book proposes finding the optimal \(f\) by instead using the geometric
+    mean. We can use the estimated geometric mean because it is basically the same, while
+    being much less computation:
 
     \begin{equation}\label{eq:TWR}
         TWR = \displaystyle\prod^{N}_{i=1}1 + f \times \frac{- trade_i}{biggest loss}
@@ -160,8 +160,8 @@
 
     \subsubsection{Example of Finding the optimal F}
 
-    Given we trade \(N\) stocks buy buying them at point X and selling them at point Y we have a 
-    sample trade sequence:
+    Given we trade \(N\) stocks buy buying them at point X and selling them at point Y 
+    we have a sample trade sequence:
 
     \begin{center}
     \begin{tabular}{ |c|c|c|c| } 
@@ -276,14 +276,19 @@
     where:
     \begin{flalign*}
     n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
-    m &= \text{The number of combinations for all trades and bets, i.e. for each } n \text{ which has }x \text{ outcomes then } &&\\
-    & \Big( m = \prod^{n}_{i=1} x_i \text{ : }(x \text{ is 2 for a bet, win and lose. Or 1 for a trade, the value gained}) \Big) &&\\
+    m &= \text{The number of combinations for all trades and bets, i.e. for each } n 
+        \text{ which has }x \text{ outcomes then } &&\\
+        & \Big( m = \prod^{n}_{i=1} x_i \text{ : }(x 
+        \text{ is 2 for a bet, win and lose. Or 1 for a trade, the value gained}) \Big) &&\\
     f_k &= \text{The optimal } f \text{ for that }k^{th} \text{ set, where } f > 0 &&\\
-    PL_{k,i} &= \text{The outcome for the } i^{th} \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
+    PL_{k,i} &= \text{The outcome for the } i^{th} \text{ trade or bet associated with the } 
+        k^{th} \text{ set} &&\\
     BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
-    P(i_k | j_k) &= \text{Roughly it is the risk of }i^{th} \text{ trade or bet associated with the } k^{th} \text{ set given the risk of the } &&\\
-    & j^{th} \text{ trade or bet associated with the } k^{th} \text{ set. Which is easy to calculate for coins, but I will explain} &&\\
-    & \text{later how it is calculated for actual stocks} &&
+    P(i_k | j_k) &= \text{Roughly it is the risk of }i^{th} 
+        \text{ trade or bet associated with the } k^{th} \text{ set given the risk of the } &&\\
+        & j^{th} \text{ trade or bet associated with the } k^{th} 
+        \text{ set. Which is easy to calculate for coins, but I will explain} &&\\
+        & \text{later how it is calculated for actual stocks} &&
     \end{flalign*}
 
     This equation is also from Ralph's Book \cite{Ralph}.
@@ -375,10 +380,20 @@
     Subbing the values into \(G\):
 
     \begin{flalign*}
-    G(0.1, 0.1, 0.1) &= \left( \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)} &&\\
-    G(0.1, 0.1, 0.1) &= (0.9564 \times 1 \times 1 \times 1.0333 \times 1 \times 1.0333 \times 1.0333 \times 1.0605 ) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)} &&\\
-    G(0.1, 0.1, 0.1) &= (1.1190) ^{ \left( \displaystyle\frac{1}{(0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125)} \right)} &&\\
-    G(0.1, 0.1, 0.1) &= (1.1190) ^{ \left( \displaystyle\frac{1}{(0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125)} \right)} &&\\
+    G(0.1, 0.1, 0.1) &= \left( 
+        \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{
+            \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k
+        } 
+    \right)} &&\\
+    G(0.1, 0.1, 0.1) &= 
+        (0.9564 \times 1 \times 1 \times 1.0333 \times 1 \times 1.0333 \times 1.0333 \times 1.0605 ) ^{
+            \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)
+        } &&\\
+    G(0.1, 0.1, 0.1) &= (1.1190) ^{
+        \left( \displaystyle\frac{1}{
+                (0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125 + 0.125)
+            } 
+        \right)} &&\\
     G(0.1, 0.1, 0.1) &= (1.1190) ^{1} &&\\
     G(0.1, 0.1, 0.1) &= 1.1190 &&
     \end{flalign*}
@@ -414,7 +429,7 @@
     statistical facts about the stock.
 
     \begin{align}
-        \bar{PL} &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
+        \mu &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
         \sigma^2 &= \frac{\sum^{i}_{n=1} (PL_n - \bar{PL})^2}{i} \label{eq:StockVar}
     \end{align}
 
@@ -424,18 +439,117 @@
     the mean and variance of the stock, and hence change the normal distribution. Then it is
     simple enough to use tables to find probabilities we want.
 
-    Accounting for holes in the data, and the fact that older data may not be as relevant. Is
-    Currently overlooked if we were just going to
-
-    simulated annealing 
+    \begin{equation} \label{eq:StockProb}
+        P (PL) = \big( PL \sim \Phi(\mu, \sigma^2) \big) > 0
+    \end{equation}
     
+    where:
+    \begin{flalign*}
+    PL \sim \Phi (\mu, \sigma^2) &= \text{The cumulative normal distribution, adjusted to the mean } \mu \text{ and variance } \sigma^2 &&\\
+    \text{ of the stock } PL\\
+    \end{flalign*}
+
+    Accounting for 'holes' in the data, and the fact that older data may not be as relevant. Is
+    currently overlooked if we were just going to implement these functions as our risk. The
+    first change I am going to make is that we specify a time period and a range of time to
+    take data from. This has multiple advantages, the first one being that we can choose to
+    use only the most recent data about a stock. The second being that we can also choose
+    how granular to make our risk calculation. It also builds directly into the algorithm
+    the fact that the calculation will not use all available data from a stock, hence dealing
+    with 'holes' at the same time.
+
+    Now for the more complex part of the risk calculation, while the algorithm for it is
+    simple, finding the data for it is a hard problem in itself. The equation
+    \(P(i_k | j_k)\) hides the details behind the \(|\) symbol. Normally in statistics
+    and probability of \(P(X | Y)\) means 'The probability of \(X\) given \(Y\) has occurred'
+    which in a normal probability space is actually just a shorthand for:
+
+    \begin{equation*}
+        P ( X | Y ) = \frac{P(X \cap Y)}{P(Y)}
+    \end{equation*}
+
+    But in our stock based world we don't have an equivalent function \(\cap\) and hence
+    we don't have the function \(|\) as well. The best we can do is assume that \(\cap\)
+    is roughly equivalent to multiplying together the two stocks in question, and then
+    assuming that \(\div\) is roughly equivalent to multiplying that by some amount of
+    correlation. We cannot just multiply and divide as if they are independent probabilities as
+    the first stock will just cancel out, hence doing nothing. So our function becomes:
+
+    \begin{equation*}
+        P ( X | Y ) = P ( X ) \times P ( Y ) \times C_{X, Y}
+    \end{equation*}
+
+    where:
+    \begin{flalign*}
+    C_{X, Y} &= \text{The pre-calculated correlation of stock } X \text{ to stock } Y&&\\
+    P( X ) &= \text{The probability of } X \text{ given by the equation \ref{eq:StockProb}} \\
+    \end{flalign*}
+
+    Which brings us back to the claim that the algorithm is simple but, how do we find 
+    and calculate good values for the table \(C\)? Some solutions are:
+
+    \begin{enumerate}
+        \item{Calculating the actual correlation, either Spearman's, or some other mathematical technique}
+        \item{Using some form of NLP (Natural Language Parsing) to figure out how related the stocks are in the news world}
+        \item{Grouping stocks by which industry they are in and assigning each group a correlation}
+        \item{Assuming all stocks are independent}
+        \item{Or a combination of all the above}\label{item:C}
+    \end{enumerate}
+
+
+    The answer to the question: how to find a good \(C\)? is probably worth its own paper, since
+    its almost definitely \ref{item:C}. Which requires a more complex analysis of the systems
+    that make up a stock. At the end of the day the numbers we can gather about a stock never
+    tell the full story. A stock is a part of a business, and a business is simply a is a
+    group of people working together to sell a product or service to other people.
+    And at the end of day using numbers to analyze how people will succeed in selling
+    a product or service will always come up short compared to knowing and understanding
+    the people who are ultimately doing the selling.
+
+    For the sake of simplicity I will calculate the correlation as its mathematically defined.
+    For example calculating the correlation between 2 stocks \(PL_1\) and \(PL_2\) is
+    done as so:
+
+    \begin{align}
+        C_{PL_1, PL_2} = 
+        \frac{
+            \displaystyle\sum^{n}_{i=1} (PL_{1, i} - \bar {PL_1})(PL_{2, i} - \bar {PL_2})
+        }{
+            \sqrt{
+                \displaystyle\sum^{n}_{i=1}(PL_{1,i} - \bar {PL_1})^2 
+                \displaystyle\sum^{n}_{i=1}(PL_{2,i} - \bar {PL_2})^2
+            }
+        }
+        \label{eq:Correlation}
+    \end{align}
+
+    
+
+    %simulated annealing
+
 
 \section{Machine Learning And Finding \(G\)}
 
     Equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k} can be combined into one equation:
 
     \begin{equation}\label{eq:FullG}
-        G(f_1...f_n) = \left( \displaystyle\prod^{m}_{k=1} \Bigg( 1 + \displaystyle\sum^{n}_{i=1} f_k \times \Big( \frac{- PL_{k,i} }{BL_k}\Big) \Bigg)^{\Bigg( \displaystyle\prod^{n - 1}_{i=1}  P(i_k | j_k) \Bigg) ^ {\frac{1}{n - 1}}} \right) ^ {\left( {1 \div {\displaystyle\sum^{m}_{k=1} \Bigg( \displaystyle\prod^{n - 1}_{i=1}  P(i_k | j_k) \Bigg) ^ {\frac{1}{n - 1}}}} \right)}
+        G(f_1...f_n) = \left(
+            \displaystyle\prod^{m}_{k=1} \Bigg(
+                1 + \displaystyle\sum^{n}_{i=1} f_k \times \Big(
+                    \frac{- PL_{k,i} }{BL_k}
+                \Big) 
+            \Bigg)^{\Bigg(
+                \displaystyle\prod^{n - 1}_{i=1} P(i_k | j_k)
+            \Bigg) ^ {\frac{1}{n - 1}}} 
+        \right) ^ {
+            \left( {1 \div {\displaystyle\sum^{m}_{k=1}
+                \Bigg( 
+                    \displaystyle\prod^{n - 1}_{i=1}  P(i_k | j_k)
+                \Bigg) ^ {
+                    \frac{1}{n - 1}}
+                }
+            }
+        \right)}
     \end{equation}
 
     where:
@@ -443,9 +557,11 @@
     n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
     m &= \text{The number of combinations for all trades and bets} &&\\
     f_k &= \text{The optimal } f \text{ for that }k^{th} \text{set, where } f > 0 &&\\
-    PL_{k,i} &= \text{The outcome for the } i^{th} \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
+    PL_{k,i} &= \text{The outcome for the } i^{th} 
+        \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
     BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
-    P(i_k | j_k) &= \text{The risk of }i^{th} \text{ trade or bet associated with the } k^{th} \text{ set given the risk of the } &&\\
+    P(i_k | j_k) &= \text{The risk of }i^{th} \text{ trade or bet associated with the } 
+        k^{th} \text{ set given the risk of the } &&\\
     & j^{th} \text{ trade or bet associated with the } k^{th} \text{ set.} &&
     \end{flalign*}
 
