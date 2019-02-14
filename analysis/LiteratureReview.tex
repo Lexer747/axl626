@@ -43,8 +43,9 @@
     Firstly the equation \ref{eq:KellyOriginal} has one clear difference to real stocks and 
     investment which is that you are assumed to lose 100\% of your wager upon a loss. Which 
     while technically true in the worst case for a stock or bond investment. Is more often than 
-    not, not what happens. Typically you lose a smaller percentage than 100\%. Hence there is
-    an adapted formula: {(From the article by Alon\cite{Alon})}
+    not, you lose a percentage of your inital investment. Typically you lose a smaller
+    percentage than 100\%. Hence there is an adapted formula: 
+    {(From the article by Alon\cite{Alon})}
 
     \begin{equation}\label{eq:KellyWinLoss}
         k = \frac{p - (1 - p)}{\frac{W}{L}}
@@ -115,11 +116,11 @@
     game. Hence why we need to adapt the equations so that we can try to apply them to the
     real world.
 
-\subsection{Optimal F}
+\subsection{Optimal \(F\)}
 
     \begin{displayquote}[\cite{Ralph}] \textit {
         For any given independent trials situation where you have an edge (i.e. positive 
-        expectation, see Kelly Criterion for an example) there exists an optimal fixed
+        expectation) there exists an optimal fixed
         fraction (f) between 0 and 1 as a divisor of your biggest loss to bet on each event.
     } \end{displayquote}
 
@@ -147,7 +148,7 @@
     \begin{flalign*}
     f &= \text{The optimal f} &&\\
     N &= \text{The number of trades} &&\\
-    trade_i &= \text{The profit loss of the} i^{th} \text{trade from the set of trades} &&\\
+    trade_i &= \text{The profit loss of the } i^{th} \text{ trade from the set of trades} &&\\
     biggest loss &= \text{The biggest loss from the set of trades} &&\\
     exp(x) &= \text{The exponential function} &&\\
     Ln(x) &= \text{The natural logarithm function} &&
@@ -155,10 +156,10 @@
 
     Equation from Ralph Vince's book\cite{Ralph}.
     To maximize our profit from a set of trades we want to optimize for the highest possible 
-    geometric mean. Since f is a free standing variable which cannot be made the subject of the 
-    equation we can only use iteration to find a good estimate.
+    geometric mean. Since \(f\) is a free standing variable which cannot be made the subject 
+    of the equation we can only use iteration to find a good estimate.
 
-    \subsubsection{Example of Finding the optimal F}
+    \subsubsection{Example of Finding the optimal \(F\)}
 
     Given we trade \(N\) stocks buy buying them at point X and selling them at point Y 
     we have a sample trade sequence:
@@ -238,27 +239,27 @@
 
 \section{Portfolio Diversification}
 
-    Finding the optimal f, or the fraction to bet is only a small part of actually determining 
+    Finding the optimal \(f\), or the fraction to bet is only a small part of actually determining 
     how to spread out a bank roll over multiple markets. At the end of day portfolio allocation 
     is about the mathematics of a system, rather than a single trade or bet. Consider a 2:1
-    coin game which has favorable mathematically expectation, the optimal f is 0.25.
+    coin game which has favorable mathematically expectation, the optimal \(f\) is 0.25.
 
     But consider simultaneously playing 2 games, {(for simplicity another 2:1 coin game)} the 
-    optimal f becomes a function of correlation between both games. As if these games are not 
-    independent events, much like stocks on the market are not. Then the outcome of the first 
-    game affecting the second game, or vice versa. Will affect the optimal f.
+    optimal \(f\) becomes a function of correlation between both games. As if these games 
+    are not independent events, much like stocks on the market are not. Then the outcome 
+    of the first game affecting the second game, or vice versa. Will affect the optimal \(f\).
 
     Thinking of the optimal f as a single point, inside a space of trades/bets. When we have 
     only a single trade/bet, we are doing calculations in a 2D space, and we have a line which 
-    represents out optimal f. However as the number of trades/bets increases we gain another 
-    dimension for each one.
+    represents out optimal \(f\). However as the number of trades/bets increases we gain
+    another dimension for each one.
 
-    Therefore instead a f which lies on a line, it lies on a plane, or a 3D object, and etc. If 
-    the f suddenly becomes a multi variable coordinate which must be exactly correct. If a 
-    single axis is out then you can miss the hill of positive growth, even if every other axis 
-    lined up.
+    Therefore instead a \(f\) which lies on a line, it lies on a plane, or a 3D object, 
+    and etc. If the \(f\) suddenly becomes a multi variable coordinate which must be 
+    exactly correct. If a single axis is out then you can miss the hill of positive 
+    growth, even if every other axis lined up.
 
-    This means we need to define a new function to find the individual f's for all the bets,
+    This means we need to define a new function to find the individual \(f\)'s for all the bets,
     but with relation to each other.
 
 \subsection{Mathematical Definition}
@@ -408,9 +409,9 @@
     find the best array of inputs to score the best in the evaluation function. In our case,
     the array is \(f\), and our function is \(G\).
 
-    But for completeness Ralph\cite{Ralph} shows how if you do find the best \(f\) for 3 coin
+    But for completeness Ralph shows how if you do find the best \(f\) for 3 coin
     games, its different than just applying Kelly to each game individually. And the \(f\)
-    chosen by this method outperforms the basic Kelly formula.
+    chosen by this method outperforms the basic Kelly formula.\cite{Ralph} 
 
 \section{Calculating Risk}
 
@@ -420,7 +421,7 @@
     Proposed Model of a Stock: 
     \begin{itemize}
         \item{Open {\&} Close values for a given arbitrary time period}
-        \item{A ratio of correlation to other stocks; see Ralph \cite{Ralph} for reasoning}
+        \item{A ratio of correlation to other stocks}
         \item{Holes of Open {\&} Close values may occur}
     \end{itemize}
 
@@ -429,8 +430,10 @@
     statistical facts about the stock.
 
     \begin{align}
-        \mu &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
-        \sigma^2 &= \frac{\sum^{i}_{n=1} (PL_n - \bar{PL})^2}{i} \label{eq:StockVar}
+        \text{mean: }
+            \mu &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
+        \text{variance: } 
+            \sigma^2 &= \frac{\sum^{i}_{n=1} (PL_n - \bar{PL})^2}{i} \label{eq:StockVar}
     \end{align}
 
     Using this data we can transform a stock into a distribution which we can use to estimate
@@ -448,6 +451,10 @@
     PL \sim \Phi (\mu, \sigma^2) &= \text{The cumulative normal distribution, adjusted to the mean } \mu \text{ and variance } \sigma^2 &&\\
     \text{ of the stock } PL\\
     \end{flalign*}
+
+    Since calculating \Phi (\mu, \sigma^2)\) is incredibly hard to calculate and
+    a perfect value isn't critical, we can settle for using tables as a close enough
+    estimate.
 
     Accounting for 'holes' in the data, and the fact that older data may not be as relevant. Is
     currently overlooked if we were just going to implement these functions as our risk. The
@@ -490,7 +497,7 @@
 
     \begin{enumerate}
         \item{Calculating the actual correlation, either Spearman's, or some other mathematical technique}
-        \item{Using some form of NLP (Natural Language Parsing) to figure out how related the stocks are in the news world}
+        \item{Using some form of NLP (Natural Language Parsing) to figure out how related the stocks are in the real world}
         \item{Grouping stocks by which industry they are in and assigning each group a correlation}
         \item{Assuming all stocks are independent}
         \item{Or a combination of all the above}\label{item:C}
@@ -522,8 +529,6 @@
         }
         \label{eq:Correlation}
     \end{align}
-
-    
 
     %simulated annealing
 
@@ -571,7 +576,20 @@
     calculating the value of \(G\) as we know all these variables. But it becomes an issue if
     want to differentiate \(G\) with respect to \(f\). I believe it would be possible to
     differentiate this equation using the chain rule, but then it becomes differentiated with
-    respect to a single \(f\).
+    respect to a single \(f\). Which is unhelpful as we want to find the gradient of \(G\)
+    with respect to the matrix \(f\) and all its values. This makes many versions of Machine
+    Learning inapplicable, since we cannot perform regression on this function.
+
+    Hence we must choose a more suitable version of Machine Learning. One most obvious 
+    for this application is a type of genetic algorithm. We have the two important things
+    we need for a genetic algorithm, firstly we have a gene: Our matrix of \(f\) values.
+    And we have a cost function to analyze how successful a given gene is: \(G\).
+
+    All that is left to do is too optimize the execution time of \(G\), and the best way to
+    encode \(f\) as a gene, and how it should be randomized between generations.
+    Then we can run the algorithm to give us the best guess it can find for \(f\).
+
+    According to the work by Stron \& Price \cite{Storn-Price}
 
 \section{Portfolio Optimization}
 
@@ -580,15 +598,10 @@
     addition of a risk model in which each trade or bet when combined forms a linear correlation 
     using an estimation technique which can then be used to find the variance of the system.
 
-    I shall leave the specific implementation of this model to the reader if they wish to 
-    understand the latest and greatest models currently in use. This model also uses genetic 
-    algorithms to solve the model for the set of f. Since once again its a evaluation function, 
+    This model also uses genetic algorithms to solve the model for the set of \(f\). 
+    Since once again its a evaluation function, 
     with a large set of inputs which can adjusted to find the optimum set of inputs which best 
     performs according to the function.
-
-    But Later in my report I discuss my approach to handling risk, which goes in a different
-    direction to Zachariah.
-
 
 \section{Random Walks}
 
