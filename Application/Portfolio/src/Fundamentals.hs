@@ -41,7 +41,14 @@ innerG i baseDate probk f hpr = final ** probk
     where final = 1 + (sum $ map inner (selectDataSingle (checkAlmostEqYear i) hpr baseDate))
           inner x = f * (x / (maxLoss hpr))
 
-fullG :: Integer -> String -> Correlations -> [(Double,HPR)] -> Double
+
+fullG :: Integer -> --Plus and minus the number of years to take data from
+        String -> --The date to centralize the data collection from
+        Correlations -> --A mapping of every stock to stock, and its correlation
+                        --Its treated symmetrically so X -> Y = Z implies Y -> X = Z
+                        --An empty mapping treats every stock as independent
+        [(Double,HPR)] -> --A list of every pair of optimal f and stock
+        Double --The return on invest for the parameters
 fullG i baseDate cs hprs = (product $ map inner hprs)
     where inner (f,h) = innerG i baseDate probk f h
           probk = probK [x | (_,x) <- hprs] cs i baseDate
@@ -49,3 +56,7 @@ fullG i baseDate cs hprs = (product $ map inner hprs)
 test = do
         p <- checkForErrors parseAll
         return $ fullG 1 "1999-xx-xx" [] $ zip (repeat 0.3) (makeAllHPR p)
+
+test2 = do
+        p <- checkForErrors parseAll
+        return $ head $ reverse $ calcCorrelate (makeAllHPR p) 1 "1999-xx-xx"
