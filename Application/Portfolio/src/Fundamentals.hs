@@ -52,11 +52,3 @@ fullG :: Integer -> --Plus and minus the number of years to take data from
 fullG i baseDate cs hprs = (product $ map inner hprs)
     where inner (f,h) = innerG i baseDate probk f h
           probk = probK [x | (_,x) <- hprs] cs i baseDate
-
-test = do
-        p <- checkForErrors parseAll
-        return $ fullG 1 "1999-xx-xx" [] $ zip (repeat 0.3) (makeAllHPR p)
-
-test2 = do
-        p <- checkForErrors parseAll
-        return $ head $ reverse $ calcCorrelate (makeAllHPR p) 1 "1999-xx-xx"

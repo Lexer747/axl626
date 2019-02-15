@@ -16,7 +16,8 @@ instance Eq HPR where
     (==) x y = (name x) == (name y)
 
 instance Show HPR where
-    show h = (name h) ++ " @ " ++ (path h) ++ "\n BL:" ++ (show $ maxLoss h) ++ "\n" ++ (show $ trades h) ++ "\n"
+    show h = summariseHPR 0 h
+    --show h = (name h) ++ " @ " ++ (path h) ++ "\n BL:" ++ (show $ maxLoss h) ++ "\n" ++ (show $ trades h) ++ "\n"
 
 type Correlations = [(HPR,HPR,Double)]
 
@@ -33,6 +34,19 @@ getValue2 x y (_:bs) base                            = getValue2 x y bs base
 getValue2 _ _ [] base                                = base
 
 
+summariseHPRS :: [HPR] -> String
+summariseHPRS = summariseHPRS_help 0
+
+summariseHPRS_help :: Int -> [HPR] -> String
+summariseHPRS_help _ []     = []
+summariseHPRS_help i (h:hs) = (summariseHPR i h) ++ "\n" ++(summariseHPRS_help (i + 1) hs)
+
+summariseHPR :: Int -> HPR -> String
+summariseHPR i h = (show i) ++ ". \"" ++ (name h) ++ "\"; BL = " ++ (show $ maxLoss h) ++ ";" ++ (succinctList $ trades h)
+
+succinctList :: (Show a) => [a] -> String
+succinctList xs | length xs <= 4 = show xs
+succinctList xs | otherwise      = "[" ++ (concatMap show $ take 2 xs) ++ "..." ++ (concatMap show $ reverse $ take 2 xs) ++ "]"
 
 {-
 data G = G {

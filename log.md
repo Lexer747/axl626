@@ -56,6 +56,12 @@ More implementation, and thought about a custom risk calculation
 
 # Week 13 (8/02/2019)
 
-Finished basic implementation of G calculation. Formalized and finished lit review.
+Finished basic implementation of G calculation. Formalized and worked on lit review.
 
 # Week 14 (15/02/2019)
+
+More work on lit review, its almost turning into a report. Making decisions about machine
+learning: ?
+
+# Week 15 (1/03/2019)
+

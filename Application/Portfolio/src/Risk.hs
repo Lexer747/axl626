@@ -42,16 +42,15 @@ appliedP hpr i baseDate = calcP toCalc
 
 --Probk = (n - 1 Π i=1 {n Π j=i+1 { P(ik | jk) }}) ^ (1 / (n - 1)) 
 probK :: [HPR] -> Correlations -> Integer -> String -> Double
-probK hprs cs i baseDate = inner ** (1 / (n - 1))
+probK hprs cs i baseDate = product $ map (correlate n cs ps) ps
     where ps = map (\hpr -> (hpr,appliedP hpr i baseDate)) hprs
-          inner = product $ map (correlate cs ps) ps
-          n = fromIntegral $ length hprs
+          n = 1 / ((fromIntegral $ length hprs) - 1)
 
-correlate :: Correlations -> [(HPR,Double)] -> (HPR,Double) -> Double
-correlate cs hprs (baseH,baseD) = product $ map f hprs
-    where f (h,d) = (getValue2 baseH h cs 1) * d * baseD
+correlate :: Double -> Correlations -> [(HPR,Double)] -> (HPR,Double) -> Double
+correlate n cs hprs (baseH,baseD) = (product $ map f hprs) ** n
+    where f (h,d) = ((getValue2 baseH h cs 1) * d * baseD) 
 
---calcCorrelate :: [HPR] -> Integer -> String -> Correlations
+calcCorrelate :: [HPR] -> Integer -> String -> Correlations
 calcCorrelate hprs i baseDate = mapMaybe inner allData
     where allData = createPermutations $ map (\h -> (h, g h, calcMean $ g h)) hprs
           g h = selectDataSingle (checkAlmostEqYear i) h baseDate
