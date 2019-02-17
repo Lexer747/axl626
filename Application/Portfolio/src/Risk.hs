@@ -42,13 +42,20 @@ appliedP hpr i baseDate = calcP toCalc
 
 --Probk = (n - 1 Π i=1 {n Π j=i+1 { P(ik | jk) }}) ^ (1 / (n - 1)) 
 probK :: [HPR] -> Correlations -> Integer -> String -> Double
-probK hprs cs i baseDate = product $ map (correlate n cs ps) ps
+probK hprs cs i baseDate = (product $ map (correlate cs ps) ps) ** n
     where ps = map (\hpr -> (hpr,appliedP hpr i baseDate)) hprs
           n = 1 / ((fromIntegral $ length hprs) - 1)
 
-correlate :: Double -> Correlations -> [(HPR,Double)] -> (HPR,Double) -> Double
-correlate n cs hprs (baseH,baseD) = (product $ map f hprs) ** n
-    where f (h,d) = ((getValue2 baseH h cs 1) * d * baseD) 
+correlate :: Correlations -> [(HPR,Double)] -> (HPR,Double) -> Double
+correlate cs hprs (baseH,baseD) = (foldr f baseD hprs)
+    where f (h,d) prev = combineCorrelations prev d (getValue2 h baseH cs) 
+
+combineCorrelations :: Double -> Double -> Maybe Double -> Double
+combineCorrelations p1 p2 (Just c) | c >= 0 = (p1 + (p2 * c)) / (1 + c)--(p1 + (p2 * c)) / 1 + c
+combineCorrelations p1 _  Nothing           = p1
+combineCorrelations p1 p2 (Just c)          = (p1 + ((1 - p2) * c')) / (1 + c')
+    where c' = c * (- 1) 
+
 
 calcCorrelate :: [HPR] -> Integer -> String -> Correlations
 calcCorrelate hprs i baseDate = mapMaybe inner allData

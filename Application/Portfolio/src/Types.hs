@@ -27,11 +27,11 @@ getValue x ((a,b):_) _ | (x == a) = b
 getValue x (_:bs) b               = getValue x bs b
 getValue _ [] b                 = b
 
-getValue2 :: Eq a => a -> a -> [(a,a,b)] -> b -> b
-getValue2 x y ((a,a',b):_) _ | (x == a) && (y == a') = b --X -> Y = Z
-getValue2 x y ((a,a',b):_) _ | (x == a') && (y == a) = b --Y -> X = Z
-getValue2 x y (_:bs) base                            = getValue2 x y bs base
-getValue2 _ _ [] base                                = base
+getValue2 :: Eq a => a -> a -> [(a,a,b)] -> Maybe b
+getValue2 x y ((a,a',b):_) | (x == a) && (y == a') = Just b --X -> Y = Z
+getValue2 x y ((a,a',b):_) | (x == a') && (y == a) = Just b --Y -> X = Z
+getValue2 x y (_:bs)                               = getValue2 x y bs
+getValue2 _ _ []                                   = Nothing
 
 
 summariseHPRS :: [HPR] -> String

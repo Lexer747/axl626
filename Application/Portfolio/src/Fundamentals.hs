@@ -4,7 +4,6 @@ import qualified Data.Vector as V
 
 import CSV
 import Types
-import SemiDate
 import Risk
 
 --given an input, strip out unnecessary data
