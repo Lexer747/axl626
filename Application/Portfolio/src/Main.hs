@@ -2,6 +2,9 @@ module Main where
 
 import Moo.GeneticAlgorithm.Continuous
 import Moo.GeneticAlgorithm.Constraints
+import Moo.GeneticAlgorithm.Random (getRandomR)
+
+import Control.Monad (replicateM)
 
 import Fundamentals
 import CSV
@@ -74,17 +77,16 @@ elitesize = 5
 
 ------------- GENETIC EQUATIONS ------------
 
-constraints :: Int -> [Constraint Double Double]
-constraints i = [s .<=. 1, l .==. (fromIntegral i)]
+constraints :: [Constraint Double Double]
+constraints = [s .<=. 1]
     where
         s xs = sum xs
-        l xs = fromIntegral $ length xs
 
 f :: [HPR] -> Correlations -> [Double] -> Double
 f hprs cs xs = fullG extraYears baseDate cs (zip xs hprs) --see Fundamentals
 
-select :: Int -> SelectionOp Double
-select i = withConstraints (constraints i) numberOfViolations Maximizing (stochasticUniversalSampling elitesize)
+select :: SelectionOp Double
+select = withConstraints constraints numberOfViolations Maximizing (rouletteSelect elitesize)
 
 crossover :: CrossoverOp Double
 crossover = unimodalCrossoverRP
@@ -92,25 +94,48 @@ crossover = unimodalCrossoverRP
 mutate :: MutationOp Double
 mutate = gaussianMutate prob sigma
 
-step :: Int -> [HPR] -> Correlations -> StepGA Rand Double
-step i hprs cs = nextGeneration Maximizing (f hprs cs) (select i) elitesize crossover mutate
+step :: [HPR] -> Correlations -> StepGA Rand Double
+step hprs cs = nextGeneration Maximizing (f hprs cs) select elitesize crossover mutate
+
+logStats :: Int -> Population Double -> IO ()
+logStats iterno pop = putStrLn $ (show iterno) ++ ": Pop: " ++ (show pop)
+
+-------------- CREATE GENOMES ----------------
 
 
 initGenome :: Int -> Rand [Genome Double]
-initGenome i = getConstrainedGenomes (constraints i) popsize [(0,1)]
+initGenome i = customConstrainedGenomes popsize i
+--initGenome i = getConstrainedGenomes (constraints i) popsize (replicate i (0,1))
 
-logStats :: Int -> Population Double -> IO ()
-logStats n something = putStrLn $ "hi" ++ (show n) ++ " : " ++ (show something) 
+--init a set genomes with the constraints baked into the function
+customConstrainedGenomes :: Int -> Int -> Rand [Genome Double]
+customConstrainedGenomes numberOfGenomes lengthOfGenome = replicateM numberOfGenomes $ induvidualGenome lengthOfGenome
 
---------------------------------------------
+induvidualGenome :: Int -> Rand (Genome Double)
+induvidualGenome i = fixInit $ let xs = replicate i (0,1) in
+                     mapM getRandomR xs
+
+--Randomly reduce each value in the genome till we satisfy our constraint
+fixInit :: Rand (Genome Double) -> Rand (Genome Double)
+fixInit genome = do
+                    g <- genome
+                    if (sum g <= 1) then return g
+                                    else fixInit $ mapM takeAwayRand g
+
+takeAwayRand :: Double -> Rand Double
+takeAwayRand x = do
+                    r <- getRandomR (0,x)
+                    return $ x - r
+
+------------------- MAIN ----------------------
 
 geneticAlgorithm :: Int -> [HPR] -> Correlations -> IO (Population Double)
 geneticAlgorithm i hprs cs = do
     runIO (initGenome i) innerLoop
     where innerLoop = loopIO 
-                    [DoEvery 1 (logStats), TimeLimit timeLimit]
+                    [DoEvery 1 (logStats)] --, TimeLimit timeLimit
                     (Generations maxIterations)
-                    (step i hprs cs)
+                    (step hprs cs)
 
 tab :: String
 tab = "    "
@@ -122,3 +147,5 @@ main = do
         finalPop <- geneticAlgorithm len hprs correlations
         let winner = takeGenome . head . bestFirst Maximizing $ finalPop
         putStrLn $ (show winner) ++ ":" ++ ""
+
+--------------------------------------------
