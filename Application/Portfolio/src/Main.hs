@@ -4,6 +4,7 @@ import Moo.GeneticAlgorithm.Continuous
 import Moo.GeneticAlgorithm.Random (getRandomR, getNormal, withProbability)
 
 import Control.Monad (replicateM, when)
+import System.IO
 
 import Fundamentals
 import CSV
@@ -33,13 +34,16 @@ import Risk
 -- 3 Init genetic algorithm
 -- 4 run algorithm till solution
 
+verbose :: Bool
+verbose = False
+
 ------------- CSV CONSTANTS --------------
 
 baseDate :: String
-baseDate = "2016-**-**"
+baseDate = "1998-**-**"
 
 extraYears :: Integer
-extraYears = 1
+extraYears = 20
 
 ------------- CALC CORRELATIONS ------------
 
@@ -53,13 +57,13 @@ initCorrelationsAndData = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 300 --seconds
+timeLimit = 60 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
 
 popsize :: Int
-popsize = 100
+popsize = 500
 
 mutateProb :: Double
 mutateProb = 0.1 --probability of a mutation for each variable in the genome
@@ -77,7 +81,7 @@ elitesize = 5
 
 -- Our function we want to optimize, its fullG partially applied with the stocks and correlations
 f :: [HPR] -> Correlations -> [Double] -> Double
-f hprs cs xs = if isNaN g then error $ (show xs)
+f hprs cs xs = if isNaN g then error $ "NaN caused by: " ++ (show xs)
                           else g
     where g = fullG extraYears baseDate cs (zip xs hprs) --see Fundamentals
 
@@ -121,7 +125,8 @@ fixInit genome = do
 
 --given a number, choose a number from 0 up to that number, and take it away from the original
 takeAwayRand :: Double -> Rand Double
-takeAwayRand x | x <= 0 = return x
+takeAwayRand x | x < 0  = error $ "testing:" ++ (show x)
+takeAwayRand x | x == 0 = return x
 takeAwayRand x = do
                     r <- getRandomR (0,x)
                     return $ x - r
@@ -155,16 +160,21 @@ naivef x = take x $ repeat $ 1 / (fromIntegral x)
 
 verfiy :: [Double] -> Bool
 verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
+-- (show $ foldr (&&) True $ map (\ (a,_) -> verfiy a) gs)
 
 logStats :: Int -> Population Double -> IO ()
 logStats iterno pop = do
     when (iterno == 0) $
-        putStrLn "# Generation best median worst genomeOfBest"
+        if verbose then putStrLn "# Generation best median worst verified?"
+                   else putStrLn "Running (Each '.' represents a generation)"
     let gs = bestFirst Maximizing $ pop
-    let (bestG,best) = head gs
+    let (_,best) = head gs
     let (_,median) = gs !! (length gs `div` 2)
     let (_,worst) = last gs
-    putStrLn $ unwords [(show iterno), (take 5 $ show best), (take 5 $ show median), (take 5 $ show worst),(show $ foldr (&&) True $ map (\ (a,_) -> verfiy a) gs), (succinctList bestG)]
+    if verbose then putStrLn $ unwords [(show iterno), (take 5 $ show best), (take 5 $ show median), (take 5 $ show worst)]
+               else do
+                        putStr "."
+                        hFlush stdout
 
 geneticAlgorithm :: Int -> [HPR] -> Correlations -> IO (Population Double)
 geneticAlgorithm i hprs cs = do
@@ -180,9 +190,17 @@ tab = "    "
 main :: IO ()
 main = do
         (len, hprs, correlations) <- initCorrelationsAndData
-        putStrLn $ "Init complete: \n" ++ tab ++ "Year Range in use: " ++ (take 4 baseDate) ++ " ± " ++ (show extraYears) ++ "\n" ++ tab ++ "Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "Naive f value: " ++ (show $ f hprs correlations (naivef len)) ++ "\n"
+        let details = tab ++ "Year Range in use: " ++ (take 4 baseDate) ++ " ± " ++ (show extraYears) ++ "\n" ++ tab ++ "Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "Naive f value: " ++ (show $ f hprs correlations (naivef len)) ++ "\n"
+        putStrLn $ "Init complete: \n" ++ details
         finalPop <- geneticAlgorithm len hprs correlations
         let (bestG, best) = head . bestFirst Maximizing $ finalPop
         putStrLn $ "\nFinished!\n" ++ tab ++ "Value achieved: " ++ (show best) ++ "\n" ++ tab ++"with f's: " ++ (show bestG)
+        putStrLn details
 
 --------------------------------------------
+
+printRand :: (Random a, Show a) => Rand a -> IO ()
+printRand r = do
+                rng <- newPureMT
+                let (x, _) = runRand r rng
+                putStrLn $ show x

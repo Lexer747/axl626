@@ -36,7 +36,9 @@ getBL hpr = case xs of
 
 --HPRk = (1 + (n Σ i=1 {fk * (-PLk,i / BLi) }) ) ^ Probk
 innerG :: Integer -> String -> Double -> Double -> HPR -> Double
-innerG i baseDate probk f hpr = final ** probk
+innerG i baseDate probk f hpr = if final < 0 then 0 else final ** probk
+    -- ^ bound check, as if we happen to choose data which performed very badly we will
+    -- have a negative, so instead just use 0
     where final = 1 + (sum $ map inner (selectDataSingle (checkAlmostEqYear i) hpr baseDate))
           inner x = f * ((- x) / (maxLoss hpr))
 
