@@ -46,7 +46,7 @@ summariseHPR i h = (show i) ++ ". \"" ++ (name h) ++ "\"; BL = " ++ (show $ maxL
 
 succinctList :: (Show a) => [a] -> String
 succinctList xs | length xs <= 4 = show xs
-succinctList xs | otherwise      = "[" ++ (show $ xs !! 0) ++ "," ++ (show $ xs !! 1) ++ "..." ++ (show $ xs' !! 1) ++ "," ++ (show $ xs' !! 0) ++ "]"
+succinctList xs | otherwise      = "[" ++ (show $ xs !! 0) ++ "," ++ (show $ xs !! 1) ++ ",...," ++ (show $ xs' !! 1) ++ "," ++ (show $ xs' !! 0) ++ "]"
     where xs' = reverse xs
 
 {-

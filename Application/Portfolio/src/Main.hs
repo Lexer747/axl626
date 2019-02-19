@@ -59,19 +59,22 @@ timeLimit :: Double
 timeLimit = 300 --seconds
 
 maxIterations :: Int
-maxIterations = 100
+maxIterations = 1000
 
 popsize :: Int
-popsize = 100
+popsize = 500
 
-prob :: Double
-prob = 0.1 --probability of a mutation for each variable in the genome
+mutateProb :: Double
+mutateProb = 0.1 --probability of a mutation for each variable in the genome
+
+crossoverProb :: Double
+crossoverProb = 0.25 --the probability to crossover sections of genes in a genome
 
 sigma :: Double
-sigma = 0.1 --the highest amount a single gene can change by
+sigma = 0.00001 --the highest amount a single gene can change by
 
 elitesize :: Int
-elitesize = 5
+elitesize = popsize `div` 10
 
 ------------- GENETIC EQUATIONS ------------
 
@@ -88,13 +91,12 @@ initGenome i = customConstrainedGenomes popsize i
 select :: SelectionOp Double
 select = rouletteSelect elitesize
 
---See \cite{Hajime-Isao-Shigenobu}
 crossover :: CrossoverOp Double
-crossover = unimodalCrossoverRP
+crossover = onePointCrossover crossoverProb
 
 --Randomly change values with a Gaussian distribution as guidance
 mutate :: MutationOp Double
-mutate = customMutate prob
+mutate = customMutate mutateProb
 
 --give the 'nextGeneration' function all the parameters it needs to evaluate
 --and select the most successful ones to carry their genes on
@@ -129,12 +131,16 @@ takeAwayRand x = do
 customMutate :: Double -> MutationOp Double
 customMutate p old = fixMutate old $ adaptedMutate p sigma old
 
+singleMutate :: Double -> Double -> Rand Double
+singleMutate s v = do
+    n <- getNormal
+    let n' = s * n
+    if (v + n') < 0 then return $ v - n'
+                    else return $ v + n'
+
 adaptedMutate :: Double -> Double -> MutationOp Double
 adaptedMutate p s vars = mapM m vars
-    where m = withProbability p $ \v -> do
-               n <- getNormal
-               return $ if (v + s*n) < 0 then (v - s*n) --check for negatives
-                                         else (v + s*n)
+    where m = withProbability p (singleMutate s)
 
 fixMutate :: Genome Double -> Rand (Genome Double) -> Rand (Genome Double)
 fixMutate old cur = do
@@ -147,7 +153,7 @@ fixMutate old cur = do
 ------------------- MAIN ----------------------
 
 verfiy :: [Double] -> Bool
-verfiy xs = sum xs <= 1 && sum xs >= 0
+verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
 
 logStats :: Int -> Population Double -> IO ()
 logStats iterno pop = do
@@ -157,7 +163,7 @@ logStats iterno pop = do
     let (bestG,best) = head gs
     let (_,median) = gs !! (length gs `div` 2)
     let (_,worst) = last gs
-    putStrLn $ unwords [(show iterno), (take 5 $ show best), (take 5 $ show median), (take 5 $ show worst), (show $ verfiy bestG), (succinctList bestG)]
+    putStrLn $ unwords [(show iterno), (take 5 $ show best), (take 5 $ show median), (take 5 $ show worst),(show $ foldr (&&) True $ map (\ (a,_) -> verfiy a) gs), (succinctList bestG)]
 
 geneticAlgorithm :: Int -> [HPR] -> Correlations -> IO (Population Double)
 geneticAlgorithm i hprs cs = do
@@ -173,9 +179,9 @@ tab = "    "
 main :: IO ()
 main = do
         (len, hprs, correlations) <- initCorrelationsAndData
-        putStrLn $ "Init complete: \n" ++ tab ++ "Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "Number of correlations: " ++ (show $ length correlations) ++ "\n"
+        putStrLn $ "Init complete: \n" ++ tab ++ "Year Range in use: " ++ (take 4 baseDate) ++ " ± " ++ (show extraYears) ++ "\n" ++ tab ++ "Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "Naive f value: " ++ (show $ f hprs correlations (naivef len)) ++ "\n"
         finalPop <- geneticAlgorithm len hprs correlations
-        let winner = takeGenome . head . bestFirst Maximizing $ finalPop
-        putStrLn $ (show winner) ++ ":" ++ ""
+        let (bestG, best) = head . bestFirst Maximizing $ finalPop
+        putStrLn $ "\nFinished!\n" ++ tab ++ "Value achieved: " ++ (show best) ++ "\n" ++ tab ++"with f's: " ++ (show bestG)
 
 --------------------------------------------
