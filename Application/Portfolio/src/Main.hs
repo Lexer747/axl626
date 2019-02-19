@@ -40,10 +40,10 @@ verbose = False
 ------------- CSV CONSTANTS --------------
 
 baseDate :: String
-baseDate = "1998-**-**"
+baseDate = "2009-**-**"
 
 extraYears :: Integer
-extraYears = 20
+extraYears = 1000
 
 ------------- CALC CORRELATIONS ------------
 
@@ -162,6 +162,9 @@ verfiy :: [Double] -> Bool
 verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
 -- (show $ foldr (&&) True $ map (\ (a,_) -> verfiy a) gs)
 
+findNumberOfPoints :: Integer -> String -> [HPR] -> Int
+findNumberOfPoints i b hprs = sum $ map length $ selectData (checkAlmostEqYear i) hprs b
+
 logStats :: Int -> Population Double -> IO ()
 logStats iterno pop = do
     when (iterno == 0) $
@@ -190,7 +193,7 @@ tab = "    "
 main :: IO ()
 main = do
         (len, hprs, correlations) <- initCorrelationsAndData
-        let details = tab ++ "Year Range in use: " ++ (take 4 baseDate) ++ " ± " ++ (show extraYears) ++ "\n" ++ tab ++ "Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "Naive f value: " ++ (show $ f hprs correlations (naivef len)) ++ "\n"
+        let details = tab ++ "Year Range in use: " ++ (take 4 baseDate) ++ " ± " ++ (show extraYears) ++ "\n" ++ tab ++ "Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "Number of data Points: " ++ (show $ findNumberOfPoints extraYears baseDate hprs) ++ "\n" ++ tab ++ "Naive f value: " ++ (show $ f hprs correlations (naivef len)) ++ "\n"
         putStrLn $ "Init complete: \n" ++ details
         finalPop <- geneticAlgorithm len hprs correlations
         let (bestG, best) = head . bestFirst Maximizing $ finalPop
@@ -199,8 +202,16 @@ main = do
 
 --------------------------------------------
 
-printRand :: (Random a, Show a) => Rand a -> IO ()
-printRand r = do
-                rng <- newPureMT
-                let (x, _) = runRand r rng
-                putStrLn $ show x
+tem1 = zip [20,15,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] ["1998", "2003", "2008", "2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017"]
+
+
+help = do
+        all <- mapM temp $ tem1
+        return $ map (\(x,y,h) -> findNumberOfPoints x y h) all
+
+--temp :: (Integer, String) -> IO (Int, [HPR], Correlations)
+temp (x,y) = do
+                            p <- checkForErrors parseAll --see CSV
+                            let hprs = makeAllHPR p --see CSV
+                            --let cs = calcCorrelate hprs x y --see Risk
+                            return $ (x, y, hprs)

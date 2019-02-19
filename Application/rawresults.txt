@@ -11,6 +11,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 182
     Naive f value: 1.1990264760541856
 
 
@@ -25,6 +26,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 206
     Naive f value: 1.4221378310853559
 
 Test 3:
@@ -38,6 +40,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 202
     Naive f value: 1.1110999763020462
 
 Test 4:
@@ -51,6 +54,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 200
     Naive f value: 0.8533438932589458
 
 Test 5:
@@ -68,6 +72,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 188
     Naive f value: 1.119157623650755
 
 Test 7:
@@ -81,6 +86,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 176
     Naive f value: 1.380570872372844
 
 Test 8:
@@ -94,6 +100,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 176
     Naive f value: 1.1649453705929376
 
 Test 9:
@@ -107,6 +114,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 176
     Naive f value: 1.1792577424753192
 
 Test 10:
@@ -120,6 +128,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 176
     Naive f value: 1.5770154538385017
 
 Test 11:
@@ -133,6 +142,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 173
     Naive f value: 0.9167355226028273
 
 Test 12:
@@ -146,6 +156,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 161
     Naive f value: 0.7514034401527524
 
 Test 13:
@@ -159,6 +170,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 152
     Naive f value: 1.142483503503544
 
 Test 14:
@@ -172,6 +184,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 1009
     Naive f value: 1.8309869680777253
 
 Test 15:
@@ -185,6 +198,7 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 1372
     Naive f value: 2.4067432033618985
 
 Test 16:
@@ -198,4 +212,5 @@ Finished!
     Time to run: 60.0s
     Population size: 500
     Elite Size: 5
+    Number of data Points: 1632
     Naive f value: 2.3746456375229035
