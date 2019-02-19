@@ -38,7 +38,7 @@ getBL hpr = case xs of
 innerG :: Integer -> String -> Double -> Double -> HPR -> Double
 innerG i baseDate probk f hpr = final ** probk
     where final = 1 + (sum $ map inner (selectDataSingle (checkAlmostEqYear i) hpr baseDate))
-          inner x = f * (x / (maxLoss hpr))
+          inner x = f * ((- x) / (maxLoss hpr))
 
 
 fullG :: Integer -> --Plus and minus the number of years to take data from

@@ -39,7 +39,7 @@ baseDate :: String
 baseDate = "2016-**-**"
 
 extraYears :: Integer
-extraYears = 2
+extraYears = 1
 
 ------------- CALC CORRELATIONS ------------
 
@@ -50,38 +50,36 @@ initCorrelationsAndData = do
                             let cs = calcCorrelate hprs extraYears baseDate --see Risk
                             return $ (length hprs, hprs, cs)
 
-naivef :: Int -> [Double]
-naivef x = take x $ repeat $ 1 / (fromIntegral x)
-
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
 timeLimit = 300 --seconds
 
 maxIterations :: Int
-maxIterations = 1000
+maxIterations = 5000
 
 popsize :: Int
-popsize = 500
+popsize = 100
 
 mutateProb :: Double
 mutateProb = 0.1 --probability of a mutation for each variable in the genome
 
 crossoverProb :: Double
-crossoverProb = 0.25 --the probability to crossover sections of genes in a genome
+crossoverProb = 0.5 --the probability to crossover sections of genes in a genome
 
 sigma :: Double
-sigma = 0.00001 --the highest amount a single gene can change by
+sigma = 0.0001 --the highest amount a single gene can change by
 
 elitesize :: Int
-elitesize = popsize `div` 10
+elitesize = 5
 
 ------------- GENETIC EQUATIONS ------------
 
-
 -- Our function we want to optimize, its fullG partially applied with the stocks and correlations
 f :: [HPR] -> Correlations -> [Double] -> Double
-f hprs cs xs = fullG extraYears baseDate cs (zip xs hprs) --see Fundamentals
+f hprs cs xs = if isNaN g then error $ (show xs)
+                          else g
+    where g = fullG extraYears baseDate cs (zip xs hprs) --see Fundamentals
 
 --init a list of lists of potential f's
 initGenome :: Int -> Rand [Genome Double]
@@ -151,6 +149,9 @@ fixMutate old cur = do
                             else takeAwayRand n) (zip old c)
 
 ------------------- MAIN ----------------------
+
+naivef :: Int -> [Double]
+naivef x = take x $ repeat $ 1 / (fromIntegral x)
 
 verfiy :: [Double] -> Bool
 verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
