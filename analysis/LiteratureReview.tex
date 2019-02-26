@@ -452,7 +452,7 @@
     \text{ of the stock } PL\\
     \end{flalign*}
 
-    Since calculating \Phi (\mu, \sigma^2)\) is incredibly hard to calculate and
+    Since calculating \(\Phi (\mu, \sigma^2)\) is incredibly hard to calculate and
     a perfect value isn't critical, we can settle for using tables as a close enough
     estimate.
 
@@ -492,7 +492,41 @@
     P( X ) &= \text{The probability of } X \text{ given by the equation \ref{eq:StockProb}} \\
     \end{flalign*}
 
-    Which brings us back to the claim that the algorithm is simple but, how do we find 
+    However this doesn't work for lots of stocks as each probability is a smaller value 1, so
+    when we times them all together, the value gets ever smaller regardless if each chance was
+    actually quite high. For example, say we had 25 stocks, and each stock has a 0.9
+    chance to make money, and for simplicity each correlation to every stock is 0.8:
+
+    \begin{flalign*}
+        \text{for all stocks } P &= 0.9 \times 0.9 \times 0.8 &&\\
+        \text{hence } P &= 0.648 ^ {25} &&\\
+        P &= 0.00001947041 \\
+    \end{flalign*}
+
+    So even in this example, with really high odds the overall chance of a single stock
+    producing a likely chance. Therefore we need to use something which both preserve
+    the chances of every stock, while taking into account how correlated something is.
+
+    The solution I have chosen is to use a weighted average over the stocks.
+    And in the case where the correlation is negative we simply do \(1 - P(PL)\)
+    when we calculate the average.
+
+    \begin{equation} \label{eq:StockWeight}
+        P ( X | Y ) = 
+        \begin{cases}
+            \displaystyle\frac 
+                {P( X ) + (P ( Y ) \times C_{X, Y})}
+                {1 + C_{X, Y}} 
+                & \text{ if } C_{X, Y} >= 0\\
+            \displaystyle\frac
+                {P( X ) + ((1 - P ( Y )) \times - C_{X, Y})}
+                {1 - C_{X, Y}} 
+                & \text{ if } C_{X, Y} < 0
+        \end{cases}
+    \end{equation}
+
+    Which brings us back to the claim that the algorithm is simple - all we do is find a
+    weighted average of the stocks based on how correlated they are but, how do we find 
     and calculate good values for the table \(C\)? Some solutions are:
 
     \begin{enumerate}
@@ -502,7 +536,6 @@
         \item{Assuming all stocks are independent}
         \item{Or a combination of all the above}\label{item:C}
     \end{enumerate}
-
 
     The answer to the question: how to find a good \(C\)? is probably worth its own paper, since
     its almost definitely \ref{item:C}. Which requires a more complex analysis of the systems
@@ -595,7 +628,7 @@
 
     This model of \(G\) is just one method, another model is suggested by Zachariah
     \cite{Zachariah} in which the author combines the same model proposed above, with the 
-    addition of a risk model in which each trade or bet when combined forms a linear correlation 
+    addition of a risk model in which each trade or bet when combined forms a linear correlation
     using an estimation technique which can then be used to find the variance of the system.
 
     This model also uses genetic algorithms to solve the model for the set of \(f\). 

@@ -61,7 +61,11 @@ Finished basic implementation of G calculation. Formalized and worked on lit rev
 # Week 14 (15/02/2019)
 
 More work on lit review, its almost turning into a report. Making decisions about machine
-learning: ?
+learning:
 
-# Week 15 (1/03/2019)
+# Week 15 (22/02.2019)
+
+It now uses a genetic algorithm. Successfully got some good results.
+
+# Week 16 (1/03/2019)
 
