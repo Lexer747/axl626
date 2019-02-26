@@ -40,10 +40,10 @@ verbose = False
 ------------- CSV CONSTANTS --------------
 
 baseDate :: String
-baseDate = "2009-**-**"
+baseDate = "2014-**-**"
 
 extraYears :: Integer
-extraYears = 1000
+extraYears = 1
 
 ------------- CALC CORRELATIONS ------------
 
