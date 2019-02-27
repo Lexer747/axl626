@@ -1,34 +1,42 @@
-Global Details:
+# Results
 
-Field                 | Value
-----------------------|-------
-Number of Stocks      | 28
-Naive f               | 1 / 28 = 0.0357...
-Population of Genomes | 500
-Elite Population      | 5
-mutateProb | 0.1
-crossoverProb | 0.5
-sigma | 0.0001
-Genetic Time Allowed  | 60s
+### Global Details:
 
-Year Range  | # Correlations | # Data Points | Naive Gain         | Genetic Gain
-------------|----------------|---------------|--------------------|--------------
-2017 ± 1    | 351            | 182           | 1.199026           | 1.805432
-2016 ± 1    | 378            | 206           | 1.422137           | 2.240821
-2015 ± 1    | 325            | 202           | 1.111099           | 1.511684
-2014 ± 1    | 300            | 200           | 0.853343           | 1.271068
-2013 ± 1    | 300            | 188           | 1.119157           | 1.767346
-2012 ± 1    | 231            | 176           | 1.380570           | 2.144387
-2011 ± 1    | 231            | 176           | 1.164945           | 1.631635
-2010 ± 1    | 231            | 176           | 1.179257           | 1.575081
-2009 ± 1    | 231            | 176           | 1.577015           | 2.127189
-2008 ± 1    | 231            | 173           | 0.916735           | 1.221756
-2007 ± 1    | 210            | 161           | 0.751403           | 0.979822
-2008 ± 10   | 378            | 1009          | 1.830986           | 3.605183
-2003 ± 15   | 378            | 1372          | 2.406743           | 4.211454
-1998 ± 20   | 378            | 1632          | 2.374645           | 5.203981
+Field                  | Value
+-----------------------|-------
+Number of Stocks       | 28
+Naive f                | 1 / 28 = 0.0357...
+Population of Genomes  | 500
+Elite Population       | 5
+Mutation Chance        | 0.1
+Crossover Chance       | 0.5
+Scale of gene mutation | 0.0001
+Genetic Time Allowed   | 60s
 
-How to read this table:
+# TODO
+
+Explain table ^
+
+## Performance of the Algorithm vs control results
+
+Year Range  | # Correlations | # Data Points | Naive Gain         | Genetic Gain | UK Interest Gain 
+------------|----------------|---------------|--------------------|--------------|-----------------
+2017 ± 1    | 351            | 182           | 1.199026           | 1.805432     | 1.015068
+2016 ± 1    | 378            | 206           | 1.422137           | 2.240821     | 1.012550
+2015 ± 1    | 325            | 202           | 1.111099           | 1.511684     | 1.012550
+2014 ± 1    | 300            | 200           | 0.853343           | 1.271068     | 1.015075
+2013 ± 1    | 300            | 188           | 1.119157           | 1.767346     | 1.015075
+2012 ± 1    | 231            | 176           | 1.380570           | 2.144387     | 1.015075
+2011 ± 1    | 231            | 176           | 1.164945           | 1.631635     | 1.015075
+2010 ± 1    | 231            | 176           | 1.179257           | 1.575081     | 1.020125
+2009 ± 1    | 231            | 176           | 1.577015           | 2.127189     | 1.055144
+2008 ± 1    | 231            | 173           | 0.916735           | 1.221756     | 1.107639
+2007 ± 1    | 210            | 161           | 0.751403           | 0.979822     | 1.150135
+2008 ± 10   | 378            | 1009          | 1.830986           | 3.605183     | 1.789870
+2003 ± 15   | 378            | 1372          | 2.406743           | 4.211454     | 4.154327
+1998 ± 20   | 378            | 1632          | 2.374645           | 5.203981     | 12.312127
+
+### How to read this table:
 
 1. The year range is 2 key values, the first value being the year on which the data is centered.
 And the second value being the number of years either side of the first value which data is
@@ -50,6 +58,14 @@ a gain < 1 is a loss.
   stocks.
   * Genetic Gain: is the gain if we distributed our portfolio according to the results
   of the genetic algorithm at the end of its 60s evolution time.
+  * UK Interest Gain: is the gain if you had a bank giving you interest at the
+  defined level according to the Bank of England, over the same time period. <sup>![[Bank of England]](https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp)</sup>
+
+### Plotted as a graph:
+
+![](Performance_of_the_Algorithm_vs_National_Interest_&_Naïve_Allocation.svg)
+
+## Performance on Individual Stocks:
 
 Stock | Naive f | 2017 ± 1 | 2016 ± 1 | 2015 ± 1 | 2014 ± 1 | 2013 ± 1 | 2012 ± 1 | 2011 ± 1 | 2010 ± 1 | 2009 ± 1 | 2008 ± 1 | 2007 ± 1 | 2008 ± 10 | 2003 ± 15 | 1998 ± 20
 ------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|---
