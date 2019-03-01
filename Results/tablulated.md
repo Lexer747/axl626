@@ -101,3 +101,22 @@ N Gain | 0      | 1.1990 | 1.4221 | 1.1111 | 0.8533 | 1.1192 | 1.3806 | 1.1649 |
 G Gain | 0      | 1.8054 | 2.2408 | 1.5117 | 1.2711 | 1.7673 | 2.1444 | 1.6316 | 1.5751 | 2.1272 | 1.2218 | 0.9798 | 3.6052 | 4.2115 | 5.2040
 
 ![](Portfolio_Allocation_Achieved,_based_on_year_range._A_Comparison.svg)
+
+calculate the annual income, the risk per stock, justify why the stocks chosen by
+the algorithm, correlated with the real world.
+
+assumptions, what happen if they're wrong?
+
+# Demo:
+
+why do i ask this question?
+
+why do should i answer this question?
+
+(novelty) eco, nobody has done this, i think...
+
+(novelty) comp sci, solving the equation using genetic algorithms
+
+stress this: i learnt 2 things, portfolio optimization, and genetic algorithms
+
+18 mar - 1 apr
