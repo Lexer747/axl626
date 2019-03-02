@@ -27,34 +27,35 @@ selectDataSingle f h baseDate = mapMaybe g (trades h)
                         False -> Nothing
 
 --calculate the risk of a series of points
-calcP :: [Double] -> Double
-calcP []  = 1 --variance of an empty distribution is NaN, so make it the neutral for multiplication
-calcP [_] = 1 --variance of a single element distribution is 0, so make it the neutral for multiplication
-calcP xs  = complCumulative (normalDistr mean (sqrt var)) 0
+calcP :: [Double] -> Maybe Double
+calcP []           = Nothing
+calcP [_]          = Nothing
+calcP [_,_]        = Nothing
+calcP [_,_,_]      = Nothing
+calcP xs           = Just $ complCumulative (normalDistr mean (sqrt var)) 0
     where mean = calcMean xs
           var  = calcVariance xs mean
 
 --find P<date> with a year size of i
 --appliedP <stock> 0 1999-xx-xx 
-appliedP :: HPR -> Integer -> String -> Double
+appliedP :: HPR -> Integer -> String -> Maybe Double
 appliedP hpr i baseDate = calcP toCalc
     where toCalc = selectDataSingle (checkAlmostEqYear i) hpr baseDate
 
---Probk = (n - 1 Π i=1 {n Π j=i+1 { P(ik | jk) }}) ^ (1 / (n - 1)) 
-probK :: [HPR] -> Correlations -> Integer -> String -> Double
-probK hprs cs i baseDate = (product $ map (correlate cs ps) ps) ** n
-    where ps = map (\hpr -> (hpr,appliedP hpr i baseDate)) hprs
-          n = 1 / ((fromIntegral $ length hprs) - 1)
+probK :: [HPR] -> Correlations -> HPR -> Maybe Double
+probK hprs cs h = correlate cs hprs h --no longer using ^ 1 / n -1
 
-correlate :: Correlations -> [(HPR,Double)] -> (HPR,Double) -> Double
-correlate cs hprs (baseH,baseD) = (foldr f baseD hprs)
-    where f (h,d) prev = combineCorrelations prev d (getValue2 h baseH cs) 
+correlate :: Correlations -> [HPR] -> HPR -> Maybe Double
+correlate cs hprs h = case risk h of
+        Just r  -> Just (foldr f r hprs)
+        Nothing -> Nothing
+    where f h' prev = combineCorrelations prev (risk h') (getValue2 h' h cs)
 
-combineCorrelations :: Double -> Double -> Maybe Double -> Double
-combineCorrelations p1 p2 (Just c) | c >= 0 = (p1 + (p2 * c)) / (1 + c)--(p1 + (p2 * c)) / 1 + c
-combineCorrelations p1 _  Nothing           = p1
-combineCorrelations p1 p2 (Just c)          = (p1 + ((1 - p2) * c')) / (1 + c')
-    where c' = c * (- 1) 
+combineCorrelations :: Double -> Maybe Double -> Maybe Double -> Double
+combineCorrelations p1 (Just p2) (Just c) | c >= 0 = (p1 + (p2 * c)) / (1 + c)--(p1 + (p2 * c)) / 1 + c
+combineCorrelations p1 (Just p2) (Just c)          = (p1 + ((1 - p2) * c')) / (1 + c')
+    where c' = c * (- 1)
+combineCorrelations p1 _  _                        = p1 --in the case either is nothing
 
 
 calcCorrelate :: [HPR] -> Integer -> String -> Correlations

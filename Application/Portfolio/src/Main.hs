@@ -5,6 +5,8 @@ import Moo.GeneticAlgorithm.Random (getRandomR, getNormal, withProbability)
 
 import Control.Monad (replicateM, when)
 import System.IO
+import System.Environment (getArgs)
+import System.Exit
 
 import Fundamentals
 import CSV
@@ -37,27 +39,19 @@ import Risk
 verbose :: Bool
 verbose = False
 
-------------- CSV CONSTANTS --------------
-
-baseDate :: String
-baseDate = "2014-**-**"
-
-extraYears :: Integer
-extraYears = 1
-
 ------------- CALC CORRELATIONS ------------
 
-initCorrelationsAndData :: IO (Int, [HPR], Correlations)
-initCorrelationsAndData = do
+initCorrelationsAndData :: Integer -> String -> IO (Int, [HPR], Correlations)
+initCorrelationsAndData i s = do
                             p <- checkForErrors parseAll --see CSV
-                            let hprs = makeAllHPR p --see CSV
-                            let cs = calcCorrelate hprs extraYears baseDate --see Risk
+                            let hprs = completeAllHPR p i s --see CSV
+                            let cs = calcCorrelate hprs i s --see Risk
                             return $ (length hprs, hprs, cs)
 
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 60 --seconds
+timeLimit = 120 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
@@ -72,7 +66,7 @@ crossoverProb :: Double
 crossoverProb = 0.5 --the probability to crossover sections of genes in a genome
 
 sigma :: Double
-sigma = 0.0001 --the highest amount a single gene can change by
+sigma = 0.001 --the highest amount a single gene can change by
 
 elitesize :: Int
 elitesize = 5
@@ -80,10 +74,14 @@ elitesize = 5
 ------------- GENETIC EQUATIONS ------------
 
 -- Our function we want to optimize, its fullG partially applied with the stocks and correlations
-f :: [HPR] -> Correlations -> [Double] -> Double
-f hprs cs xs = if isNaN g then error $ "NaN caused by: " ++ (show xs)
+f :: Integer -> String -> [HPR] -> Correlations -> [Double] -> Double
+f i s hprs cs xs = if isNaN g then error $ "NaN caused by: " ++ (show xs)
                           else g
-    where g = fullG extraYears baseDate cs (zip xs hprs) --see Fundamentals
+    where g = fullG i s cs (zip xs hprs) --see Fundamentals
+
+partialf :: Integer -> String -> [HPR] -> Correlations -> [Double] -> (Double, Double)
+partialf i s hprs cs xs = (1,probk)
+    where (g,probk) = partialG i s cs (zip xs hprs)
 
 --init a list of lists of potential f's
 initGenome :: Int -> Rand [Genome Double]
@@ -102,8 +100,8 @@ mutate = customMutate mutateProb
 
 --give the 'nextGeneration' function all the parameters it needs to evaluate
 --and select the most successful ones to carry their genes on
-step :: [HPR] -> Correlations -> StepGA Rand Double
-step hprs cs = nextGeneration Maximizing (f hprs cs) select elitesize crossover mutate
+step :: Integer -> String -> [HPR] -> Correlations -> StepGA Rand Double
+step i s hprs cs = nextGeneration Maximizing (f i s hprs cs) select elitesize crossover mutate
 
 -------------- CREATE GENOMES ----------------
 
@@ -168,7 +166,7 @@ findNumberOfPoints i b hprs = sum $ map length $ selectData (checkAlmostEqYear i
 logStats :: Int -> Population Double -> IO ()
 logStats iterno pop = do
     when (iterno == 0) $
-        if verbose then putStrLn "# Generation best median worst verified?"
+        if verbose then putStrLn "# Generation best median worst"
                    else putStrLn "Running (Each '.' represents a generation)"
     let gs = bestFirst Maximizing $ pop
     let (_,best) = head gs
@@ -179,39 +177,51 @@ logStats iterno pop = do
                         putStr "."
                         hFlush stdout
 
-geneticAlgorithm :: Int -> [HPR] -> Correlations -> IO (Population Double)
-geneticAlgorithm i hprs cs = do
-    runIO (initGenome i) innerLoop
+geneticAlgorithm :: Integer -> String -> Int -> [HPR] -> Correlations -> IO (Population Double)
+geneticAlgorithm i s genomeLen hprs cs = do
+    runIO (initGenome genomeLen) innerLoop
     where innerLoop = loopIO 
-                    [DoEvery 1 (logStats), (TimeLimit timeLimit)] --
+                    [DoEvery 1 (logStats), (TimeLimit timeLimit)]
                     (Generations maxIterations)
-                    (step hprs cs)
+                    (step i s hprs cs)
 
 tab :: String
 tab = "    "
 
 main :: IO ()
 main = do
-        (len, hprs, correlations) <- initCorrelationsAndData
-        let details = tab ++ "Year Range in use: " ++ (take 4 baseDate) ++ " ± " ++ (show extraYears) ++ "\n" ++ tab ++ "Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "Number of data Points: " ++ (show $ findNumberOfPoints extraYears baseDate hprs) ++ "\n" ++ tab ++ "Naive f value: " ++ (show $ f hprs correlations (naivef len)) ++ "\n"
+        a <- getArgs
+        when (length a /= 2) $
+            exitFailure
+        let s = a !! 0
+        when (length s /= 4) $
+            exitFailure
+        let i = read $ a !! 1
+        (len, hprs, correlations) <- initCorrelationsAndData i s
+        let (naiveG, naiveR) = partialf i s hprs correlations (naivef len)
+        let details = tab ++ "\
+\Year Range in use: " ++ (take 4 s) ++ " ± " ++ (show i) ++ "\n" ++ tab ++ "\
+\Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "\
+\Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "\
+\Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "\
+\Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "\
+\Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "\
+\Number of data Points: " ++ (show $ findNumberOfPoints i s hprs) ++ "\n" ++ tab ++ "\
+\Naive f value: " ++ (show $ f i s hprs correlations (naivef len)) ++ "\n" ++ tab ++ "\
+\Per Annum value: " ++ (show $ calcAnnum i $ f i s hprs correlations (naivef len)) ++ "\n" ++ tab ++ "\
+\Partials : | Gain: " ++ (show naiveG) ++ " | Risk: " ++ (show naiveR) ++ "\n"
+
         putStrLn $ "Init complete: \n" ++ details
-        finalPop <- geneticAlgorithm len hprs correlations
+        finalPop <- geneticAlgorithm i s len hprs correlations
         let (bestG, best) = head . bestFirst Maximizing $ finalPop
-        putStrLn $ "\nFinished!\n" ++ tab ++ "Value achieved: " ++ (show best) ++ "\n" ++ tab ++"with f's: " ++ (show bestG)
+        let (g, r) = partialf i s hprs correlations bestG
+        putStrLn $ "\n\
+\Finished!\n" ++ tab ++ "\
+\Value achieved: " ++ (show best) ++ "\n" ++ tab ++"\
+\Per Anumn: " ++ (show $ calcAnnum i best) ++ "\n" ++ tab ++ "\
+\Partials : | Gain: " ++ (show g) ++ " | Risk: " ++ (show r) ++ "\n" ++ tab ++ "\
+\with f's: " ++ (show bestG)
+
         putStrLn details
 
 --------------------------------------------
-
-tem1 = zip [20,15,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] ["1998", "2003", "2008", "2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017"]
-
-
-help = do
-        all <- mapM temp $ tem1
-        return $ map (\(x,y,h) -> findNumberOfPoints x y h) all
-
---temp :: (Integer, String) -> IO (Int, [HPR], Correlations)
-temp (x,y) = do
-                            p <- checkForErrors parseAll --see CSV
-                            let hprs = makeAllHPR p --see CSV
-                            --let cs = calcCorrelate hprs x y --see Risk
-                            return $ (x, y, hprs)

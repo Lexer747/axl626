@@ -6,10 +6,11 @@ data BaseData = BaseData {date :: String, close :: Double, open :: Double}
 
 --store the data needed about a stock
 data HPR = HPR {
-        path :: String, 
-        name:: String, 
-        trades :: [(Double, String)], 
-        maxLoss :: Double
+        path :: String,
+        name:: String,
+        trades :: [(Double, String)],
+        maxLoss :: Double,
+        risk :: Maybe Double
     }
 
 instance Eq HPR where
