@@ -80,8 +80,7 @@ f i s hprs cs xs = if isNaN g then error $ "NaN caused by: " ++ (show xs)
     where g = fullG i s cs (zip xs hprs) --see Fundamentals
 
 partialf :: Integer -> String -> [HPR] -> Correlations -> [Double] -> (Double, Double)
-partialf i s hprs cs xs = (1,probk)
-    where (g,probk) = partialG i s cs (zip xs hprs)
+partialf i s hprs cs xs = appliedPartialG i s cs (zip xs hprs)
 
 --init a list of lists of potential f's
 initGenome :: Int -> Rand [Genome Double]

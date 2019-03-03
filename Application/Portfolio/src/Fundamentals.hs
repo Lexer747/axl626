@@ -1,6 +1,7 @@
 module Fundamentals where
 
 import qualified Data.Vector as V
+import Data.Maybe (maybeToList, mapMaybe)
 
 import CSV
 import Types
@@ -39,11 +40,18 @@ completeAllHPR :: [(String, String, Fundamental)] -> Integer -> String -> [HPR]
 completeAllHPR xs i s = map (\h -> completeHPR h i s) $ makeAllHPR xs
 
 --HPRk = (1 + (n Σ i=1 {fk * (-PLk,i / BLi) }) ) ^ Probk
-innerG :: Integer -> String -> Double -> HPR -> Double
-innerG i baseDate f hpr = if final < 0 then 0 else final
+innerG :: Integer -> String -> Double -> HPR -> Maybe Double
+innerG i baseDate f hpr = case (final input) of
+        Just x | x < 0 -> Just 0
+        Just x         -> Just x
+        Nothing        -> Nothing
     -- ^ bound check, as if we happen to choose data which performed very badly we will
     -- have a negative, so instead just use 0
-    where final = 1 + (sum $ map inner (selectDataSingle (checkAlmostEqYear i) hpr baseDate))
+    where final [] = Nothing
+          final [_] = Nothing
+          final [_,_] = Nothing
+          final xs = Just $ 1 + (sum $ map inner xs)
+          input = (selectDataSingle (checkAlmostEqYear i) hpr baseDate)
           inner x = f * ((- x) / (maxLoss hpr))
 
 
@@ -54,11 +62,25 @@ fullG :: Integer -> --Plus and minus the number of years to take data from
                         --An empty mapping treats every stock as independent
         [(Double,HPR)] -> --A list of every pair of optimal f and stock
         Double --The return on invest for the parameters
-fullG i baseDate cs hprs = probk-- g -- ** (1 / probk)
-    where (g, probk) = partialG i baseDate cs hprs
+fullG i baseDate cs hprs = (inner g p) ** (1 / probk)
+    where (g, p) = partialG i baseDate cs hprs
+          probk = sum $ concatMap maybeToList p
+          inner :: [Maybe Double] -> [Maybe Double] -> Double
+          inner [] [] = 1
+          inner ((Just hpr):hs) ((Just k):ks) = (hpr ** k) * (inner hs ks)
+          inner (Nothing:hs) (_:ks) = inner hs ks
+          inner (_:hs) (Nothing:ks) = inner hs ks
+          inner _ _                 = error "fullG: inner fail"
 
-partialG :: Integer -> String -> Correlations -> [(Double, HPR)] -> ([(Double, Maybe Double)], Double)
-partialG i s cs fAndHprs = (zip (map inner fAndHprs) (map (probK hprs cs) hprs), 1)
+appliedPartialG :: Integer -> String -> Correlations -> [(Double, HPR)] -> (Double, Double)
+appliedPartialG i s cs fAndHprs = (product $ concatMap maybeToList g, product $ mapMaybe inner fAndP)
+    where (g,prob) = partialG i s cs fAndHprs
+          fAndP = zip (map fst fAndHprs) prob
+          inner (f, (Just p)) = Just $ 1 + (f * p)
+          inner (_, Nothing)  = Nothing
+
+partialG :: Integer -> String -> Correlations -> [(Double, HPR)] -> ([Maybe Double], [Maybe Double])
+partialG i s cs fAndHprs = ((map inner fAndHprs), (map (probK hprs cs) hprs))
     where inner (f,h) = innerG i s f h
           hprs = map snd fAndHprs
           --originalProbK = sum $ map (probK hprs cs) hprs
