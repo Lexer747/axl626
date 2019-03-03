@@ -2,6 +2,7 @@ module Main where
 
 import Moo.GeneticAlgorithm.Continuous
 import Moo.GeneticAlgorithm.Random (getRandomR, getNormal, withProbability)
+import Moo.GeneticAlgorithm.Multiobjective
 
 import Control.Monad (replicateM, when)
 import System.IO
@@ -27,7 +28,7 @@ import Risk
     |                                          |
     |                                          |
     |                                          v
-(genomes) <----- [ crossover ] <-------- (evaluted genomes)
+(genomes) <----- [ crossover ] <------- (evaluated genomes)
 -}
 
 -- Our Steps:
@@ -37,7 +38,10 @@ import Risk
 -- 4 run algorithm till solution
 
 verbose :: Bool
-verbose = False
+verbose = True
+
+multiObjective :: Bool
+multiObjective = True
 
 ------------- CALC CORRELATIONS ------------
 
@@ -51,13 +55,13 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 120 --seconds
+timeLimit = 1 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
 
 popsize :: Int
-popsize = 500
+popsize = 10
 
 mutateProb :: Double
 mutateProb = 0.1 --probability of a mutation for each variable in the genome
@@ -80,7 +84,7 @@ f i s hprs cs xs = if isNaN g then error $ "NaN caused by: " ++ (show xs)
     where g = fullG i s cs (zip xs hprs) --see Fundamentals
 
 partialf :: Integer -> String -> [HPR] -> Correlations -> [Double] -> (Double, Double)
-partialf i s hprs cs xs = appliedPartialG i s cs (zip xs hprs)
+partialf i s hprs cs xs = (decoupleG i s cs (zip xs hprs), decoupleR i s cs (zip xs hprs))
 
 --init a list of lists of potential f's
 initGenome :: Int -> Rand [Genome Double]
@@ -101,6 +105,12 @@ mutate = customMutate mutateProb
 --and select the most successful ones to carry their genes on
 step :: Integer -> String -> [HPR] -> Correlations -> StepGA Rand Double
 step i s hprs cs = nextGeneration Maximizing (f i s hprs cs) select elitesize crossover mutate
+
+multiObjectiveProblem :: Integer -> String -> [HPR] -> Correlations -> MultiObjectiveProblem ([Double] -> Double)
+multiObjectiveProblem i s hprs cs = [(Maximizing,(\xs -> decoupleG i s cs (zip xs hprs))),(Minimizing,(\xs -> decoupleR i s cs (zip xs hprs)))]
+
+multiObjectiveStep :: Integer -> String -> [HPR] -> Correlations -> StepGA Rand Double
+multiObjectiveStep i s hprs cs = stepNSGA2 (multiObjectiveProblem i s hprs cs) select crossover mutate
 
 -------------- CREATE GENOMES ----------------
 
@@ -162,27 +172,30 @@ verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
 findNumberOfPoints :: Integer -> String -> [HPR] -> Int
 findNumberOfPoints i b hprs = sum $ map length $ selectData (checkAlmostEqYear i) hprs b
 
-logStats :: Int -> Population Double -> IO ()
-logStats iterno pop = do
+logStats :: Integer -> String -> [HPR] -> Correlations -> Int -> Population Double -> IO ()
+logStats i s hprs cs iterno pop = do
     when (iterno == 0) $
         if verbose then putStrLn "# Generation best median worst"
                    else putStrLn "Running (Each '.' represents a generation)"
-    let gs = bestFirst Maximizing $ pop
-    let (_,best) = head gs
-    let (_,median) = gs !! (length gs `div` 2)
-    let (_,worst) = last gs
-    if verbose then putStrLn $ unwords [(show iterno), (take 5 $ show best), (take 5 $ show median), (take 5 $ show worst)]
-               else do
-                        putStr "."
-                        hFlush stdout
+    if multiObjective 
+        then putStrLn $ show $ evalAllObjectives (multiObjectiveProblem i s hprs cs) pop
+        else (let gs = bestFirst Maximizing $ pop in
+              let (_,best) = head gs in
+              let (_,median) = gs !! (length gs `div` 2) in
+              let (_,worst) = last gs in
+              if verbose then putStrLn $ unwords [(show iterno), (take 5 $ show best), (take 5 $ show median), (take 5 $ show worst)]
+                           else do
+                                    putStr "."
+                                    hFlush stdout)
 
 geneticAlgorithm :: Integer -> String -> Int -> [HPR] -> Correlations -> IO (Population Double)
 geneticAlgorithm i s genomeLen hprs cs = do
     runIO (initGenome genomeLen) innerLoop
-    where innerLoop = loopIO 
-                    [DoEvery 1 (logStats), (TimeLimit timeLimit)]
+    where innerLoop = loopIO
+                    [DoEvery 1 (logStats i s hprs cs), (TimeLimit timeLimit)]
                     (Generations maxIterations)
-                    (step i s hprs cs)
+                    (if multiObjective then (multiObjectiveStep i s hprs cs)
+                                       else (step i s hprs cs))
 
 tab :: String
 tab = "    "
@@ -204,11 +217,12 @@ main = do
 \Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "\
 \Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "\
 \Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "\
+\MultiObjective?: " ++ (show multiObjective) ++ "\n" ++ tab ++ "\
 \Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "\
 \Number of data Points: " ++ (show $ findNumberOfPoints i s hprs) ++ "\n" ++ tab ++ "\
 \Naive f value: " ++ (show $ f i s hprs correlations (naivef len)) ++ "\n" ++ tab ++ "\
 \Per Annum value: " ++ (show $ calcAnnum i $ f i s hprs correlations (naivef len)) ++ "\n" ++ tab ++ "\
-\Partials : | Gain: " ++ (show naiveG) ++ " | Risk: " ++ (show naiveR) ++ "\n"
+\Decoupled | Gain: " ++ (show naiveG) ++ " | Risk: " ++ (show naiveR) ++ "\n"
 
         putStrLn $ "Init complete: \n" ++ details
         finalPop <- geneticAlgorithm i s len hprs correlations
@@ -218,7 +232,7 @@ main = do
 \Finished!\n" ++ tab ++ "\
 \Value achieved: " ++ (show best) ++ "\n" ++ tab ++"\
 \Per Anumn: " ++ (show $ calcAnnum i best) ++ "\n" ++ tab ++ "\
-\Partials : | Gain: " ++ (show g) ++ " | Risk: " ++ (show r) ++ "\n" ++ tab ++ "\
+\Decoupled | Gain: " ++ (show g) ++ " | Risk: " ++ (show r) ++ "\n" ++ tab ++ "\
 \with f's: " ++ (show bestG)
 
         putStrLn details

@@ -66,24 +66,30 @@ fullG i baseDate cs hprs = (inner g p) ** (1 / probk)
     where (g, p) = partialG i baseDate cs hprs
           probk = sum $ concatMap maybeToList p
           inner :: [Maybe Double] -> [Maybe Double] -> Double
-          inner [] [] = 1
+          inner [] []                         = 1
           inner ((Just hpr):hs) ((Just k):ks) = (hpr ** k) * (inner hs ks)
-          inner (Nothing:hs) (_:ks) = inner hs ks
-          inner (_:hs) (Nothing:ks) = inner hs ks
-          inner _ _                 = error "fullG: inner fail"
-
-appliedPartialG :: Integer -> String -> Correlations -> [(Double, HPR)] -> (Double, Double)
-appliedPartialG i s cs fAndHprs = (product $ concatMap maybeToList g, product $ mapMaybe inner fAndP)
-    where (g,prob) = partialG i s cs fAndHprs
-          fAndP = zip (map fst fAndHprs) prob
-          inner (f, (Just p)) = Just $ 1 + (f * p)
-          inner (_, Nothing)  = Nothing
+          inner (Nothing:hs) (_:ks)           = inner hs ks
+          inner (_:hs) (Nothing:ks)           = inner hs ks
+          inner _ _                           = error "fullG: inner fail, mismatched list length"
 
 partialG :: Integer -> String -> Correlations -> [(Double, HPR)] -> ([Maybe Double], [Maybe Double])
 partialG i s cs fAndHprs = ((map inner fAndHprs), (map (probK hprs cs) hprs))
     where inner (f,h) = innerG i s f h
           hprs = map snd fAndHprs
           --originalProbK = sum $ map (probK hprs cs) hprs
+
+decoupleG :: Integer -> String -> Correlations -> [(Double, HPR)] -> Double
+decoupleG i s _ fAndHprs = product $ concatMap maybeToList $ map inner fAndHprs
+    where inner (f,h) = innerG i s f h
+
+decoupleR :: Integer -> String -> Correlations -> [(Double, HPR)] -> Double
+decoupleR _ _ cs fAndHprs = product $ mapMaybe inner fAndP
+    where fAndP = zip (map fst fAndHprs) maybes
+          inner (f, (Just p)) = Just $ 1 + (f * p)
+          inner (_, Nothing)  = Nothing
+          maybes = map (probK hprs cs) hprs
+          hprs = map snd fAndHprs
+
 
 calcAnnum :: Integer -> Double -> Double
 calcAnnum i gain = gain ** (1 / ((2 * n) + 1))
