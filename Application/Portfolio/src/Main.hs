@@ -55,13 +55,13 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 1 --seconds
+timeLimit = 5 * 60 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
 
 popsize :: Int
-popsize = 10
+popsize = 500
 
 mutateProb :: Double
 mutateProb = 0.1 --probability of a mutation for each variable in the genome
@@ -172,13 +172,32 @@ verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
 findNumberOfPoints :: Integer -> String -> [HPR] -> Int
 findNumberOfPoints i b hprs = sum $ map length $ selectData (checkAlmostEqYear i) hprs b
 
+findBest :: [MultiPhenotype Double] -> ([Objective], [Objective])
+findBest []     = ([],[])
+findBest ((_,x):xs) = findBest_help xs x x
+
+findBest_help :: [MultiPhenotype Double] -> [Objective] -> [Objective] -> ([Objective], [Objective])
+findBest_help ((_,[g,r]):xs) [bestG,_]  [bestR,_]  | ((g > bestG) && (r < bestR)) = findBest_help xs [g,r] [g,r]
+findBest_help ((_,[g,r]):xs) [bestG,_]  [bestR,r'] | (g > bestG)                  = findBest_help xs [g,r] [bestR,r']
+findBest_help ((_,[g,r]):xs) [bestG,g'] [bestR,_]  | (r < bestR)                  = findBest_help xs [bestG,g'] [g,r]
+findBest_help (_:xs)         g'          r'                                       = findBest_help xs g' r'
+findBest_help []             g'          r'                                       = (g',r')
+
 logStats :: Integer -> String -> [HPR] -> Correlations -> Int -> Population Double -> IO ()
 logStats i s hprs cs iterno pop = do
     when (iterno == 0) $
-        if verbose then putStrLn "# Generation best median worst"
+        if verbose then (if multiObjective 
+                            then putStrLn "# Generation best"
+                            else putStrLn "# Generation best median worst")
                    else putStrLn "Running (Each '.' represents a generation)"
     if multiObjective 
-        then putStrLn $ show $ evalAllObjectives (multiObjectiveProblem i s hprs cs) pop
+        then (if verbose 
+            then (let res = evalAllObjectives (multiObjectiveProblem i s hprs cs) pop in
+                  let (bestG, bestR) = findBest res in
+                  putStrLn $ unwords $ [(show iterno), "Highest Gain:", (show bestG), "Lowest Risk:", (show bestR)])
+            else do
+                     putStr "."
+                     hFlush stdout)
         else (let gs = bestFirst Maximizing $ pop in
               let (_,best) = head gs in
               let (_,median) = gs !! (length gs `div` 2) in
