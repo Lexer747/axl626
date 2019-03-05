@@ -61,19 +61,19 @@ maxIterations :: Int
 maxIterations = 5000
 
 popsize :: Int
-popsize = 500
+popsize = 100
 
 mutateProb :: Double
-mutateProb = 0.1 --probability of a mutation for each variable in the genome
+mutateProb = 0.2 --probability of a mutation for each variable in the genome
 
 crossoverProb :: Double
 crossoverProb = 0.5 --the probability to crossover sections of genes in a genome
 
 sigma :: Double
-sigma = 0.001 --the highest amount a single gene can change by
+sigma = 0.01 --the highest amount a single gene can change by
 
 elitesize :: Int
-elitesize = 5
+elitesize = 1
 
 ------------- GENETIC EQUATIONS ------------
 
@@ -110,7 +110,7 @@ multiObjectiveProblem :: Integer -> String -> [HPR] -> Correlations -> MultiObje
 multiObjectiveProblem i s hprs cs = [(Maximizing,(\xs -> decoupleG i s cs (zip xs hprs))),(Minimizing,(\xs -> decoupleR i s cs (zip xs hprs)))]
 
 multiObjectiveStep :: Integer -> String -> [HPR] -> Correlations -> StepGA Rand Double
-multiObjectiveStep i s hprs cs = stepNSGA2 (multiObjectiveProblem i s hprs cs) select crossover mutate
+multiObjectiveStep i s hprs cs = stepNSGA2bt (multiObjectiveProblem i s hprs cs) crossover mutate
 
 -------------- CREATE GENOMES ----------------
 
@@ -172,16 +172,16 @@ verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
 findNumberOfPoints :: Integer -> String -> [HPR] -> Int
 findNumberOfPoints i b hprs = sum $ map length $ selectData (checkAlmostEqYear i) hprs b
 
-findBest :: [MultiPhenotype Double] -> ([Objective], [Objective])
-findBest []     = ([],[])
-findBest ((_,x):xs) = findBest_help xs x x
+findBest :: [MultiPhenotype Double] -> ((Genome Double, [Objective]), (Genome Double, [Objective]))
+findBest []     = error "Empty population"
+findBest ((a,x):xs) = findBest_help xs (a,x) (a,x)
 
-findBest_help :: [MultiPhenotype Double] -> [Objective] -> [Objective] -> ([Objective], [Objective])
-findBest_help ((_,[g,r]):xs) [bestG,_]  [bestR,_]  | ((g > bestG) && (r < bestR)) = findBest_help xs [g,r] [g,r]
-findBest_help ((_,[g,r]):xs) [bestG,_]  [bestR,r'] | (g > bestG)                  = findBest_help xs [g,r] [bestR,r']
-findBest_help ((_,[g,r]):xs) [bestG,g'] [bestR,_]  | (r < bestR)                  = findBest_help xs [bestG,g'] [g,r]
-findBest_help (_:xs)         g'          r'                                       = findBest_help xs g' r'
-findBest_help []             g'          r'                                       = (g',r')
+findBest_help :: [MultiPhenotype Double] -> (Genome Double, [Objective]) -> (Genome Double, [Objective]) -> ((Genome Double, [Objective]), (Genome Double, [Objective]))
+findBest_help ((a,[g,r]):xs) (_,[bestG,_])  (_,[bestR,_])  | ((g > bestG) && (r < bestR)) = findBest_help xs (a,[g,r]) (a,[g,r])
+findBest_help ((a,[g,r]):xs) (_,[bestG,_])  (c,[bestR,r']) | (g > bestG)                  = findBest_help xs (a,[g,r]) (c,[bestR,r'])
+findBest_help ((a,[g,r]):xs) (b,[bestG,g']) (_,[bestR,_])  | (r < bestR)                  = findBest_help xs (b,[bestG,g']) (a,[g,r])
+findBest_help (_:xs)         g'             r'                                            = findBest_help xs g' r'
+findBest_help []             g'             r'                                            = (g',r')
 
 logStats :: Integer -> String -> [HPR] -> Correlations -> Int -> Population Double -> IO ()
 logStats i s hprs cs iterno pop = do
@@ -193,7 +193,7 @@ logStats i s hprs cs iterno pop = do
     if multiObjective 
         then (if verbose 
             then (let res = evalAllObjectives (multiObjectiveProblem i s hprs cs) pop in
-                  let (bestG, bestR) = findBest res in
+                  let ((g,bestG),(r, bestR)) = findBest res in
                   putStrLn $ unwords $ [(show iterno), "Highest Gain:", (show bestG), "Lowest Risk:", (show bestR)])
             else do
                      putStr "."
