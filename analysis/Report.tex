@@ -212,155 +212,155 @@
     This equation is also from Ralph's Book \cite{Ralph}.
 
 
-    \subsubsection{Calculating Risk}
+\subsubsection{Calculating Risk}
 
-        Here we are actually constructing the risk calculation for a stock in a more concrete form.
-        So must operate under some assumptions and natural patterns of a stock. 
+    Here we are actually constructing the risk calculation for a stock in a more concrete form.
+    So must operate under some assumptions and natural patterns of a stock. 
 
-        Proposed Model of a Stock: 
-        \begin{itemize}
-            \item{Open {\&} Close values for a given arbitrary time period}
-            \item{A ratio of correlation to other stocks}
-            \item{Holes of Open {\&} Close values may occur}
-        \end{itemize}
+    Proposed Model of a Stock: 
+    \begin{itemize}
+        \item{Open {\&} Close values for a given arbitrary time period}
+        \item{A ratio of correlation to other stocks}
+        \item{Holes of Open {\&} Close values may occur}
+    \end{itemize}
 
-        Calculating the profit{\/}loss of a stock at time period is now trivial and useful.
-        Renaming the change in value at each time period \(i\) to \(PL_i\) we can find
-        statistical facts about the stock.
+    Calculating the profit{\/}loss of a stock at time period is now trivial and useful.
+    Renaming the change in value at each time period \(i\) to \(PL_i\) we can find
+    statistical facts about the stock.
 
-        \begin{align}
-            \text{mean: }
-                \mu &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
-            \text{variance: } 
-                \sigma^2 &= \frac{\sum^{i}_{n=1} (PL_n - \bar{PL})^2}{i} \label{eq:StockVar}
-        \end{align}
+    \begin{align}
+        \text{mean: }
+            \mu &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
+        \text{variance: } 
+            \sigma^2 &= \frac{\sum^{i}_{n=1} (PL_n - \bar{PL})^2}{i} \label{eq:StockVar}
+    \end{align}
 
-        Using this data we can transform a stock into a distribution which we can use to estimate
-        the likely hood of the next \(PL_i\) being above a certain value. In our case we transform
-        the normal distribution using equations \ref{eq:StockMean} and \ref{eq:StockVar} to find
-        the mean and variance of the stock, and hence change the normal distribution. Then it is
-        simple enough to use tables to find probabilities we want.
+    Using this data we can transform a stock into a distribution which we can use to estimate
+    the likely hood of the next \(PL_i\) being above a certain value. In our case we transform
+    the normal distribution using equations \ref{eq:StockMean} and \ref{eq:StockVar} to find
+    the mean and variance of the stock, and hence change the normal distribution. Then it is
+    simple enough to use tables to find probabilities we want.
 
-        \begin{equation} \label{eq:StockProb}
-            P (PL) = \big( PL \sim \Phi(\mu, \sigma^2) \big) > 0
-        \end{equation}
-        
-        where:
-        \begin{flalign*}
-        PL \sim \Phi (\mu, \sigma^2) &= \text{The cumulative normal distribution, adjusted to the mean } \mu \text{ and variance } \sigma^2 &&\\
-        \text{ of the stock } PL\\
-        \end{flalign*}
+    \begin{equation} \label{eq:StockProb}
+        P (PL) = \big( PL \sim \Phi(\mu, \sigma^2) \big) > 0
+    \end{equation}
+    
+    where:
+    \begin{flalign*}
+    PL \sim \Phi (\mu, \sigma^2) &= \text{The cumulative normal distribution, adjusted to the mean } \mu \text{ and variance } \sigma^2 &&\\
+    \text{ of the stock } PL\\
+    \end{flalign*}
 
-        Since calculating \(\Phi (\mu, \sigma^2)\) is incredibly hard to calculate and
-        a perfect value isn't critical, we can settle for using tables as a close enough
-        estimate.
+    Since calculating \(\Phi (\mu, \sigma^2)\) is incredibly hard to calculate and
+    a perfect value isn't critical, we can settle for using tables as a close enough
+    estimate.
 
-        Accounting for 'holes' in the data, and the fact that older data may not be as relevant. Is
-        currently overlooked if we were just going to implement these functions as our risk. The
-        first change I am going to make is that we specify a time period and a range of time to
-        take data from. This has multiple advantages, the first one being that we can choose to
-        use only the most recent data about a stock. The second being that we can also choose
-        how granular to make our risk calculation. It also builds directly into the algorithm
-        the fact that the calculation will not use all available data from a stock, hence dealing
-        with 'holes' at the same time.
+    Accounting for 'holes' in the data, and the fact that older data may not be as relevant. Is
+    currently overlooked if we were just going to implement these functions as our risk. The
+    first change I am going to make is that we specify a time period and a range of time to
+    take data from. This has multiple advantages, the first one being that we can choose to
+    use only the most recent data about a stock. The second being that we can also choose
+    how granular to make our risk calculation. It also builds directly into the algorithm
+    the fact that the calculation will not use all available data from a stock, hence dealing
+    with 'holes' at the same time.
 
-        Now for the more complex part of the risk calculation, while the algorithm for it is
-        simple, finding the data for it is a hard problem in itself. The equation
-        \(P(i_k | j_k)\) hides the details behind the \(|\) symbol. Normally in statistics
-        and probability of \(P(X | Y)\) means 'The probability of \(X\) given \(Y\) has occurred'
-        which in a normal probability space is actually just a shorthand for:
+    Now for the more complex part of the risk calculation, while the algorithm for it is
+    simple, finding the data for it is a hard problem in itself. The equation
+    \(P(i_k | j_k)\) hides the details behind the \(|\) symbol. Normally in statistics
+    and probability of \(P(X | Y)\) means 'The probability of \(X\) given \(Y\) has occurred'
+    which in a normal probability space is actually just a shorthand for:
 
-        \begin{equation*}
-            P ( X | Y ) = \frac{P(X \cap Y)}{P(Y)}
-        \end{equation*}
+    \begin{equation*}
+        P ( X | Y ) = \frac{P(X \cap Y)}{P(Y)}
+    \end{equation*}
 
-        But in our stock based world we don't have an equivalent function \(\cap\) and hence
-        we don't have the function \(|\) as well. The best we can do is assume that \(\cap\)
-        is roughly equivalent to multiplying together the two stocks in question, and then
-        assuming that \(\div\) is roughly equivalent to multiplying that by some amount of
-        correlation. We cannot just multiply and divide as if they are independent probabilities as
-        the first stock will just cancel out, hence doing nothing. So our function becomes:
+    But in our stock based world we don't have an equivalent function \(\cap\) and hence
+    we don't have the function \(|\) as well. The best we can do is assume that \(\cap\)
+    is roughly equivalent to multiplying together the two stocks in question, and then
+    assuming that \(\div\) is roughly equivalent to multiplying that by some amount of
+    correlation. We cannot just multiply and divide as if they are independent probabilities as
+    the first stock will just cancel out, hence doing nothing. So our function becomes:
 
-        \begin{equation*}
-            P ( X | Y ) = P ( X ) \times P ( Y ) \times C_{X, Y}
-        \end{equation*}
+    \begin{equation*}
+        P ( X | Y ) = P ( X ) \times P ( Y ) \times C_{X, Y}
+    \end{equation*}
 
-        where:
-        \begin{flalign*}
-        C_{X, Y} &= \text{The pre-calculated correlation of stock } X \text{ to stock } Y&&\\
-        P( X ) &= \text{The probability of } X \text{ given by the equation \ref{eq:StockProb}} \\
-        \end{flalign*}
+    where:
+    \begin{flalign*}
+    C_{X, Y} &= \text{The pre-calculated correlation of stock } X \text{ to stock } Y&&\\
+    P( X ) &= \text{The probability of } X \text{ given by the equation \ref{eq:StockProb}} \\
+    \end{flalign*}
 
-        However this doesn't work for lots of stocks as each probability is a smaller value 1, so
-        when we times them all together, the value gets ever smaller regardless if each chance was
-        actually quite high. For example, say we had 25 stocks, and each stock has a 0.9
-        chance to make money, and for simplicity each correlation to every stock is 0.8:
+    However this doesn't work for lots of stocks as each probability is a smaller value 1, so
+    when we times them all together, the value gets ever smaller regardless if each chance was
+    actually quite high. For example, say we had 25 stocks, and each stock has a 0.9
+    chance to make money, and for simplicity each correlation to every stock is 0.8:
 
-        \begin{flalign*}
-            \text{for all stocks } P &= 0.9 \times 0.9 \times 0.8 &&\\
-            \text{hence } P &= 0.648 ^ {25} &&\\
-            P &= 0.00001947041 \\
-        \end{flalign*}
+    \begin{flalign*}
+        \text{for all stocks } P &= 0.9 \times 0.9 \times 0.8 &&\\
+        \text{hence } P &= 0.648 ^ {25} &&\\
+        P &= 0.00001947041 \\
+    \end{flalign*}
 
-        So even in this example, with really high odds the overall chance of a single stock
-        producing a likely chance. Therefore we need to use something which both preserve
-        the chances of every stock, while taking into account how correlated something is.
+    So even in this example, with really high odds the overall chance of a single stock
+    producing a likely chance. Therefore we need to use something which both preserve
+    the chances of every stock, while taking into account how correlated something is.
 
-        The solution I have chosen is to use a weighted average over the stocks.
-        And in the case where the correlation is negative we simply do \(1 - P(PL)\)
-        when we calculate the average.
+    The solution I have chosen is to use a weighted average over the stocks.
+    And in the case where the correlation is negative we simply do \(1 - P(PL)\)
+    when we calculate the average.
 
-        \begin{equation} \label{eq:StockWeight}
-            P ( X | Y ) = 
-            \begin{cases}
-                \displaystyle\frac 
-                    {P( X ) + (P ( Y ) \times C_{X, Y})}
-                    {1 + C_{X, Y}} 
-                    & \text{ if } C_{X, Y} >= 0\\
-                \displaystyle\frac
-                    {P( X ) + ((1 - P ( Y )) \times - C_{X, Y})}
-                    {1 - C_{X, Y}} 
-                    & \text{ if } C_{X, Y} < 0
-            \end{cases}
-        \end{equation}
+    \begin{equation} \label{eq:StockWeight}
+        P ( X | Y ) = 
+        \begin{cases}
+            \displaystyle\frac 
+                {P( X ) + (P ( Y ) \times C_{X, Y})}
+                {1 + C_{X, Y}} 
+                & \text{ if } C_{X, Y} >= 0\\
+            \displaystyle\frac
+                {P( X ) + ((1 - P ( Y )) \times - C_{X, Y})}
+                {1 - C_{X, Y}} 
+                & \text{ if } C_{X, Y} < 0
+        \end{cases}
+    \end{equation}
 
-        Which brings us back to the claim that the algorithm is simple - all we do is find a
-        weighted average of the stocks based on how correlated they are but, how do we find 
-        and calculate good values for the table \(C\)? Some solutions are:
+    Which brings us back to the claim that the algorithm is simple - all we do is find a
+    weighted average of the stocks based on how correlated they are but, how do we find 
+    and calculate good values for the table \(C\)? Some solutions are:
 
-        \begin{enumerate}
-            \item{Calculating the actual correlation, either Spearman's, or some other mathematical technique}
-            \item{Using some form of NLP (Natural Language Parsing) to figure out how related the stocks are in the real world}
-            \item{Grouping stocks by which industry they are in and assigning each group a correlation}
-            \item{Assuming all stocks are independent}
-            \item{Or a combination of all the above}\label{item:C}
-        \end{enumerate}
+    \begin{enumerate}
+        \item{Calculating the actual correlation, either Spearman's, or some other mathematical technique}
+        \item{Using some form of NLP (Natural Language Parsing) to figure out how related the stocks are in the real world}
+        \item{Grouping stocks by which industry they are in and assigning each group a correlation}
+        \item{Assuming all stocks are independent}
+        \item{Or a combination of all the above}\label{item:C}
+    \end{enumerate}
 
-        The answer to the question: how to find a good \(C\)? is probably worth its own paper, since
-        its almost definitely point \ref{item:C}. Which requires a more complex analysis of the systems
-        that make up a stock. At the end of the day the numbers we can gather about a stock never
-        tell the full story. A stock is a part of a business, and a business is simply a is a
-        group of people working together to sell a product or service to other people.
-        And at the end of day using numbers to analyze how people will succeed in selling
-        a product or service will always come up short compared to knowing and understanding
-        the people who are ultimately doing the selling.
+    The answer to the question: how to find a good \(C\)? is probably worth its own paper, since
+    its almost definitely point \ref{item:C}. Which requires a more complex analysis of the systems
+    that make up a stock. At the end of the day the numbers we can gather about a stock never
+    tell the full story. A stock is a part of a business, and a business is simply a is a
+    group of people working together to sell a product or service to other people.
+    And at the end of day using numbers to analyze how people will succeed in selling
+    a product or service will always come up short compared to knowing and understanding
+    the people who are ultimately doing the selling.
 
-        For the sake of simplicity I will calculate the correlation as its mathematically defined.
-        For example calculating the correlation between 2 stocks \(PL_1\) and \(PL_2\) is
-        done as so:
+    For the sake of simplicity I will calculate the correlation as its mathematically defined.
+    For example calculating the correlation between 2 stocks \(PL_1\) and \(PL_2\) is
+    done as so:
 
-        \begin{align}
-            C_{PL_1, PL_2} = 
-            \frac{
-                \displaystyle\sum^{n}_{i=1} (PL_{1, i} - \bar {PL_1})(PL_{2, i} - \bar {PL_2})
-            }{
-                \sqrt{
-                    \displaystyle\sum^{n}_{i=1}(PL_{1,i} - \bar {PL_1})^2 
-                    \displaystyle\sum^{n}_{i=1}(PL_{2,i} - \bar {PL_2})^2
-                }
+    \begin{align}
+        C_{PL_1, PL_2} = 
+        \frac{
+            \displaystyle\sum^{n}_{i=1} (PL_{1, i} - \bar {PL_1})(PL_{2, i} - \bar {PL_2})
+        }{
+            \sqrt{
+                \displaystyle\sum^{n}_{i=1}(PL_{1,i} - \bar {PL_1})^2 
+                \displaystyle\sum^{n}_{i=1}(PL_{2,i} - \bar {PL_2})^2
             }
-            \label{eq:Correlation}
-        \end{align}
+        }
+        \label{eq:Correlation}
+    \end{align}
 
 \section{Machine Learning And Finding \(G\)}
 
