@@ -38,7 +38,7 @@ import Risk
 -- 4 run algorithm till solution
 
 verbose :: Bool
-verbose = True
+verbose = False
 
 multiObjective :: Bool
 multiObjective = True
@@ -55,7 +55,7 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 5 * 60 --seconds
+timeLimit = 3 * 60 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
@@ -64,10 +64,10 @@ popsize :: Int
 popsize = 100
 
 mutateProb :: Double
-mutateProb = 0.2 --probability of a mutation for each variable in the genome
+mutateProb = 0.75 --probability of a mutation for each variable in the genome
 
 crossoverProb :: Double
-crossoverProb = 0.5 --the probability to crossover sections of genes in a genome
+crossoverProb = 0.75 --the probability to crossover sections of genes in a genome
 
 sigma :: Double
 sigma = 0.01 --the highest amount a single gene can change by
@@ -245,12 +245,15 @@ main = do
 
         putStrLn $ "Init complete: \n" ++ details
         finalPop <- geneticAlgorithm i s len hprs correlations
-        let (bestG, best) = head . bestFirst Maximizing $ finalPop
+        let bestG =  if multiObjective 
+                            then fst $ fst (findBest $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop)
+                            else fst (head . bestFirst Maximizing $ finalPop)
+        let total = f i s hprs correlations bestG
         let (g, r) = partialf i s hprs correlations bestG
         putStrLn $ "\n\
 \Finished!\n" ++ tab ++ "\
-\Value achieved: " ++ (show best) ++ "\n" ++ tab ++"\
-\Per Anumn: " ++ (show $ calcAnnum i best) ++ "\n" ++ tab ++ "\
+\Value achieved: " ++ (show total) ++ "\n" ++ tab ++"\
+\Per Anumn: " ++ (show $ calcAnnum i total) ++ "\n" ++ tab ++ "\
 \Decoupled | Gain: " ++ (show g) ++ " | Risk: " ++ (show r) ++ "\n" ++ tab ++ "\
 \with f's: " ++ (show bestG)
 

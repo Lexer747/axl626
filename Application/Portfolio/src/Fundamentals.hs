@@ -50,6 +50,7 @@ innerG i baseDate f hpr = case (final input) of
     where final [] = Nothing
           final [_] = Nothing
           final [_,_] = Nothing
+          -- if we don't have enough data ^
           final xs = Just $ 1 + (sum $ map inner xs)
           input = (selectDataSingle (checkAlmostEqYear i) hpr baseDate)
           inner x = f * ((- x) / (maxLoss hpr))
@@ -76,7 +77,6 @@ partialG :: Integer -> String -> Correlations -> [(Double, HPR)] -> ([Maybe Doub
 partialG i s cs fAndHprs = ((map inner fAndHprs), (map (probK hprs cs) hprs))
     where inner (f,h) = innerG i s f h
           hprs = map snd fAndHprs
-          --originalProbK = sum $ map (probK hprs cs) hprs
 
 decoupleG :: Integer -> String -> Correlations -> [(Double, HPR)] -> Double
 decoupleG i s _ fAndHprs = product $ concatMap maybeToList $ map inner fAndHprs

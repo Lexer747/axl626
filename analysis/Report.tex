@@ -25,6 +25,8 @@
 
     TODO: its like a conclusion, but at the beginning
 
+\pagebreak
+
 \section{Train of Thought}
 
     A Train of thought refers to the interconnection in a sequence of ideas, as well as the sequence
@@ -87,11 +89,48 @@
     game. Hence why we need to adapt the equations so that we can try to apply them to the
     real world.
 
-    TODO: Consider the Assumptions of modeling a stock as random variable : Link to random walk
+    A big assumption which is being made from now on, by other papers - sometimes implicitly,
+    is that we can model a stock as random variable. And this is a large assumption. It
+    implies that from past data we can use this to construct a model which will be able
+    to tells the probabilities associated with different outcomes of future events. Unlike
+    in an actual variable, which once defined will always function the same. A stock will
+    depend upon its past data to define its functionality.
 
-    Our Line of thinking has been explored before by many other people, and in my opinion
-    has been proven to be solved by using the concept of Kelly's fixed fractional bet
-    but applying it to the geometric mean of a stock.
+    This furthermore means that as we gain new data, our model is constantly shifting.
+    We do not have a fixed way to tell us probabilities of all future outcomes.
+    To top this, we made another assumption: That its feasible to use past data to predict
+    future events.
+
+    This line of thinking has been criticized by the famous book "A Random Walk Down
+    Wall Street" by Burton \cite{Burton} it uses
+    key economic historical events and many studies to describe how investing and trading are
+    a futile game, compared to compound interest, or using an Index like S\&P 500. Which
+    simply is a summation of the top 500 stocks in the US stock market.
+
+    Instead of applying mathematics and statistics to your stock purchasing its contrary the 
+    very nature of randomness, which is that humans look for patterns in all things. True 
+    randomness seems to be against the very nature of what it is to be human, which is why
+    there is still contention as to the ideas in the book. The idea that if you examine stock
+    prices in a given period you can always find a system that would produce a positive return.
+
+    A system which will always work and produce a positive return, and be mathematically sound. 
+    I.e. it will work infinitely. Is an impossibility. We do not have an infinite amount of
+    time to test our systems on infinite data.
+
+    However, as much as I like the argument presented in the book and the complete contrast to 
+    statistically minded way to analyze stocks. Ultimately a stock is buying a piece of an 
+    actual business something which is valued on how it provides a product or service. And 
+    looking back at businesses it becomes easier to see how the value of its stock is directly 
+    related to the people in it, manning the ship.
+
+    And for me, the only way to me to reason to myself that statistics, and analysis are still 
+    useful. Is that a market is a system of people, which is something I don't believe we will 
+    ever fully understand. But, statistics and short term analysis can give us insights as to 
+    how it might work. It's too easy - for me at least - to accept that we our powerless and 
+    nothing we can do in the long run will change that we can't beat randomness. Hence why
+    trying to 'game' the system by using short term analysis to find businesses which happen
+    to be doing well right now, for short term returns, is the only option we have against
+    randomness.
 
 \subsection{Optimal \(f\)}
 
@@ -362,7 +401,7 @@
         \label{eq:Correlation}
     \end{align}
 
-\section{Machine Learning And Finding \(G\)}
+\section{Finding \(G\)}
 
     Equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k} can be combined into one equation:
 
@@ -396,7 +435,8 @@
     BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
     P(i_k | j_k) &= \text{The risk of }i^{th} \text{ trade or bet associated with the } 
         k^{th} \text{ set given the risk of the } &&\\
-    & j^{th} \text{ trade or bet associated with the } k^{th} \text{ set.} &&
+    & j^{th} \text{ trade or bet associated with the } k^{th} \text{ set. Defined by 
+    equation \ref{eq:StockWeight}} &&
     \end{flalign*}
 
     Inside this function we actually have 3 other functions which are needed to compute \(G\).
@@ -418,56 +458,52 @@
     encode \(f\) as a gene, and how it should be randomized between generations.
     Then we can run the algorithm to give us the best guess it can find for \(f\).
 
-    According to the work by Stron \& Price \cite{Storn-Price}
+\subsection{Decoupling \(G\)}
 
-\section{Portfolio Optimization}
+    In the original equation \ref{eq:FullG}, \(G\) is coupled with the risk of the portfolio
+    by raising the inner calculation to 1 over the risk of the portfolio.
+    There is another approach, which is to keep the two equations separate and use multi
+    variable genetic algorithms to solve it. The motivation for this is to balance risk
+    and reward independently, contrasting to the original \(G\) which lowers the gain
+    by coupling it with the risk exponentially. Equations used by the multi variable
+    algorithm:
 
-    This model of \(G\) is just one method, another model is suggested by Zachariah
-    \cite{Zachariah} in which the author combines the same model proposed above, with the 
-    addition of a risk model in which each trade or bet when combined forms a linear correlation
-    using an estimation technique which can then be used to find the variance of the system.
+    \begin{equation}\label{eq:DecoupleG}
+        G(f_1...f_n) = \displaystyle\prod^{m}_{k=1} \left(
+                1 + \displaystyle\sum^{n}_{i=1} f_k \times \Big(
+                    \frac{- PL_{k,i} }{BL_k}
+                \Big)
+            \right)
+    \end{equation}
 
-    This model also uses genetic algorithms to solve the model for the set of \(f\). 
-    Since once again its a evaluation function, 
-    with a large set of inputs which can adjusted to find the optimum set of inputs which best 
-    performs according to the function.
+    \begin{equation}\label{eq:DecoupleR}
+        R(f_1...f_n) = \displaystyle\prod^{m}_{k=1} \left(
+                1 + f_k \times \Big(
+                    \forall y \in m \to P(k|y)
+                \Big)
+            \right)
+    \end{equation}
 
-\section{Random Walks}
+    where:
+    \begin{flalign*}
+    n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
+    m &= \text{The number of combinations for all trades and bets} &&\\
+    f_k &= \text{The optimal } f \text{ for that } k^{th} \text{set, where } f > 0 &&\\
+    PL_{k,i} &= \text{The outcome for the } i^{th} 
+        \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
+    BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
+    P(k|y) &= \text{Equation \ref{eq:StockWeight} with the first stock } k \text{ correlated 
+    with every other stock in the set } m &&
+    \end{flalign*}
 
-    There is a competing train of the thought to the one described by the narrative above. And 
-    even though it appears to have a large theoretical, and practical support, it is still an 
-    ongoing debate among economists as to which train of thought is better or even if either is 
-    correct.
+    Now we can use these functions separately to evaluate both risk and reward of the
+    portfolio.
 
-    As described in the book 'A Random Walk Down Wall Street' by Burton \cite{Burton} it uses
-    key economic historical events and many studies to describe how investing and trading are
-    a futile game, compared to compound interest, or using an Index like S\&P 500. Which
-    simply is a summation of the top 500 stocks in the US stock market.
+\section{Solving \(f\) with respect to \(G\) and \(R\)}
 
-    Instead of applying mathematics and statistics to your stock purchasing its contrary the 
-    very nature of randomness, which is that humans look for patterns in all things. True 
-    randomness seems to be against the very nature of what it is to be human, which is why
-    there is still contention as to the ideas in the book. The idea that if you examine stock
-    prices in a given period you can always find a system that would produce a positive return.
+    TODO: Explain Default Genetic Algorithm
 
-    A system which will always work and produce a positive return, and be mathematically sound. 
-    I.e. it will work infinitely. Is an impossibility. We do not have an infinite amount of
-    time to test our systems on infinite data.
-
-    However, as much as I like the argument presented in the book and the complete contrast to 
-    statistically minded way to analyze stocks. Ultimately a stock is buying a piece of an 
-    actual business something which is valued on how it provides a product or service. And 
-    looking back at businesses it becomes easier to see how the value of its stock is directly 
-    related to the people in it, manning the ship.
-
-    And for me, the only way to me to reason to myself that statistics, and analysis are still 
-    useful. Is that a market is a system of people, which is something I don't believe we will 
-    ever fully understand. But, statistics and short term analysis can give us insights as to 
-    how it might work. It's too easy - for me at least - to accept that we our powerless and 
-    nothing we can do in the long run will change that we can't beat randomness. Hence why
-    trying to 'game' the system by using short term analysis to find businesses which happen
-    to be doing well right now, for short term returns, is the only option we have against
-    randomness.
+    TODO: Explain Multi-Variable Genetic Algorithm
 
 \pagebreak
 \bibliography{Report}
