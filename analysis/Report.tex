@@ -545,10 +545,10 @@
         \item{\textbf{Gene:} The encoding of a trait, and roughly it stores the current
             setting for the trait (e.g. eye colour, blue, brown, etc). There is a set
             from which any single gene can pull its data from. In nature its the chemical
-            bases C, T, A, G}
+            bases  of DNA}
         \item{\textbf{Genome:} The complete collection of all the genes is called a
             genome}
-        \item{\textbf{Crossover:} During reproduction each parent's genes will be
+        \item{\textbf{Reproduction:} During reproduction each parent's genomes will be
             combined and crossed over creating a child which has a combination of
             the traits of its parents}
         \item{\textbf{Mutation:} During crossover there is a chance a single gene
@@ -559,15 +559,56 @@
             by nature, but by an \textbf{Objective} function}
     \end{itemize}
 
-    
+    The general procdeure of a GA is better explained with a diagram:
 
-    \begin{figure}[h]
+    \begin{figure}[h] % fig:GA
         \centering
         \includegraphics[width=\textwidth]{GA}
-        \caption{Life Cycle of A Genetic Algorithm}\label{fig:GA}
+        \caption{"Life Cycle" of A Genetic Algorithm}\label{fig:GA}
     \end{figure}
 
-    Look figure \ref{fig:GA} is a cool image.
+    One note about figure \ref{fig:GA} is that the decision to go to the "Stop"
+    state is determined by some outside factor i.e. execution time. Otherwise
+    it repeats infinitly - just like real life. Applying this generic algorithm to 
+    our specific problem. We simply need to
+    define each state in this diagram in the context of our problem.
+
+    The \textit{Genomes} state for our problem is the set of \(f\)'s. Each gene is an
+    \(f\) for a specific stock. But we have addtional constraints, which is for 
+    any genome \((f_1...f_m)\) made up of genes \(f_i\). The genome \textbf{must}
+    abide by these laws:
+
+    \begin{equation*}
+        0 < \left(
+            \displaystyle\sum^{m}_{i=1} f_i
+        \right) <= 1
+    \end{equation*}
+    \begin{equation*}
+        \forall f_i \in (f_1...f_m) \to \left(
+            0 < f_i <= 1
+        \right)
+    \end{equation*}
+
+    which more simply states, we can't bet more than our entire wealth over all the stocks or
+    a negative bet. And on a single stock we can't place a negative bet more than our
+    entire portfolio.
+
+    The \textit{Select} state is a function which takes all pairs of evaluated genomes
+    and thier fitness. And based on how well each genome performs, will cull the
+    list of genomes to a smaller list. This smaller list is the list of genomes
+    which act as parents for the next generation.
+
+    The \textit{Elite} state is another output from the select function. Which is
+    the most fit genomes have thier lifespan extended into the next generation.
+    Importantly this elite population be very small, aswell as avoiding the
+    chance to its genes to be destroyed by crossover and mutation. \cite{DeJong}
+    This allows the best genome to always stay alive, and stops the GA from
+    having to re-discover previously good results.
+
+    The \textit{Crossover} state can simply be the same as any generic GA implementation,
+    as we have no extra constraints to worry about. TODO: Explain crossover choice
+
+    The \textit{Mutate} state needs to make sure it follows the same constraints
 
     TODO: Explain Multi-Variable Genetic Algorithm
 
