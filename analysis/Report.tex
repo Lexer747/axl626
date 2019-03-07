@@ -4,6 +4,7 @@
 \usepackage{mathtools}
 \usepackage{csquotes}
 \usepackage{graphicx}
+\usepackage{titling}
 \graphicspath{ {./figures/} }
 \newcommand{\bigO}{\mathcal{O}}
 
@@ -14,79 +15,70 @@
 \addtolength{\topmargin}{-.875in}
 \addtolength{\textheight}{1.75in}
 
-%------------ TITLE INFO ------------
-\title{Portfolio Optimization Using Geometric Mean, Risk Correlation 
-    \& Multi-Variable Genetic Algorithms}
-\author{Alex Lewis
-\and {\small Supervisor:} Shan He}
-\date{\today}
-
 %------------ START DOCUMENT ----------
 \begin{document}
-\maketitle
 
-\section{Abstract}
+%------------ TITLE INFO ------------
+\begin{titlingpage}
+    \centering\par
+    {\huge University of Birmingham\par}
+    {\small School of Computer Science\par}
+        \vspace{0.9cm}
+    {\Large Final Year Project\par}
+        \vspace{0.9cm}
+    {\Huge\bfseries Portfolio Optimization Using Geometric Mean, Risk Correlation 
+        \& Multi-Variable Genetic Algorithms\par}
+        \vspace{2.5cm}
+    {\Large Alex Lewis\par}
+        \vspace{0.9cm}
+    {\tiny Supervised by\par}
+    {\Large Shan He\par}
+        \vspace{0.9cm}
+    {\large \today \par}
+        \vspace{0.2cm}
+        \hrulefill
+    \begin{abstract}
+            TODO: its like a conclusion, but at the beginning
+    \end{abstract}
+\end{titlingpage}
 
-    TODO: its like a conclusion, but at the beginning
+\section{What is Portfolio Optimization?}
 
-\pagebreak
-\subsection{What is Portfolio Optimization}
+    A portfolio is a collection of economic assets, and the optimization of such an
+    entity is the process of maximizing its return over time, while minimizing the
+    risk of the collection.
 
-    TODO
+    More specifically, in the case of this project, the assets we are analyzing are
+    stocks. Whereas in the more general case, a portfolio would consist of choosing
+    assets over multiple markets of completely different types. Such as the price of 
+    materials, currencies, bonds, etc. 
 
-    \cite{Markowitz}
+    Alot of work is already based on this simple premise of min-maxing risk and
+    reward, it was first discussed by Harry Markowitz in 1952 \cite{Markowitz}
+    in his famous paper. He talks about the geometry of the Risk Reward space
+    of portfolio's in an abstract way. This was developed futher into more specific
+    forms: Value at Risk \cite{ValueAtRisk, Ghaoui}, Mean Variance Model(named
+    after Markowitz's paper) \cite{Markowitz, Robert, SidWard} and many many more.
+    The full review of all these other optimization solutions is best left
+    to economists.
 
-\subsection{Kelly Criterion}
+    The focus of this project is to use the incredibly hard computable nature
+    of this problem, and solve it with insight from computer science. The focus
+    is not to fully solve portfolio optimization, but rather taking the problems
+    presented in these various papers - in our case, geometric mean \& risk
+    correlation. Applying them to the rich data set provided
+    by my supervisor, and formulating an experiment to test whether using
+    multi-variable genetic algorithms (GAs explained in \ref{section:GA}) come to
+    good solutions.
 
-    Kelly criterion is a well known concept for the most optimal way to grow a budget from a 
-    given gamble. In the case where there is a positive expectation gamble, then using the 
-    Kelly criterion is mathematically proven to be optimal. Based on the paper which under
-    the guise of networking formally defines the optimal growth rate of a betting function
-    with a fixed probability and payout.
+\subsection{Kelly Criterion \& Assumptions}
 
-    \begin{equation}\label{eq:KellyOriginal}
-        k = \frac{(b \times p - (1 - p))}{b} 
-    \end{equation}
-
-    where:
-    \begin{flalign*}
-        k &= \text{The best size as a fraction of your portfolio} &&\\
-        b &= \text{The net odds on the wager. i.e. your win } b + \text{ wager staked} &&\\
-        p &= \text{The probability of winning} &&
-    \end{flalign*}
-
-    The equation \ref{eq:KellyOriginal} is from the famous paper by Kelly in 1956 \cite{Kelly}.
-    Much work has been done to adapt the formula and make it more relevant to current economics.
-    Firstly the equation \ref{eq:KellyOriginal} has one clear difference to real stocks and 
-    investment which is that you are assumed to lose 100\% of your wager upon a loss. Which 
-    while technically true in the worst case for a stock or bond investment. Is more often than 
-    not, you lose a percentage of your initial investment. Typically you lose a smaller
-    percentage than 100\%. Hence there is an adapted formula: 
-    {(From the article by Alon\cite{Alon})}
-
-    \begin{equation}\label{eq:KellyCorrect}
-        k = \frac{p}{L} - \frac{1 - p}{W}
-    \end{equation}
-
-    where:
-    \begin{flalign*}
-        k &= \text{The best size as a fraction of your portfolio} &&\\
-        L &= \text{The amount of money lost if its a loose result} &&\\
-        W &= \text{The amount of money won if its a win result} &&\\
-        p &= \text{The probability of winning} &&
-    \end{flalign*}
-
-    Equation \ref{eq:KellyCorrect} is adapted specifically for trading and modeling stocks.
-    And, more precisely, it simply splits the \(b\) from Kelly's equation into its
-    constituent parts, winning and losing.
-
-\subsection{Kelly Criterion Application \& Assumptions}
-
-    Kelly Criterion as concept is a great theoretical achievement, such a simple formula so
-    perfectly describes how to play a system in order to gain the most from it. But alas
+    Kelly Criterion \cite{Kelly} as concept is a great theoretical achievement, such a simple formula so
+    perfectly describes how to play a system in order to gain the most from it. In Fact
+    it completely solves how to invest into a single stock. But alas
     stocks and trades are themselves not a repeatable and positive mathematical expectation
     game. Hence why we need to adapt the equations so that we can try to apply them to the
-    real world.
+    real world. Aswell as dealing with more than one stock.
 
     A big assumption which is being made from now on, by other papers - sometimes implicitly,
     is that we can model a stock as random variable. And this is a large assumption. It
@@ -159,7 +151,7 @@
 
     where:
     \begin{flalign*}
-    f &= \text{The optimal f} &&\\
+    f &= \text{The optimal } f &&\\
     N &= \text{The number of trades} &&\\
     trade_i &= \text{The profit loss of the } i^{th} \text{ trade from the set of trades} &&\\
     biggest loss &= \text{The biggest loss from the set of trades} &&\\
@@ -179,10 +171,25 @@
     Its a classical way of thinking to also consider diversification
     of your investments. Intuition tells us a single stock with a calculated optimal \(f\) that predicts
     good results, may still have "unlucky streaks" in which you can run out of money before
-    your luck turns. Therefore we want a way to reduce our \(f\) by the correct amount
-    to account for large streaks. Then use the left over unused money to invest in
-    another (ideally uncorrelated) stock.
+    your luck turns. This concept is intuitive, \textit{"Don't put all your eggs in
+    one basket"}. Otherwise our problem would be solved, by using Kelly's
+    formula \cite{Kelly} we find the return of each stock individually, choose
+    the highest stock. Our portfolio is simply that stock.
 
+    \begin{equation}\label{eq:Kelly}
+        f = \frac{(b \times p - (1 - p))}{b}
+    \end{equation}
+
+    where:
+    \begin{flalign*}
+        f &= \text{The best size as a fraction of your portfolio} &&\\
+        b &= \text{The net odds on the wager. i.e. your win } b + \text{ wager staked} &&\\
+        p &= \text{The probability of winning} &&
+    \end{flalign*}
+
+    Therefore we want a way to reduce our \(f\) by the correct amount
+    to account for large streaks. Additionally we use the left over unused money to invest in
+    another (ideally uncorrelated) stocks.
     This complicates the problem of finding optimal \(f\)'s for a set of stocks. As we
     need to find a set of \(f\)'s for each stock, to best diversify our portfolio, so
     its most resistant to unlucky streaks. While still producing good geometric growth.
@@ -205,7 +212,7 @@
 \subsection{Risk}
 
     Linking back to Kelly Criterion, the riskiness of a random variable is accounted for
-    when use Kelly's formula, equation \ref{eq:KellyCorrect} needs no further calculations
+    when use Kelly's formula, equation \ref{eq:Kelly} needs no further calculations
     to account for how risky the variable is. And this is also true of geometric mean growth
     for stocks. The geometric accounts for the variance in the data of a single stock. As the
     equations \ref{eq:TWR} \& \ref{eq:GeoMean} are accounting for risk implicitly.
@@ -255,7 +262,7 @@
     later.
 
 
-\subsubsection{Calculating Risk}
+\subsubsection{Calculating Risk} \label{section:CalcR}
 
     Here we are actually constructing the risk calculation for a stock in a more concrete form.
     So must operate under some assumptions and natural patterns of a stock. 
@@ -484,21 +491,27 @@
     \end{flalign*}
 
     Now we can use these functions separately to evaluate both risk and reward of the
-    portfolio.
+    portfolio. To the best of my current knowledge equation \ref{eq:DecoupleR} is a new
+    way of thinking about the risk of the portfolio.
+    Section \ref{section:CalcR} reaches a conclusion which i believe to be
+    unique. However, Ralph's work \cite{Ralph} is what inspired this line of thought
+    and futhermore it is the basis of my work for equation \ref{eq:DecoupleR}, aswell as
+    the aggregator for equation \ref{eq:DecoupleG}.
 
 \pagebreak
 \section{Solving \(f\) with respect to \(G\)}
 
     Intuition would suggest some form of iteration to check every combination of \(f\) to find
-    the best performing \(f\). This has two major problems, the first being that we for every
-    stock we add to our portfolio, we gain facortially many more combinations to check.
+    the best performing \(f\) is a good first solution. But, This has two major problems,
+    the first being that we for every stock we add to our portfolio, 
+    we gain facortially many more combinations to check.
 
     \begin{equation*}
         \text{Number of combinations to check for: } \# F \text{ for } (f_1...f_m) = m!
     \end{equation*}
 
     Which in some senarios may be feasible, but becuase of our second major problem. The computation
-    time of our evaluation functions. It becomes completly impossibile to actually calculate
+    time of our evaluation functions. It becomes completely impossibile to actually calculate
     the mathematically correct solution in the lifetime of the universe.
     What follows is the Big \(\bigO\) \footnote{
         Originally defined by Bachmann \cite{Bachmann} to express orders of magnitude for 
@@ -530,10 +543,10 @@
     calculations, which cannot be precomputed. But either way, both equations grow
     in number of calculation incredibly quickly, in fact too quickly to ever be
     solved by a pure mathematical solution. So we end up with an equation we want
-    to solve, with no mathematically helpful properties (Differentailable being
-    the most important), and it cannot be solved purely.
+    to solve, with no mathematically helpful properties (differentailable being
+    the most important) to be able to do a heuristic or regression based approach.
 
-\subsection{Genetic Algorithms}
+\subsection{Genetic Algorithms}\label{section:GA}
 
     \begin{displayquote}[Albert Bethke \cite{Bethke}] \textit {
         To find the point at which a real-valued function takes it maximal value ...
@@ -544,8 +557,8 @@
     Genetic algorithms (GA), first 
     discussed by John Holland \cite{Holland} in 1975, then developed by so many
     others, such as Melanie Mitchell \cite{Mitchell}, Kalyanmoy Deb \cite{KalyanmoyDeb},
-    and Albert Bethke \cite{Bethke}, to name a mere few. are insipred by Darwinian
-    principle of surivial of the fittest.
+    and Albert Bethke \cite{Bethke}, to name a mere few. Are insipred by Darwinian
+    principle of \textit{surivial of the fittest}.
     First it is useful to define some biological terminology; in the context of
     genetic algorithms these terms are used in the same spirit as the real biology,
     but heavily simplfied. In an attempt to emulate thier nature as a living entity,
