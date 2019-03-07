@@ -3,6 +3,7 @@
 %------------ PACKAGES ----------
 \usepackage{mathtools}
 \usepackage{csquotes}
+\newcommand{\bigO}{\mathcal{O}}
 
 %------------ MARGINS ----------
 \addtolength{\oddsidemargin}{-.875in}
@@ -14,7 +15,8 @@
 %------------ TITLE INFO ------------
 \title{Portfolio Optimization Using Geometric Mean, Risk Correlation 
     \& Multi-Variable Genetic Algorithms}
-\author{Alex Lewis}
+\author{Alex Lewis
+\and {\small Supervisor:} Shan He}
 \date{\today}
 
 %------------ START DOCUMENT ----------
@@ -26,14 +28,11 @@
     TODO: its like a conclusion, but at the beginning
 
 \pagebreak
-
-\section{Train of Thought}
-
-    A Train of thought refers to the interconnection in a sequence of ideas, as well as the sequence
-    itself. The following sections are my Train of thought as too how I arrived at the conclusions
-    and functions which define the solution to the problem of Portfolio Optimization.
-
 \subsection{What is Portfolio Optimization}
+
+    TODO
+
+\subsection{Terminology}
 
     TODO
 
@@ -102,7 +101,7 @@
     future events.
 
     This line of thinking has been criticized by the famous book "A Random Walk Down
-    Wall Street" by Burton \cite{Burton} it uses
+    Wall Street" by Burton Malkiel \cite{BurtonMalkiel} it uses
     key economic historical events and many studies to describe how investing and trading are
     a futile game, compared to compound interest, or using an Index like S\&P 500. Which
     simply is a summation of the top 500 stocks in the US stock market.
@@ -221,7 +220,7 @@
     how we spread our money over a set of stocks.
 
     \begin{equation}\label{eq:G}
-        G(f_1...f_n) = \left( \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)}
+        G(f_1...f_m) = \left( \displaystyle\prod^{m}_{k=1} HPR_k \right) ^{ \left( \displaystyle\frac{1}{\sum^{m}_{k=1}Prob_k} \right)}
     \end{equation}
     \begin{equation}\label{eq:HPR_k}
         HPR_k = \left( 1 +  \displaystyle\sum^{n}_{i=1} f_k \times \frac{- PL_{k,i}}{BL_k} \right) ^{Prob_k}
@@ -233,10 +232,7 @@
     where:
     \begin{flalign*}
     n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
-    m &= \text{The number of combinations for all trades and bets, i.e. for each } n 
-        \text{ which has }x \text{ outcomes then } &&\\
-        & \Big( m = \prod^{n}_{i=1} x_i \text{ : }(x 
-        \text{ is 2 for a bet, win and lose. Or 1 for a trade, the value gained}) \Big) &&\\
+    m &= \text{The number of stocks} &&\\
     f_k &= \text{The optimal } f \text{ for that }k^{th} \text{ set, where } f > 0 &&\\
     PL_{k,i} &= \text{The outcome for the } i^{th} \text{ trade or bet associated with the } 
         k^{th} \text{ set} &&\\
@@ -401,12 +397,13 @@
         \label{eq:Correlation}
     \end{align}
 
-\section{Finding \(G\)}
+\pagebreak
+\section{Finding \(G\)} \label{FindingG}
 
     Equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k} can be combined into one equation:
 
     \begin{equation}\label{eq:FullG}
-        G(f_1...f_n) = \left(
+        G(f_1...f_m) = \left(
             \displaystyle\prod^{m}_{k=1} \Bigg(
                 1 + \displaystyle\sum^{n}_{i=1} f_k \times \Big(
                     \frac{- PL_{k,i} }{BL_k}
@@ -428,7 +425,7 @@
     where:
     \begin{flalign*}
     n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
-    m &= \text{The number of combinations for all trades and bets} &&\\
+    m &= \text{The number of stocks} &&\\
     f_k &= \text{The optimal } f \text{ for that }k^{th} \text{set, where } f > 0 &&\\
     PL_{k,i} &= \text{The outcome for the } i^{th} 
         \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
@@ -486,9 +483,9 @@
 
     where:
     \begin{flalign*}
-    n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
+    n &= \text{The number of trades or bets in the } k^{th}\text{ set} &&\\
     m &= \text{The number of combinations for all trades and bets} &&\\
-    f_k &= \text{The optimal } f \text{ for that } k^{th} \text{set, where } f > 0 &&\\
+    f_k &= \text{The optimal } f \text{ for that } k^{th} \text{ set, where } f > 0 &&\\
     PL_{k,i} &= \text{The outcome for the } i^{th} 
         \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
     BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
@@ -499,14 +496,51 @@
     Now we can use these functions separately to evaluate both risk and reward of the
     portfolio.
 
+\pagebreak
 \section{Solving \(f\) with respect to \(G\) and \(R\)}
 
-    TODO: Explain Default Genetic Algorithm
+    As explained in section \ref{FindingG} we can't use regression, and from face value
+    we cannot use iteration to find the exact optimal solution. To detail why, what follows
+    is the Big \(\bigO\) \cite{BigO} calculation for both problems:
+
+
+    \begin{equation*}
+        \text{Coupled } G = \bigO (n^m)
+    \end{equation*}
+    \begin{equation*}
+        \text{Decoupled } G = \bigO (n^m)
+    \end{equation*}
+    \begin{equation*}
+        \text{Decoupled } R = \bigO ((n \times m)^m)
+    \end{equation*}
+
+    where:
+    \begin{flalign*}
+    n &= \text{The number of trades or bets in the stock} &&\\
+    m &= \text{The number of stocks} &&
+    \end{flalign*}
+
+    The coupled G performs better as it can optimized by calculating equation \ref{eq:Prob_k}
+    once, ahead of time. Whereas for decoupled G it needs to calculate both, and \(R\) has
+    considerably more calculations, which cannot be precomputed. But either way, both
+    equations grow in number of calculation incredibly quickly.
+
+     \begin{displayquote}[\cite{Bethke}] \textit {
+        If you don't know of any special properties of the objective function, then you
+        should use a method which is more general like genetic algorithms.
+    } \end{displayquote}
+
+    Genetic algorithms (GA), first 
+    discussed by John Holland \cite{Holland} in 1975, then developed by various
+    others, such as Melanie Mitchell \cite{Mitchell}, Kalyanmoy Deb \cite{KalyanmoyDeb},
+    Albert Bethke \cite{Bethke}.
+
 
     TODO: Explain Multi-Variable Genetic Algorithm
 
 \pagebreak
+\bibliographystyle{IEEEtran}
 \bibliography{Report}
-\bibliographystyle{plain}
+
 
 \end{document}
