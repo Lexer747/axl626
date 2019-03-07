@@ -3,6 +3,8 @@
 %------------ PACKAGES ----------
 \usepackage{mathtools}
 \usepackage{csquotes}
+\usepackage{graphicx}
+\graphicspath{ {./figures/} }
 \newcommand{\bigO}{\mathcal{O}}
 
 %------------ MARGINS ----------
@@ -32,9 +34,7 @@
 
     TODO
 
-\subsection{Terminology}
-
-    TODO
+    \cite{Markowitz}
 
 \subsection{Kelly Criterion}
 
@@ -133,7 +133,7 @@
 
 \subsection{Optimal \(f\)}
 
-    \begin{displayquote}[\cite{Ralph}] \textit {
+    \begin{displayquote}[Ralph Vince \cite{Ralph}] \textit {
         For any given independent trials situation where you have an edge (i.e. positive 
         expectation) there exists an optimal fixed
         fraction (f) between 0 and 1 as a divisor of your biggest loss to bet on each event.
@@ -436,25 +436,6 @@
     equation \ref{eq:StockWeight}} &&
     \end{flalign*}
 
-    Inside this function we actually have 3 other functions which are needed to compute \(G\).
-    As described \(PL_{k,i}\), \(BL_k\) and \(P(i_k | j_k)\) are all their own functions, which
-    use stocks, and other variables to be calculated. This is not an issue when it comes to
-    calculating the value of \(G\) as we know all these variables. But it becomes an issue if
-    want to differentiate \(G\) with respect to \(f\). I believe it would be possible to
-    differentiate this equation using the chain rule, but then it becomes differentiated with
-    respect to a single \(f\). Which is unhelpful as we want to find the gradient of \(G\)
-    with respect to the matrix \(f\) and all its values. This makes many versions of Machine
-    Learning inapplicable, since we cannot perform regression on this function.
-
-    Hence we must choose a more suitable version of Machine Learning. One most obvious 
-    for this application is a type of genetic algorithm. We have the two important things
-    we need for a genetic algorithm, firstly we have a gene: Our matrix of \(f\) values.
-    And we have a cost function to analyze how successful a given gene is: \(G\).
-
-    All that is left to do is too optimize the execution time of \(G\), and the best way to
-    encode \(f\) as a gene, and how it should be randomized between generations.
-    Then we can run the algorithm to give us the best guess it can find for \(f\).
-
 \subsection{Decoupling \(G\)}
 
     In the original equation \ref{eq:FullG}, \(G\) is coupled with the risk of the portfolio
@@ -499,19 +480,29 @@
 \pagebreak
 \section{Solving \(f\) with respect to \(G\) and \(R\)}
 
-    As explained in section \ref{FindingG} we can't use regression, and from face value
-    we cannot use iteration to find the exact optimal solution. To detail why, what follows
-    is the Big \(\bigO\) \cite{BigO} calculation for both problems:
-
+    Intuition would suggest some form of iteration to check every combination of \(f\) to find
+    the best performing \(f\). This has two major problems, the first being that we for every
+    stock we add to our portfolio, we gain facortially many more combinations to check.
 
     \begin{equation*}
-        \text{Coupled } G = \bigO (n^m)
+        \text{Number of combinations to check for: } \# F \text{ for } (f_1...f_m) = m!
+    \end{equation*}
+
+    Which in some senarios may be feasible, but becuase of our second major problem. The computation
+    time of our evaluation functions. It becomes completly impossibile to actually calculate
+    the mathematically correct solution in the lifetime of the universe.
+    What follows is the Big \(\bigO\) \footnote{
+        Originally defined by Bachmann \cite{Bachmann} to express orders of magnitude for 
+        the time taken for computation
+    } calculation for both problems:
+
+    \begin{equation*}
+        \text{Coupled: } \bigO (\# F \times n^m)
     \end{equation*}
     \begin{equation*}
-        \text{Decoupled } G = \bigO (n^m)
-    \end{equation*}
-    \begin{equation*}
-        \text{Decoupled } R = \bigO ((n \times m)^m)
+        \text{Decoupled: } \bigO \left(
+            \# F \times (n^m + nm^m)
+        \right)
     \end{equation*}
 
     where:
@@ -520,21 +511,30 @@
     m &= \text{The number of stocks} &&
     \end{flalign*}
 
-    The coupled G performs better as it can optimized by calculating equation \ref{eq:Prob_k}
-    once, ahead of time. Whereas for decoupled G it needs to calculate both, and \(R\) has
-    considerably more calculations, which cannot be precomputed. But either way, both
-    equations grow in number of calculation incredibly quickly.
+    The coupled equation \ref{eq:FullG} performs better as it can optimized by calculating
+    equation \ref{eq:Prob_k} once, ahead of time. Whereas for the decoupled equations 
+    \ref{eq:DecoupleG},
+    \ref{eq:DecoupleR} it needs to calculate both, and equation \ref{eq:DecoupleR} has 
+    considerably more
+    calculations, which cannot be precomputed. But either way, both equations grow
+    in number of calculation incredibly quickly, in fact too quickly to ever be
+    solved by a pure mathematical solution. So we end up with an equation we want
+    to solve, with no mathematically helpful properties (Differentailable being
+    the most important), and it cannot be solved purely.
 
-     \begin{displayquote}[\cite{Bethke}] \textit {
+\subsection{Genetic Algorithms}
+
+    \begin{displayquote}[Albert Bethke \cite{Bethke}] \textit {
         If you don't know of any special properties of the objective function, then you
         should use a method which is more general like genetic algorithms.
     } \end{displayquote}
 
     Genetic algorithms (GA), first 
-    discussed by John Holland \cite{Holland} in 1975, then developed by various
+    discussed by John Holland \cite{Holland} in 1975, then developed by so many
     others, such as Melanie Mitchell \cite{Mitchell}, Kalyanmoy Deb \cite{KalyanmoyDeb},
-    Albert Bethke \cite{Bethke}.
+    and Albert Bethke \cite{Bethke}, to name a mere few.
 
+    The basic premise of a GA 
 
     TODO: Explain Multi-Variable Genetic Algorithm
 

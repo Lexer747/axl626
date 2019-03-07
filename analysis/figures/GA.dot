@@ -1,0 +1,37 @@
+digraph G {
+
+    graph [splines=ortho]
+    rankdir = LR;
+
+    Start [shape=diamond];
+    Select [shape=rect];
+    Crossover [shape=rect];
+    Mutate [shape=rect];
+    Stop [shape=diamond];
+    Genomes1 [label="Genomes"];
+    Genomes2 [label="Genomes"];
+    Elite;
+    Objective [label="Calculate Objectives", shape=rect];
+    Evaluated1 [label="Evaluated Genomes"];
+    Evaluated2 [label="Evaluated Genomes"];
+
+    {rank = same; Start; Stop}
+    {rank = same; Genomes1; Objective; Evaluated1}
+    {rank = same; Genomes2; Crossover; Evaluated2}
+
+    Start -> Genomes1;
+    Genomes1 -> Objective;
+    Objective -> Evaluated1;
+    Evaluated1 -> Stop;
+    Evaluated1 -> Select;
+    Select -> Elite;
+    Select -> Evaluated2;
+    Elite -> Genomes1;
+    Evaluated2 -> Crossover;
+    Crossover -> Genomes2;
+    Genomes2 -> Mutate;
+    Mutate -> Genomes1;
+
+
+
+}
