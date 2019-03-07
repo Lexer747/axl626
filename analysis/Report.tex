@@ -80,7 +80,7 @@
     And, more precisely, it simply splits the \(b\) from Kelly's equation into its
     constituent parts, winning and losing.
 
-\subsection{Kelly Criterion Application}
+\subsection{Kelly Criterion Application \& Assumptions}
 
     Kelly Criterion as concept is a great theoretical achievement, such a simple formula so
     perfectly describes how to play a system in order to gain the most from it. But alas
@@ -478,7 +478,7 @@
     portfolio.
 
 \pagebreak
-\section{Solving \(f\) with respect to \(G\) and \(R\)}
+\section{Solving \(f\) with respect to \(G\)}
 
     Intuition would suggest some form of iteration to check every combination of \(f\) to find
     the best performing \(f\). This has two major problems, the first being that we for every
@@ -527,7 +527,8 @@
 \subsection{Genetic Algorithms}
 
     \begin{displayquote}[Albert Bethke \cite{Bethke}] \textit {
-        If you don't know of any special properties of the objective function, then you
+        To find the point at which a real-valued function takes it maximal value ...
+        If you don't know of any special properties of the function, then you
         should use a method which is more general like genetic algorithms.
     } \end{displayquote}
 
@@ -608,9 +609,15 @@
     The \textit{Crossover} state can simply be the same as any generic GA implementation,
     as we have no extra constraints to worry about. TODO: Explain crossover choice
 
-    The \textit{Mutate} state needs to make sure it follows the same constraints
+    The \textit{Mutate} state needs to make sure it follows the same constraints as
+    genomes states has to follow. Futhermore since this step is after crossover,
+    any genomes which violate the laws will be fixed in this step. Other than this,
+    mutation can be any generic GA mutation. TODO: Explain mutation choice
 
-    TODO: Explain Multi-Variable Genetic Algorithm
+    Finally the \textit{Calculate Objectives} state, which is the final product of all our
+    mathematical exploration. Here we have two options the single variable option: equation
+    \ref{eq:FullG}, or the decoupled multi-variable option: equations \ref{eq:DecoupleG}
+    and \ref{eq:DecoupleR}.
 
 \pagebreak
 \bibliographystyle{IEEEtran}
