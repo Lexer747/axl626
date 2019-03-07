@@ -213,6 +213,10 @@
     But we need a new calculation to find the risk of the portfolio. And furthermore we would
     like a way to correlate stocks together so that we can more wisely spread our money.
 
+    TODO: Drawdowns - why we want to find the overall risk
+    TODO: Maybe risk of ruin talk?
+
+
 \subsection{Mathematical Definition}
 
     Given the motivation from our the above sections, we would now like to formally define our
@@ -244,7 +248,11 @@
         & \text{later how it is calculated for actual stocks} &&
     \end{flalign*}
 
-    This equation is also from Ralph's Book \cite{Ralph}.
+    This equation is also from Ralph's Book \cite{Ralph}. Which is an execellent starting point,
+    but it needs to be adapted to include this idea of correlation among stocks. And furthermore
+    it needs to be decoupled, so that the risk of the overall stock is also found. The motivation
+    for such a thing, is becuase of the nature of how this equation is solved. Which is explained
+    later.
 
 
 \subsubsection{Calculating Risk}
@@ -341,7 +349,7 @@
     producing a likely chance. Therefore we need to use something which both preserve
     the chances of every stock, while taking into account how correlated something is.
 
-    The solution I have chosen is to use a weighted average over the stocks.
+    The solution is to use a weighted average over the stocks.
     And in the case where the correlation is negative we simply do \(1 - P(PL)\)
     when we calculate the average.
 
@@ -380,7 +388,7 @@
     a product or service will always come up short compared to knowing and understanding
     the people who are ultimately doing the selling.
 
-    For the sake of simplicity I will calculate the correlation as its mathematically defined.
+    For the sake of simplicity we will calculate the correlation as its mathematically defined.
     For example calculating the correlation between 2 stocks \(PL_1\) and \(PL_2\) is
     done as so:
 
@@ -398,7 +406,7 @@
     \end{align}
 
 \pagebreak
-\section{Finding \(G\)} \label{FindingG}
+\section{Finding \(f\)}
 
     Equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k} can be combined into one equation:
 
@@ -436,15 +444,16 @@
     equation \ref{eq:StockWeight}} &&
     \end{flalign*}
 
+    TODO: Breif explanation why we can't solve this
+
 \subsection{Decoupling \(G\)}
 
     In the original equation \ref{eq:FullG}, \(G\) is coupled with the risk of the portfolio
-    by raising the inner calculation to 1 over the risk of the portfolio.
+    by raising the inner calculation to 1 over the sum of all risks for every stock.
     There is another approach, which is to keep the two equations separate and use multi
     variable genetic algorithms to solve it. The motivation for this is to balance risk
     and reward independently, contrasting to the original \(G\) which lowers the gain
-    by coupling it with the risk exponentially. Equations used by the multi variable
-    algorithm:
+    by coupling it with the risk exponentially.
 
     \begin{equation}\label{eq:DecoupleG}
         G(f_1...f_n) = \displaystyle\prod^{m}_{k=1} \left(
