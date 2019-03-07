@@ -32,6 +32,4 @@ digraph G {
     Genomes2 -> Mutate;
     Mutate -> Genomes1;
 
-
-
 }

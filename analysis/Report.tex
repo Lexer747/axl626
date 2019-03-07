@@ -497,12 +497,14 @@
     } calculation for both problems:
 
     \begin{equation*}
-        \text{Coupled: } \bigO (\# F \times n^m)
+        \text{Coupled: } \bigO (
+            m! \times n^m
+        )
     \end{equation*}
     \begin{equation*}
-        \text{Decoupled: } \bigO \left(
-            \# F \times (n^m + nm^m)
-        \right)
+        \text{Decoupled: } \bigO (
+            m! \times (n^m + (nm)^m)
+        )
     \end{equation*}
 
     where:
@@ -532,15 +534,45 @@
     Genetic algorithms (GA), first 
     discussed by John Holland \cite{Holland} in 1975, then developed by so many
     others, such as Melanie Mitchell \cite{Mitchell}, Kalyanmoy Deb \cite{KalyanmoyDeb},
-    and Albert Bethke \cite{Bethke}, to name a mere few.
+    and Albert Bethke \cite{Bethke}, to name a mere few. are insipred by Darwinian
+    principle of surivial of the fittest.
+    First it is useful to define some biological terminology; in the context of
+    genetic algorithms these terms are used in the same spirit as the real biology,
+    but heavily simplfied. In an attempt to emulate thier nature as a living entity,
+    while being computationally easier to process.
 
-    The basic premise of a GA 
+    \begin{itemize}
+        \item{\textbf{Gene:} The encoding of a trait, and roughly it stores the current
+            setting for the trait (e.g. eye colour, blue, brown, etc). There is a set
+            from which any single gene can pull its data from. In nature its the chemical
+            bases C, T, A, G}
+        \item{\textbf{Genome:} The complete collection of all the genes is called a
+            genome}
+        \item{\textbf{Crossover:} During reproduction each parent's genes will be
+            combined and crossed over creating a child which has a combination of
+            the traits of its parents}
+        \item{\textbf{Mutation:} During crossover there is a chance a single gene
+            may be incorrectly copied, and mutate into a different gene}
+        \item{\textbf{Fitness: } In nature the fitness of an animal determines
+            its chances of surival and therefore its chance to pass on its genes
+            and be the most successful animal. In GA the level of fitness is not assessed
+            by nature, but by an \textbf{Objective} function}
+    \end{itemize}
+
+    
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{GA}
+        \caption{Life Cycle of A Genetic Algorithm}\label{fig:GA}
+    \end{figure}
+
+    Look figure \ref{fig:GA} is a cool image.
 
     TODO: Explain Multi-Variable Genetic Algorithm
 
 \pagebreak
 \bibliographystyle{IEEEtran}
 \bibliography{Report}
-
 
 \end{document}
