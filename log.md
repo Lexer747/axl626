@@ -69,3 +69,14 @@ It now uses a genetic algorithm. Successfully got some good results.
 
 # Week 16 (1/03/2019)
 
+After a talk with Shan, it now correctly uses a multi-variable genetic algorithm.
+
+A lot of basic report was started, laying the foundations for the write up.
+
+# Week 17 (8/03/2019)
+
+Results gathered from the algorithm. Surprisingly good. Plotted them on graphs.
+More work on report.
+
+# Week 18 (15/03/2019)
+
