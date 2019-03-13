@@ -27,7 +27,7 @@
     {\Large Final Year Project\par}
         \vspace{0.9cm}
     {\Huge\bfseries Portfolio Optimization Using Geometric Mean, Risk Correlation 
-        \& Multi-Variable Genetic Algorithms\par}
+        \& Multi-Objective Genetic Algorithms\par}
         \vspace{2.5cm}
     {\Large Alex Lewis\par}
         \vspace{0.9cm}
@@ -68,7 +68,7 @@
     presented in these various papers - in our case, geometric mean \& risk
     correlation - then applying them to the rich data set provided
     by my supervisor, and formulating an experiment to test whether using
-    multi-variable genetic algorithms come to good solutions.
+    multi-objective genetic algorithms come to good solutions.
 
 \subsection{Kelly Criterion \& Assumptions}
 
@@ -488,8 +488,8 @@
 
     In the original equation \ref{eq:FullG}, \(G\) is coupled with the risk of the portfolio
     by raising the inner calculation to 1 over the sum of all risks for every stock.
-    There is another approach, which is to keep the two equations separate and use multi
-    variable genetic algorithms to solve it. The motivation for this is to balance risk
+    There is another approach, which is to keep the two equations separate and use multi-
+    objective genetic algorithms to solve it. The motivation for this is to balance risk
     and reward independently, contrasting to the original \(G\) which lowers the gain
     by coupling it with the risk exponentially.
 
@@ -669,7 +669,7 @@
 
     Finally the \textit{Calculate Objectives} state, which is the final product of all our
     mathematical exploration. Here we have two options the single variable option: equation
-    \ref{eq:FullG}, or the decoupled multi-variable option: equations \ref{eq:DecoupleG}
+    \ref{eq:FullG}, or the decoupled multi-objective option: equations \ref{eq:DecoupleG}
     and \ref{eq:DecoupleR}.
 
 \pagebreak
