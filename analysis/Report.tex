@@ -7,6 +7,7 @@
 \usepackage{titling}
 \graphicspath{ {./figures/} }
 \newcommand{\bigO}{\mathcal{O}}
+\renewcommand*{\thefootnote}{(\arabic{footnote})}
 
 %------------ MARGINS ----------
 \addtolength{\oddsidemargin}{-.875in}
@@ -443,7 +444,6 @@
         \label{eq:Correlation}
     \end{align}
 
-\pagebreak
 \section{Finding \(f\)}
 
     Equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k} can be combined into one equation:
@@ -517,7 +517,7 @@
     PL_{k,i} &= \text{The outcome for the } i^{th} 
         \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
     BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
-    P(k|y) &= \text{Equation \ref{eq:StockWeight} with the first stock } k \text{ correlated 
+    P(k|y) &= \text{Equation \ref{eq:StockWeight} with the stock } k \text{ correlated 
     with every other stock in the set } m &&
     \end{flalign*}
 
@@ -529,7 +529,6 @@
     and furthermore it is the basis of my work for equation \ref{eq:DecoupleR}, as well as
     the aggregate for equation \ref{eq:DecoupleG}.
 
-\pagebreak
 \section{Solving \(f\) with respect to \(G\)}
 
     Intuition would suggest some form of iteration to check every combination of \(f\) to find
@@ -544,10 +543,7 @@
     Which in some scenarios may be feasible, but because of our second major problem. The computation
     time of our evaluation functions. It becomes completely impossible to actually calculate
     the mathematically correct solution in the lifetime of the universe.
-    What follows is the Big \(\bigO\) \footnote{
-        Originally defined by Bachmann \cite{Bachmann} to express orders of magnitude for 
-        the time taken for computation
-    } calculation for both problems:
+    What follows is the Big \(\bigO\) calculation for both problems:
 
     \begin{equation*}
         \text{Coupled: } \bigO (
@@ -613,7 +609,8 @@
             by nature, but by an \textbf{Objective} function}
     \end{itemize}
 
-    The general procdeure of a GA is better explained with a diagram:
+    \pagebreak
+    The general procedure of a GA is better explained with a diagram:
 
     \begin{figure}[h] % fig:GA
         \centering
@@ -632,16 +629,16 @@
     any genome \((f_1...f_m)\) made up of genes \(f_i\). The genome \textbf{must}
     abide by these laws:
 
-    \begin{equation*}
+    \begin{align*}
+        \text{Law: } & \;
         0 < \left(
             \displaystyle\sum^{m}_{i=1} f_i
-        \right) <= 1
-    \end{equation*}
-    \begin{equation*}
+        \right) <= 1 \\
+        \text{Law: } & \;
         \forall f_i \in (f_1...f_m) \to \left(
             0 < f_i <= 1
-        \right)
-    \end{equation*}
+        \right) \\
+    \end{align*}
 
     which more simply states, we can't bet more than our entire wealth over all the stocks or
     a negative bet. And on a single stock we can't place a negative bet more than our
@@ -660,7 +657,11 @@
     having to re-discover previously good results.
 
     The \textit{Crossover} state can simply be the same as any generic GA implementation,
-    as we have no extra constraints to worry about. TODO: Explain crossover choice
+    as we have no extra constraints to worry about. In the actual implementation
+    a single point crossover, of high chance of occurrence was chosen. This was
+    chosen arbitrarily, it could be worth a in-depth study to which crossover
+    method would best perform for this specific problem. Since there is no catch all
+    "best" crossover method.
 
     The \textit{Mutate} state needs to make sure it follows the same constraints as
     genomes states has to follow. Furthermore since this step is after crossover,
@@ -671,6 +672,19 @@
     mathematical exploration. Here we have two options the single variable option: equation
     \ref{eq:FullG}, or the decoupled multi-objective option: equations \ref{eq:DecoupleG}
     and \ref{eq:DecoupleR}.
+
+    Another difference between single objective and multi-objective is that for a
+    nontrivial problem such as ours, no single solution exists that simultaneously
+    optimizes each objective. This case of conflicting objectives means there is
+    a (possibly infinite) number of Pareto optimal solutions, forming a Pareto front.
+    The problem of sorting a set of genomes is complex problem, and furthermore
+    does not remove problem of fronts forming rather than complete solutions.
+    The way the results of our GA are sorted are according to the paper headed by
+    Kalyanmoy Deb \cite{DebPratapAgarwalMeyarivan} in which they propose the
+    NSGA-II, the cutting edge of multi-objective solution finding. This actually
+    has a direct impact on the selection step of the GA.
+
+    
 
 \pagebreak
 \bibliographystyle{IEEEtran}

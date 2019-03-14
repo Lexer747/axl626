@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Demo.md - Grip</title>
+  <link rel="icon" href="http://localhost:6419/__/grip/static/favicon.ico">
+  <link rel="stylesheet" href="Demo_files/frameworks-c07e6f4b02b556d1d85052fb3853caf84c80e6b23dcdb1ae1.css">
+  <link rel="stylesheet" href="Demo_files/github-21999e166be3aaa0dccb503b073e22139ed7b944d490c7401a208.css">
+  <link rel="stylesheet" href="Demo_files/site-293f92180d0a619a750fa2b5eae9e36740f5723a59c0ec308972c70.css">
+  <link rel="stylesheet" href="Demo_files/octicons.css">
+  <style>
+    /* Page tweaks */
+    .preview-page {
+      margin-top: 64px;
+    }
+    /* User-content tweaks */
+    .timeline-comment-wrapper > .timeline-comment:after,
+    .timeline-comment-wrapper > .timeline-comment:before {
+      content: none;
+    }
+    /* User-content overrides */
+    .discussion-timeline.wide {
+      width: 920px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div id="preview-page" class="preview-page" data-autorefresh-url="/__/grip/refresh/">
+
+    
+
+      <div role="main" class="main-content">
+        <div class="container new-discussion-timeline experiment-repo-nav">
+          <div class="repository-content">
+            <div id="readme" class="readme boxed-group clearfix announce instapaper_body md">
+              
+                
+              
+              <article class="markdown-body entry-content" itemprop="text" id="grip-content"><h1>
+<a id="user-content-portfolio-optimization-using-geometric-mean-risk-correlation--multi-objective-genetic-algorithms" class="anchor" href="#portfolio-optimization-using-geometric-mean-risk-correlation--multi-objective-genetic-algorithms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Portfolio Optimization Using Geometric Mean, Risk Correlation &amp; Multi-Objective Genetic Algorithms</h1>
+<h2>
+<a id="user-content-what" class="anchor" href="#what" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What?</h2>
+<p>Some Basic Terms:</p>
+<ul>
+<li>A <strong>Portfolio</strong> is a collection of investments in various economic assets.</li>
+<li>The <strong>Optimization</strong> of a portfolio is the process of finding the optimal
+distribution over said assets. Which results in the greatest return over time
+with the lowest risk of losing the investments.</li>
+<li>The <strong>Geometric Mean</strong> is the central tendency or typical value of a set of
+numbers by using the product of their values to indicate such a value.</li>
+<li>
+<strong>Risk Correlation</strong> is the concept of finding correlations between economic
+assets so that we can allocate our portfolio factoring in this correlation. This
+helps improve returns and reducing risk.</li>
+<li>
+<strong>Multi-Objective Genetic Algorithms</strong> are a class of genetic algorithm which
+aim to solve problems which have multiple objectives to be solved simultaneously.
+In our case the return of the portfolio is the first objective, and the risk
+of portfolio is the second objective.</li>
+</ul>
+<h2>
+<a id="user-content-how-did-i-go-about-attempting-to-solve-it" class="anchor" href="#how-did-i-go-about-attempting-to-solve-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How did i go about attempting to solve it?</h2>
+<p>The biggest factor to my solution was the dataset provided by my supervisor
+<sup>1</sup>.</p>
+<h4>
+<a id="user-content-todo---explain-set-collection-method" class="anchor" href="#todo---explain-set-collection-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODO - Explain Set collection method</h4>
+<p>This dataset, is a collection of stocks. So we already narrowing the scope
+of the portfolio to a more niche subset. Most portfolio's should be over
+multiple markets, and multiple assets in those markets.
+But the principle is the same. For actually optimizing a portfolio.</p>
+<p>Once we have this set. I used Haskell to implement my solution.
+This involved, csv parsing<sup>2</sup>, calculating geometric mean, risk correlation,
+creating the two objectives, and finally setting up the genetic constants
+to run the GAs<sup>3</sup>.</p>
+<p>For the actual experiments and collection of data I elected to go with a windowing
+technique. Where we only consider data within a certain time range, and only
+use this data for the calculations. If you were to actually to use this for
+portfolio optimization, then your window should obviously end at the current time.
+And the size of the window is how much older data believe is still relevant for
+analysis of future performance. For reference a window of 3 years was chosen
+for my experiment, this was arbitrarily chosen.</p>
+<h2>
+<a id="user-content-demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo!</h2>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> C:<span class="pl-cce">\U</span>sers<span class="pl-cce">\L</span>exer<span class="pl-cce">\D</span>ocuments<span class="pl-cce">\U</span>ni<span class="pl-cce">\F</span>YP<span class="pl-cce">\a</span>xl626<span class="pl-cce">\A</span>pplication<span class="pl-cce">\P</span>ortfolio
+cabal run 2018 0</pre></div>
+<p>Bug in the GA library, sometimes a generation will just lock up. Temp-fix
+restart the program.</p>
+<h2>
+<a id="user-content-results" class="anchor" href="#results" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Results</h2>
+<p>After extracting the results from the program, and plotting them.
+Its also worth noting that to compare how well the problem was solved. The graphs
+compare a naive split of the portfolio. i.e. a complete even distribution
+over the market. And the not doing anything strategy, of comparing it to
+interest rates.</p>
+<p><a href="http://localhost:6419/GainOfthePortfolio-OverDifferentWindows.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GainOfthePortfolio-OverDifferentWindows.png" alt="" style="max-width:100%;"></a></p>
+<p>You can see how the GA always outperforms the naive implementation. But only in
+later years does either outperform interest rates.</p>
+<p><a href="http://localhost:6419/HowTheInduvidualPortfolioWasDistributedOverEachWindow.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/HowTheInduvidualPortfolioWasDistributedOverEachWindow.png" alt="" style="max-width:100%;"></a></p>
+<p>In this graph we can see an anomaly in the year 2014, in which only ~60% of
+the portfolio budget was allocated. Because the solver is a GA, its hard
+to know the reasons for this, since a GA is a black box. But even with this
+low allocation, it still outperforms the naive distribution and interest rates at
+the time.</p>
+<p><a href="http://localhost:6419/GeneralStockDistributionCombinedOverAllWindowsTested.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GeneralStockDistributionCombinedOverAllWindowsTested.png" alt="" style="max-width:100%;"></a></p>
+<p>Here we can clearly see that over all time in general the GA favours certain
+stocks. Clear winner is AJG, and a clear looser is AIRI.</p>
+<ul>
+<li>
+<strong>AJG : Aruther J. Gallager &amp; Co</strong> is a global insurance brokerage, which has
+been consistently growing since its birth. Its been buying more smaller
+brokerages and merging into a giant corporation. Its been around since
+1927, has a wikipedia page, etc.</li>
+<li>
+<strong>AIRI : Air Industries Group</strong> is a supplier for aeroplane parts.
+Which has done the exact opposite of consistently growing.
+It had a really well priced starting period, and then just crumbled during
+the 2007 economic crisis. It also doesn't have a wikipedia article.</li>
+</ul>
+<p>I'm not an economist but the google search results from each stock
+paint a fairly intuitive picture for why one might be doing better than the other.</p>
+<h3>
+<a id="user-content-thanks-for-coming---q--a" class="anchor" href="#thanks-for-coming---q--a" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Thanks for coming - Q &amp; A</h3>
+<hr>
+<p><sub>1: <a href="https://git-teaching.cs.bham.ac.uk/mod-ug-proj-2018/axl626/tree/master/Application/Data" rel="nofollow">Shan's dataset (Requires cs.bham gitlab to access)</a> </sub><br>
+<sub>2: <a href="http://hackage.haskell.org/package/cassava-0.5.1.0" rel="nofollow">CSV Library used found here</a> </sub><br>
+<sub>3: <a href="http://hackage.haskell.org/package/moo-1.2" rel="nofollow">GA Library used found here</a> </sub></p>
+</article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+
+  </div>
+  <div>&nbsp;</div>
+  </div><script>
+    function showCanonicalImages() {
+      var images = document.getElementsByTagName('img');
+      if (!images) {
+        return;
+      }
+      for (var index = 0; index < images.length; index++) {
+        var image = images[index];
+        if (image.getAttribute('data-canonical-src') && image.src !== image.getAttribute('data-canonical-src')) {
+          image.src = image.getAttribute('data-canonical-src');
+        }
+      }
+    }
+
+    function scrollToHash() {
+      if (location.hash && !document.querySelector(':target')) {
+        var element = document.getElementById('user-content-' + location.hash.slice(1));
+        if (element) {
+           element.scrollIntoView();
+        }
+      }
+    }
+
+    function autorefreshContent(eventSourceUrl) {
+      var initialTitle = document.title;
+      var contentElement = document.getElementById('grip-content');
+      var source = new EventSource(eventSourceUrl);
+      var isRendering = false;
+
+      source.onmessage = function(ev) {
+        var msg = JSON.parse(ev.data);
+        if (msg.updating) {
+          isRendering = true;
+          document.title = '(Rendering) ' + document.title;
+        } else {
+          isRendering = false;
+          document.title = initialTitle;
+          contentElement.innerHTML = msg.content;
+          showCanonicalImages();
+        }
+      }
+
+      source.onerror = function(e) {
+        if (e.readyState === EventSource.CLOSED && isRendering) {
+          isRendering = false;
+          document.title = initialTitle;
+        }
+      }
+    }
+
+    window.onhashchange = function() {
+      scrollToHash();
+    }
+
+    window.onload = function() {
+      scrollToHash();
+    }
+
+    showCanonicalImages();
+
+    var autorefreshUrl = document.getElementById('preview-page').getAttribute('data-autorefresh-url');
+    if (autorefreshUrl) {
+      autorefreshContent(autorefreshUrl);
+    }
+  </script>
+
+</body></html>

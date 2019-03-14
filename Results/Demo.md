@@ -79,7 +79,17 @@ the time.
 Here we can clearly see that over all time in general the GA favours certain
 stocks. Clear winner is AJG, and a clear looser is AIRI.
 
-#### TODO - brief look at those stocks
+* **AJG : Aruther J. Gallager & Co** is a global insurance brokerage, which has
+  been consistently growing since its birth. Its been buying more smaller
+  brokerages and merging into a giant corporation. Its been around since
+  1927, has a wikipedia page, etc.
+* **AIRI : Air Industries Group** is a supplier for aeroplane parts.
+  Which has done the exact opposite of consistently growing.
+  It had a really well priced starting period, and then just crumbled during
+  the 2007 economic crisis. It also doesn't have a wikipedia article.
+
+I'm not an economist but the google search results from each stock
+paint a fairly intuitive picture for why one might be doing better than the other.
 
 ### Thanks for coming - Q & A
 

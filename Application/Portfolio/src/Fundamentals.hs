@@ -28,6 +28,7 @@ makeHPR_help (p,n,(x:xs)) bl acc = case trade < bl of
     where trade = (close x) - (open x)
 makeHPR_help (p,n,[])     bl acc = HPR {path = p, name = n,trades = acc, maxLoss = bl}
 
+--Map over all CSV files and make all of them into the HPR representation
 makeAllHPR :: [(String, String, Fundamental)] -> [HPR]
 makeAllHPR = map (makeHPR . getData)
 
