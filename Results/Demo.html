@@ -93,32 +93,47 @@ Its also worth noting that to compare how well the problem was solved. The graph
 compare a naive split of the portfolio. i.e. a complete even distribution
 over the market. And the not doing anything strategy, of comparing it to
 interest rates.</p>
-<p><a href="http://localhost:6419/GainOfthePortfolio-OverDifferentWindows.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GainOfthePortfolio-OverDifferentWindows.png" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-over-3-minutes" class="anchor" href="#over-3-minutes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Over 3 minutes:</h3>
+<p><a href="http://localhost:6419/GainOfthePortfolio-OverDifferentWindows3min.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GainOfthePortfolio-OverDifferentWindows3min.png" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-over-5-minutes" class="anchor" href="#over-5-minutes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Over 5 minutes:</h3>
+<p><a href="http://localhost:6419/GainOfthePortfolio-OverDifferentWindows5min.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GainOfthePortfolio-OverDifferentWindows5min.png" alt="" style="max-width:100%;"></a></p>
 <p>You can see how the GA always outperforms the naive implementation. But only in
 later years does either outperform interest rates.</p>
-<p><a href="http://localhost:6419/HowTheInduvidualPortfolioWasDistributedOverEachWindow.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/HowTheInduvidualPortfolioWasDistributedOverEachWindow.png" alt="" style="max-width:100%;"></a></p>
-<p>In this graph we can see an anomaly in the year 2014, in which only ~60% of
+<h3>
+<a id="user-content-over-3-minutes-1" class="anchor" href="#over-3-minutes-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Over 3 minutes:</h3>
+<p><a href="http://localhost:6419/HowTheInduvidualPortfolioWasDistributedOverEachWindow3min.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/HowTheInduvidualPortfolioWasDistributedOverEachWindow3min.png" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-over-5-minutes-1" class="anchor" href="#over-5-minutes-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Over 5 minutes:</h3>
+<p><a href="http://localhost:6419/HowTheInduvidualPortfolioWasDistributedOverEachWindow5min.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/HowTheInduvidualPortfolioWasDistributedOverEachWindow5min.png" alt="" style="max-width:100%;"></a></p>
+<p>In this 3 minute graph we can see an anomaly in the year 2014 and 2007, in which only ~60% of
 the portfolio budget was allocated. Because the solver is a GA, its hard
 to know the reasons for this, since a GA is a black box. But even with this
 low allocation, it still outperforms the naive distribution and interest rates at
 the time.</p>
-<p><a href="http://localhost:6419/GeneralStockDistributionCombinedOverAllWindowsTested.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GeneralStockDistributionCombinedOverAllWindowsTested.png" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-over-3-minutes-2" class="anchor" href="#over-3-minutes-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Over 3 minutes:</h3>
+<p><a href="http://localhost:6419/GeneralStockDistributionCombinedOverAllWindowsTested3min.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GeneralStockDistributionCombinedOverAllWindowsTested3min.png" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-over-5-minutes-2" class="anchor" href="#over-5-minutes-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Over 5 minutes:</h3>
+<p><a href="http://localhost:6419/GeneralStockDistributionCombinedOverAllWindowsTested5min.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/GeneralStockDistributionCombinedOverAllWindowsTested5min.png" alt="" style="max-width:100%;"></a></p>
 <p>Here we can clearly see that over all time in general the GA favours certain
-stocks. Clear winner is AJG, and a clear looser is AIRI.</p>
+stocks. But interestingly enough the results are very different over the two runs.
+Choosing one stock to analyze:</p>
 <ul>
-<li>
-<strong>AJG : Aruther J. Gallager &amp; Co</strong> is a global insurance brokerage, which has
-been consistently growing since its birth. Its been buying more smaller
-brokerages and merging into a giant corporation. Its been around since
-1927, has a wikipedia page, etc.</li>
 <li>
 <strong>AIRI : Air Industries Group</strong> is a supplier for aeroplane parts.
 Which has done the exact opposite of consistently growing.
 It had a really well priced starting period, and then just crumbled during
 the 2007 economic crisis. It also doesn't have a wikipedia article.</li>
 </ul>
-<p>I'm not an economist but the google search results from each stock
-paint a fairly intuitive picture for why one might be doing better than the other.</p>
+<p>In the 3 minute graph you can see it was the least chosen stock over every time window.
+Whereas in the 5 minute graph, it was the 6th most chosen stock.</p>
+<p><a href="http://localhost:6419/AIRIStockPriceOverTime.png" target="_blank" rel="noopener noreferrer"><img src="Demo_files/AIRIStockPriceOverTime.png" alt="" style="max-width:100%;"></a></p>
+<p>Looking at their stock data you can see how its currently a fairly weak stock at current
+time. But had 2 runs of decent performance, the time in which it did well, lines up with
+the 2 biggest windows for the 5 minute graph.</p>
 <h3>
 <a id="user-content-thanks-for-coming---q--a" class="anchor" href="#thanks-for-coming---q--a" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Thanks for coming - Q &amp; A</h3>
 <hr>

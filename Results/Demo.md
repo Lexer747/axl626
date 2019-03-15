@@ -61,35 +61,56 @@ compare a naive split of the portfolio. i.e. a complete even distribution
 over the market. And the not doing anything strategy, of comparing it to
 interest rates.
 
-![](GainOfthePortfolio-OverDifferentWindows.png)
+### Over 3 minutes:
+
+![](GainOfthePortfolio-OverDifferentWindows3min.png)
+
+### Over 5 minutes:
+
+![](GainOfthePortfolio-OverDifferentWindows5min.png)
 
 You can see how the GA always outperforms the naive implementation. But only in
 later years does either outperform interest rates.
 
-![](HowTheInduvidualPortfolioWasDistributedOverEachWindow.png)
+### Over 3 minutes:
 
-In this graph we can see an anomaly in the year 2014, in which only ~60% of
+![](HowTheInduvidualPortfolioWasDistributedOverEachWindow3min.png)
+
+### Over 5 minutes:
+
+![](HowTheInduvidualPortfolioWasDistributedOverEachWindow5min.png)
+
+In this 3 minute graph we can see an anomaly in the year 2014 and 2007, in which only ~60% of
 the portfolio budget was allocated. Because the solver is a GA, its hard
 to know the reasons for this, since a GA is a black box. But even with this
 low allocation, it still outperforms the naive distribution and interest rates at
 the time.
 
-![](GeneralStockDistributionCombinedOverAllWindowsTested.png)
+### Over 3 minutes:
+
+![](GeneralStockDistributionCombinedOverAllWindowsTested3min.png)
+
+### Over 5 minutes:
+
+![](GeneralStockDistributionCombinedOverAllWindowsTested5min.png)
 
 Here we can clearly see that over all time in general the GA favours certain
-stocks. Clear winner is AJG, and a clear looser is AIRI.
+stocks. But interestingly enough the results are very different over the two runs.
+Choosing one stock to analyze:
 
-* **AJG : Aruther J. Gallager & Co** is a global insurance brokerage, which has
-  been consistently growing since its birth. Its been buying more smaller
-  brokerages and merging into a giant corporation. Its been around since
-  1927, has a wikipedia page, etc.
 * **AIRI : Air Industries Group** is a supplier for aeroplane parts.
   Which has done the exact opposite of consistently growing.
   It had a really well priced starting period, and then just crumbled during
   the 2007 economic crisis. It also doesn't have a wikipedia article.
 
-I'm not an economist but the google search results from each stock
-paint a fairly intuitive picture for why one might be doing better than the other.
+In the 3 minute graph you can see it was the least chosen stock over every time window.
+Whereas in the 5 minute graph, it was the 6th most chosen stock. 
+
+![](AIRIStockPriceOverTime.png)
+
+Looking at their stock data you can see how its currently a fairly weak stock at current
+time. But had 2 runs of decent performance, the time in which it did well, lines up with
+the 2 biggest windows for the 5 minute graph.
 
 ### Thanks for coming - Q & A
 
