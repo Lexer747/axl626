@@ -1,4 +1,11 @@
-module Risk where
+module Risk (
+        checkAlmostEqYear,
+        appliedP,
+        selectDataSingle,
+        probK,
+        calcCorrelate,
+        selectData
+    ) where
 
 import Data.Maybe (mapMaybe)
 import Statistics.Distribution.Normal (normalDistr)

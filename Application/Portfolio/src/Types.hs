@@ -1,4 +1,9 @@
-module Types where
+module Types (
+        BaseData(..),
+        HPR(..),
+        Correlations,
+        getValue2
+    ) where
 
 --adj_close (1), adj_open (5)
 data BaseData = BaseData {date :: String, close :: Double, open :: Double}

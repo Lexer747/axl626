@@ -47,7 +47,7 @@ for my experiment, this was arbitrarily chosen.
 
 ``` sh
 cd C:\Users\Lexer\Documents\Uni\FYP\axl626\Application\Portfolio
-cabal run 2018 0
+cabal run 2018 1
 ```
 
 Bug in the GA library, sometimes a generation will just lock up. Temp-fix

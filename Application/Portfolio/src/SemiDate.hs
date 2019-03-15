@@ -1,4 +1,9 @@
-module SemiDate where
+module SemiDate (
+        CompareFunc,
+        Date(..),
+        findBasedOnDate,
+        almostEq
+    ) where
 
 --global format of a date, as a string
 -- "YYYY-MM-DD"

@@ -1,4 +1,10 @@
-module Fundamentals where
+module Fundamentals (
+        completeAllHPR,
+        fullG,
+        decoupleG,
+        decoupleR,
+        calcAnnum
+    ) where
 
 import qualified Data.Vector as V
 import Data.Maybe (maybeToList, mapMaybe)

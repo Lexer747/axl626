@@ -1,4 +1,4 @@
-module Main where
+module Main (main) where
 
 import Moo.GeneticAlgorithm.Continuous
 import Moo.GeneticAlgorithm.Random (getRandomR, getNormal, withProbability)
@@ -42,7 +42,7 @@ verbose :: Bool
 verbose = False
 
 toCSV :: Bool
-toCSV = True
+toCSV = False
 
 multiObjective :: Bool
 multiObjective = True
