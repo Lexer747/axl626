@@ -13,6 +13,7 @@ import Statistics.Distribution (Distribution(..))
 
 import Types
 import SemiDate
+import ParallelUtils
 
 calcMean :: [Double] -> Double
 calcMean xs = (sum xs) / (fromIntegral $ length xs)
@@ -65,8 +66,8 @@ combineCorrelations p1 _  _                        = p1 --in the case either is 
 
 
 calcCorrelate :: [HPR] -> Integer -> String -> Correlations
-calcCorrelate hprs i baseDate = mapMaybe inner allData
-    where allData = createPermutations $ map (\h -> (h, g h, calcMean $ g h)) hprs
+calcCorrelate hprs i baseDate = parallelMapMaybe inner allData
+    where allData = createPermutations $ parallelMap (\h -> (h, g h, calcMean $ g h)) hprs
           g h = selectDataSingle (checkAlmostEqYear i) h baseDate
           inner ((_, _, _),(_, [], _))      = Nothing
           inner ((_, _, _),(_, [_], _))     = Nothing
@@ -87,3 +88,4 @@ calcCorrelatePure (x:xs) (y:ys) meanX meanY (acc, accX, accY) = calcCorrelatePur
 createPermutations :: [a] -> [(a,a)]
 createPermutations [] = []
 createPermutations (x:xs) = (zip (repeat x) xs) ++ (createPermutations xs)
+

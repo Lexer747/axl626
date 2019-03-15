@@ -5,6 +5,8 @@ module Types (
         getValue2
     ) where
 
+import Control.DeepSeq
+
 --adj_close (1), adj_open (5)
 data BaseData = BaseData {date :: String, close :: Double, open :: Double}
     deriving (Show, Eq, Ord)
@@ -24,6 +26,9 @@ instance Eq HPR where
 instance Show HPR where
     show h = summariseHPR 0 h
     --show h = (name h) ++ " @ " ++ (path h) ++ "\n BL:" ++ (show $ maxLoss h) ++ "\n" ++ (show $ trades h) ++ "\n"
+
+instance NFData HPR where
+    rnf a = a `seq` ()
 
 type Correlations = [(HPR,HPR,Double)]
 

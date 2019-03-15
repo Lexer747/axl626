@@ -12,6 +12,7 @@ import Data.Maybe (maybeToList, mapMaybe)
 import CSV
 import Types
 import Risk
+import ParallelUtils
 
 --given an input, strip out unnecessary data
 getData :: (String, String, Fundamental) -> (String, String, [BaseData])
@@ -36,7 +37,7 @@ makeHPR_help (p,n,[])     bl acc = HPR {path = p, name = n,trades = acc, maxLoss
 
 --Map over all CSV files and make all of them into the HPR representation
 makeAllHPR :: [(String, String, Fundamental)] -> [HPR]
-makeAllHPR = map (makeHPR . getData)
+makeAllHPR = parallelMap (makeHPR . getData)
 
 --given a HPR from makeHPR, we can fill in the risk field
 completeHPR :: HPR -> Integer -> String -> HPR
@@ -81,16 +82,16 @@ fullG i baseDate cs hprs = (inner g p) ** (1 / probk)
           inner _ _                           = error "fullG: inner fail, mismatched list length"
 
 partialG :: Integer -> String -> Correlations -> [(Double, HPR)] -> ([Maybe Double], [Maybe Double])
-partialG i s cs fAndHprs = ((map inner fAndHprs), (map (probK hprs cs) hprs))
+partialG i s cs fAndHprs = ((parallelMap inner fAndHprs), (parallelMap (probK hprs cs) hprs))
     where inner (f,h) = innerG i s f h
           hprs = map snd fAndHprs
 
 decoupleG :: Integer -> String -> Correlations -> [(Double, HPR)] -> Double
-decoupleG i s _ fAndHprs = product $ concatMap maybeToList $ map inner fAndHprs
+decoupleG i s _ fAndHprs = product $ concatMap maybeToList $ parallelMap inner fAndHprs
     where inner (f,h) = innerG i s f h
 
 decoupleR :: Integer -> String -> Correlations -> [(Double, HPR)] -> Double
-decoupleR _ _ cs fAndHprs = product $ mapMaybe inner fAndP
+decoupleR _ _ cs fAndHprs = product $ parallelMapMaybe inner fAndP
     where fAndP = zip (map fst fAndHprs) maybes
           inner (f, (Just p)) = Just $ 1 + (f * p)
           inner (_, Nothing)  = Nothing
