@@ -43,7 +43,7 @@
     \end{abstract}
 \end{titlingpage}
 
-\section{What is Portfolio Optimization?}
+\section{Introduction}
 
     A portfolio is a collection of economic assets, and the optimization of such an
     entity is the process of maximizing its return over time, while minimizing the
@@ -583,8 +583,8 @@
 
     Genetic algorithms (GA), first 
     discussed by John Holland \cite{Holland} in 1975, then developed by so many
-    others, such as Melanie Mitchell \cite{Mitchell}, Kalyanmoy Deb \cite{KalyanmoyDeb},
-    and Albert Bethke \cite{Bethke}, to name a mere few. Are inspired by Darwinian
+    others, such as Melanie Mitchell, Kalyanmoy Deb, and Albert Bethke
+    \cite{Mitchell, KalyanmoyDeb, Bethke}, to name a mere few. Are inspired by Darwinian
     principle of \textit{survival of the fittest}.
     First it is useful to define some biological terminology; in the context of
     genetic algorithms these terms are used in the same spirit as the real biology,
@@ -666,14 +666,19 @@
     The \textit{Mutate} state needs to make sure it follows the same constraints as
     genomes states has to follow. Furthermore since this step is after crossover,
     any genomes which violate the laws will be fixed in this step. Other than this,
-    mutation can be any generic GA mutation. TODO: Explain mutation choice
+    mutation can be any generic GA mutation. The specific mutation chosen was a
+    simple Normal distributed mutation, which is randomly added or subtracted from
+    the original gene. Similar to the specific crossover choice, this choice
+    of mutation is probably worth its own in-depth study to optimize how fast
+    the GA finds the solution. As there is also no catch all "best" mutation method.
 
     Finally the \textit{Calculate Objectives} state, which is the final product of all our
     mathematical exploration. Here we have two options the single variable option: equation
     \ref{eq:FullG}, or the decoupled multi-objective option: equations \ref{eq:DecoupleG}
-    and \ref{eq:DecoupleR}.
+    and \ref{eq:DecoupleR}. 
 
-    Another difference between single objective and multi-objective is that for a
+    Other than the mathematical difference between single and multi-objective,
+    another key difference between single objective and multi-objective is that for a
     nontrivial problem such as ours, no single solution exists that simultaneously
     optimizes each objective. This case of conflicting objectives means there is
     a (possibly infinite) number of Pareto optimal solutions, forming a Pareto front.
@@ -683,6 +688,11 @@
     Kalyanmoy Deb \cite{DebPratapAgarwalMeyarivan} in which they propose the
     NSGA-II, the cutting edge of multi-objective solution finding. This actually
     has a direct impact on the selection step of the GA.
+
+\subsection{Implementation Details \& The Experiment}
+
+    Now that we have problem, and a method to solve it, all thats left is to actually
+    implement it. Then test it on some data, comparing our hypothesis to the results.
 
     
 

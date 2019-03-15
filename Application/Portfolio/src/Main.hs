@@ -8,6 +8,7 @@ import Control.Monad (replicateM, when)
 import System.IO
 import System.Environment (getArgs)
 import System.Exit
+import Text.Printf
 
 import Fundamentals
 import CSV
@@ -40,6 +41,9 @@ import Risk
 verbose :: Bool
 verbose = False
 
+toCSV :: Bool
+toCSV = True
+
 multiObjective :: Bool
 multiObjective = True
 
@@ -55,7 +59,7 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 3 * 60 --seconds
+timeLimit = 5 * 60 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
@@ -155,10 +159,12 @@ adaptedMutate p s vars = mapM m vars
 fixMutate :: Genome Double -> Rand (Genome Double) -> Rand (Genome Double)
 fixMutate old cur = do
     c <- cur
-    if (sum c <= 1) then return c
-                    else fixMutate old $ mapM (\(o,n) -> if (o == n)
-                            then return n
-                            else takeAwayRand n) (zip old c)
+    if (sum c <= 1) 
+        then return c
+        else fixMutate old $ mapM (\(o,n) ->
+            if (o == n) --did this gene mutate?
+                then return n --no: so do nothing
+                else takeAwayRand n) (zip old c) --yes: so mutate always making it smaller
 
 ------------------- MAIN ----------------------
 
@@ -256,7 +262,8 @@ main = do
 \Per Anumn: " ++ (show $ calcAnnum i total) ++ "\n" ++ tab ++ "\
 \Decoupled | Gain: " ++ (show g) ++ " | Risk: " ++ (show r) ++ "\n" ++ tab ++ "\
 \with f's: " ++ (show bestG)
-
         putStrLn details
-
---------------------------------------------
+        when toCSV $ do
+            mapM (\x -> printf "%.5f\n" x) $ bestG
+            putStrLn ""
+            printf "%.8f\n" total
