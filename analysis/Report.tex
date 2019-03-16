@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 
 %------------ PACKAGES ----------
 \usepackage{mathtools}
@@ -609,7 +609,7 @@
             by nature, but by an \textbf{Objective} function}
     \end{itemize}
 
-    \pagebreak
+    % \pagebreak
     The general procedure of a GA is better explained with a diagram:
 
     \begin{figure}[h] % fig:GA
@@ -645,13 +645,13 @@
     entire portfolio.
 
     The \textit{Select} state is a function which takes all pairs of evaluated genomes
-    and thier fitness. And based on how well each genome performs, will cull the
+    and their fitness. And based on how well each genome performs, will cull the
     list of genomes to a smaller list. This smaller list is the list of genomes
     which act as parents for the next generation.
 
     The \textit{Elite} state is another output from the select function. Which is
     the most fit genomes have their lifespan extended into the next generation.
-    Importantly this elite population be very small, aswell as avoiding the
+    Importantly this elite population be very small, as well as avoiding the
     chance to its genes to be destroyed by crossover and mutation. \cite{DeJong}
     This allows the best genome to always stay alive, and stops the GA from
     having to re-discover previously good results.
@@ -689,14 +689,53 @@
     NSGA-II, the cutting edge of multi-objective solution finding. This actually
     has a direct impact on the selection step of the GA.
 
-\subsection{Implementation Details \& The Experiment}
+\section{Implementation Details \& The Experiment}
 
     Now that we have problem, and a method to solve it, all thats left is to actually
     implement it. Then test it on some data, comparing our hypothesis to the results.
     I choose to implement the system using Haskell. This is definitely a personal
-    choice, I really prefer the strong type system when working with a lot of "pure"
-    functions. The implementation of the mathematical part of this project was made significantly
-    easier, less buggy, and probably more performant because of the language choice.
+    choice, for the standard reasons: familiarity, ease of use, having the environments
+    set-up, and the strong type system. Because when working with a lot of "pure"
+    functions, as we would have to for this project. The implementation 
+    of the mathematical part of this project was made significantly
+    easier, less buggy, and probably more performant because of the language choice
+    \footnote{Being pure makes parallelism a no cost feature \cite{HarrisMarlowJones, Chakravarty}, 
+    which will give great performance improvements due to lightweight nature of the 
+    computation, while needing lots of locking. }.
+    In my eyes the mathematical functions
+    being implemented purely reduces the chance to almost zero for there to be a translation
+    error. This was helpful during the development, as any erroneous values implied a mistake
+    in the maths.
+
+    Another key choice made, was the use of Moo - a GA library \cite{Moo}. This came with all
+    the normal advantages and disadvantages of using a library, time saved, tested by others.
+    Overall it still required a fairly large amount of work to correctly integrate the
+    problem into the library. However, this meant that once this work was done the actual
+    execution of the GA was simple.
+
+    The experiment involved the following method. First I choose a portfolio I want to
+    analyze, in this case I used the data set provided by my supervisor \cite{Dataset}.
+    Obviously there are drawbacks to this as explained in the introduction. The next step is
+    to have some point of comparison, the obvious choice is to compare the GA to
+    a complete naive spread i.e. evenly spread out the starting money over each stock.
+    I also choose to compare the GA to the UK national interest rate \cite{BankOfE} . To give an
+    indication of how well the algorithm is performing compared to doing "nothing".
+
+\subsection{Implementation Overview}
+
+    The implementation is broken up into four main sections:
+
+    \begin{itemize}
+        \item{Dataset Parsing}
+        \item{Calculating Risk \& Correlations}
+        \item{Calculating Objectives}
+        \item{Executing the GA}
+    \end{itemize}
+
+    \textit{Dataset Parsing} was implemented in a concrete form to directly work with the
+    dataset I will use in the experiment. This means the code reads the CSV files,
+    performs the necessary processing to convert them into the Haskell types, and then
+    basic statistical analysis to extract trades.
 
 \pagebreak
 \bibliographystyle{IEEEtran}

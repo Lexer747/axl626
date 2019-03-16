@@ -18,14 +18,10 @@ Some Basic Terms:
   In our case the return of the portfolio is the first objective, and the risk
   of portfolio is the second objective.
 
-## How did i go about attempting to solve it?
+## How did I go about attempting to solve it?
 
 The biggest factor to my solution was the dataset provided by my supervisor
-<sup>1</sup>.
-
-#### TODO - Explain Set collection method
-
-This dataset, is a collection of stocks. So we already narrowing the scope
+<sup>1</sup>. This dataset, is a collection of stocks. So we already narrowing the scope
 of the portfolio to a more niche subset. Most portfolio's should be over
 multiple markets, and multiple assets in those markets.
 But the principle is the same. For actually optimizing a portfolio.
@@ -47,7 +43,7 @@ for my experiment, this was arbitrarily chosen.
 
 ``` sh
 cd C:\Users\Lexer\Documents\Uni\FYP\axl626\Application\Portfolio
-cabal run 2018 1
+cabal run 2017 1
 ```
 
 Bug in the GA library, sometimes a generation will just lock up. Temp-fix
@@ -111,6 +107,13 @@ Whereas in the 5 minute graph, it was the 6th most chosen stock.
 Looking at their stock data you can see how its currently a fairly weak stock at current
 time. But had 2 runs of decent performance, the time in which it did well, lines up with
 the 2 biggest windows for the 5 minute graph.
+
+### Pareto frontier
+
+![](HowTheParetoFrontierChangesWithGADuration_2018Window.png)
+
+For a real tool, this would be the output, and you could choose the portfolio which aligns
+with your risk level and gain amount.
 
 ### Thanks for coming - Q & A
 
