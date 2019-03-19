@@ -280,9 +280,9 @@
 
     This equation is also from Ralph's Book \cite{Ralph}. Which is an excellent starting point,
     but it needs to be adapted to include this idea of correlation among stocks. And furthermore
-    it needs to be decoupled, so that the risk of the overall stock is also found. The motivation
-    for such a thing, is because of the nature of how this equation is solved. Which is explained
-    later.
+    it needs to be decoupled, so that the risk of the overall portfolio is also found. The motivation
+    for such a thing, is because we would like to be able to create a range of  portfolio's with
+    differing levels of risk and reward. Allowing a choice inside this range.
 
 
 \subsubsection{Calculating Risk} \label{section:CalcR}
@@ -297,7 +297,7 @@
         \item{Holes of Open {\&} Close values may occur}
     \end{itemize}
 
-    Calculating the profit{\/}loss of a stock at time period is now trivial and useful.
+    Calculating the profit/loss of a stock at time period is now trivial and useful.
     Renaming the change in value at each time period \(i\) to \(PL_i\) we can find
     statistical facts about the stock.
 
@@ -320,10 +320,12 @@
     the likely hood of the next \(PL_i\) being above a certain value. In our case we transform
     the normal distribution using equations \ref{eq:StockMean} and \ref{eq:StockVar} to find
     the mean and variance of the stock, and hence change the normal distribution. Then it is
-    simple enough to use tables to find probabilities we want.
+    simple enough to use tables to find probabilities we want. It should be noted that the
+    assumption that a stock is a normal distribution has sizable implications, it ties into
+    our original assumption that stocks can be modeled as random variables.
 
     \begin{equation} \label{eq:StockProb}
-        P (PL) = \big( PL \sim \Phi(\mu, \sigma^2) \big) > 0
+        P (PL) = \big( PL \sim \Phi(\mu, \sigma^2) \big) < 0
     \end{equation}
     
     where:
@@ -383,8 +385,8 @@
         P &= 0.00001947041 \\
     \end{flalign*}
 
-    So even in this example, with really high odds the overall chance of a single stock
-    producing a likely chance. Therefore we need to use something which both preserve
+    So even in this example, with really high odds, the overall chance will be incredibly low.
+    Therefore we need to use something which both preserves
     the chances of every stock, while taking into account how correlated something is.
 
     The solution is to use a weighted average over the stocks.
@@ -415,6 +417,7 @@
         \item{Using some form of NLP (Natural Language Parsing) to figure out how related the stocks are in the real world}
         \item{Grouping stocks by which industry they are in and assigning each group a correlation}
         \item{Assuming all stocks are independent}
+        \item{Some other way of correlating stocks I haven't considered}
         \item{Or a combination of all the above}\label{item:C}
     \end{enumerate}
 
@@ -444,54 +447,17 @@
         \label{eq:Correlation}
     \end{align}
 
-\section{Finding \(f\)}
+\section{Decoupling \(G\)}
 
-    Equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k} can be combined into one equation:
-
-    \begin{equation}\label{eq:FullG}
-        G(f_1...f_m) = \left(
-            \displaystyle\prod^{m}_{k=1} \Bigg(
-                1 + \displaystyle\sum^{n}_{i=1} f_k \times \Big(
-                    \frac{- PL_{k,i} }{BL_k}
-                \Big) 
-            \Bigg)^{\Bigg(
-                \displaystyle\prod^{n - 1}_{i=1} P(i_k | j_k)
-            \Bigg) ^ {\frac{1}{n - 1}}} 
-        \right) ^ {
-            \left( {1 \div {\displaystyle\sum^{m}_{k=1}
-                \Bigg( 
-                    \displaystyle\prod^{n - 1}_{i=1}  P(i_k | j_k)
-                \Bigg) ^ {
-                    \frac{1}{n - 1}}
-                }
-            }
-        \right)}
-    \end{equation}
-
-    where:
-    \begin{flalign*}
-    n &= \text{The number of trades or bets in the } k^{th}\text{set} &&\\
-    m &= \text{The number of stocks} &&\\
-    f_k &= \text{The optimal } f \text{ for that }k^{th} \text{set, where } f > 0 &&\\
-    PL_{k,i} &= \text{The outcome for the } i^{th} 
-        \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
-    BL_k &= \text{The worst trade or bet for the } k^{th} \text{ set} &&\\
-    P(i_k | j_k) &= \text{The risk of }i^{th} \text{ trade or bet associated with the } 
-        k^{th} \text{ set given the risk of the } &&\\
-    & j^{th} \text{ trade or bet associated with the } k^{th} \text{ set. Defined by 
-    equation \ref{eq:StockWeight}} &&
-    \end{flalign*}
-
-    TODO: Brief explanation why we can't solve this
-
-\subsection{Decoupling \(G\)}
-
-    In the original equation \ref{eq:FullG}, \(G\) is coupled with the risk of the portfolio
+    In the original equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k}.
+    \(G\) is coupled with the risk of the portfolio
     by raising the inner calculation to 1 over the sum of all risks for every stock.
     There is another approach, which is to keep the two equations separate and use multi-
     objective genetic algorithms to solve it. The motivation for this is to balance risk
     and reward independently, contrasting to the original \(G\) which lowers the gain
-    by coupling it with the risk exponentially.
+    by coupling it with the risk exponentially. We would also gain a Pareto set of
+    optimal portfolios to choose from, if one was more risk averse then you could choose
+    a less risky portfolio from the set.
 
     \begin{equation}\label{eq:DecoupleG}
         G(f_1...f_n) = \displaystyle\prod^{m}_{k=1} \left(
@@ -512,7 +478,7 @@
     where:
     \begin{flalign*}
     n &= \text{The number of trades or bets in the } k^{th}\text{ set} &&\\
-    m &= \text{The number of combinations for all trades and bets} &&\\
+    m &= \text{The number of stocks} &&\\
     f_k &= \text{The optimal } f \text{ for that } k^{th} \text{ set, where } f > 0 &&\\
     PL_{k,i} &= \text{The outcome for the } i^{th} 
         \text{ trade or bet associated with the } k^{th} \text{ set} &&\\
@@ -522,34 +488,34 @@
     \end{flalign*}
 
     Now we can use these functions separately to evaluate both risk and reward of the
-    portfolio. To the best of my current knowledge equation \ref{eq:DecoupleR} is a new
+    portfolio. You get a Pareto Set \cite{Kaisa}. A non dominated efficient frontier. Fortunately
+    this is not a "problem" in some sense, as a choice of risk vs reward can then be made
+    by a human. To the best of my current knowledge equation \ref{eq:DecoupleR} is a new
     way of thinking about the risk of the portfolio.
-    Section \ref{section:CalcR} reaches a conclusion which i believe to be
+    Section \ref{section:CalcR} reaches a conclusion which I believe to be
     unique. However, Ralph's work \cite{Ralph} is what inspired this line of thought
     and furthermore it is the basis of my work for equation \ref{eq:DecoupleR}, as well as
     the aggregate for equation \ref{eq:DecoupleG}.
 
 \section{Solving \(f\) with respect to \(G\)}
 
+    Solving the decoupled equations \ref{eq:DecoupleG}, \ref{eq:DecoupleR} for the highest
+    value of \(G\) and lowest value of \(R\) will give the best return on our portfolio
+    given the current data.
     Intuition would suggest some form of iteration to check every combination of \(f\) to find
-    the best performing \(f\) is a good first solution. But, This has two major problems,
-    the first being that we for every stock we add to our portfolio, 
+    the best performing \(f\) is a good first solution. This has two major problems.
+    The first problem with this solution. For every stock we add to our portfolio, 
     we gain fractorially many more combinations to check.
 
     \begin{equation*}
-        \text{Number of combinations to check for: } \# F \text{ for } (f_1...f_m) = m!
+        \text{Number of combinations to check for: } (f_1...f_m) = m!
     \end{equation*}
 
     Which in some scenarios may be feasible, but because of our second major problem. The computation
     time of our evaluation functions. It becomes completely impossible to actually calculate
     the mathematically correct solution in the lifetime of the universe.
-    What follows is the Big \(\bigO\) calculation for both problems:
+    What follows is the Big \(\bigO\) calculation:
 
-    \begin{equation*}
-        \text{Coupled: } \bigO (
-            m! \times n^m
-        )
-    \end{equation*}
     \begin{equation*}
         \text{Decoupled: } \bigO (
             m! \times (n^m + (nm)^m)
@@ -562,16 +528,12 @@
     m &= \text{The number of stocks} &&
     \end{flalign*}
 
-    The coupled equation \ref{eq:FullG} performs better as it can optimized by calculating
-    equation \ref{eq:Prob_k} once, ahead of time. Whereas for the decoupled equations 
-    \ref{eq:DecoupleG},
-    \ref{eq:DecoupleR} it needs to calculate both, and equation \ref{eq:DecoupleR} has 
-    considerably more
-    calculations, which cannot be precomputed. But either way, both equations grow
-    in number of calculation incredibly quickly, in fact too quickly to ever be
+    The decoupled equation grow
+    in number of calculations incredibly quickly, in fact too quickly to ever be
     solved by a pure mathematical solution. So we end up with an equation we want
     to solve, with no mathematically helpful properties (differentiable being
     the most important) to be able to do a heuristic or regression based approach.
+
 
 \subsection{Genetic Algorithms}\label{section:GA}
 
@@ -673,9 +635,9 @@
     the GA finds the solution. As there is also no catch all "best" mutation method.
 
     Finally the \textit{Calculate Objectives} state, which is the final product of all our
-    mathematical exploration. Here we have two options the single variable option: equation
-    \ref{eq:FullG}, or the decoupled multi-objective option: equations \ref{eq:DecoupleG}
-    and \ref{eq:DecoupleR}. 
+    mathematical exploration. Here we have two options the single variable option: equations
+    \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k}. Or the decoupled multi-objective
+    option: equations \ref{eq:DecoupleG} and \ref{eq:DecoupleR}. 
 
     Other than the mathematical difference between single and multi-objective,
     another key difference between single objective and multi-objective is that for a
@@ -709,13 +671,14 @@
 
     Another key choice made, was the use of Moo - a GA library \cite{Moo}. This came with all
     the normal advantages and disadvantages of using a library, time saved, tested by others.
-    Overall it still required a fairly large amount of work to correctly integrate the
-    problem into the library. However, this meant that once this work was done the actual
-    execution of the GA was simple.
+    But it still required a fairly large amount of work to correctly integrate the
+    problem into the library. Additionally you do not have complete control over the code,
+    so any "mistakes" or differences in behaviour are out of your control. However,
+    this meant that once this work was done the actual execution of the GA was more simple.
 
     The experiment involved the following method. First I choose a portfolio I want to
     analyze, in this case I used the data set provided by my supervisor \cite{Dataset}.
-    Obviously there are drawbacks to this as explained in the introduction. The next step is
+    Obviously there are drawbacks to this as later explained in the results. The next step is
     to have some point of comparison, the obvious choice is to compare the GA to
     a complete naive spread i.e. evenly spread out the starting money over each stock.
     I also choose to compare the GA to the UK national interest rate \cite{BankOfE} . To give an
@@ -727,7 +690,7 @@
 
     \begin{itemize}
         \item{Dataset Parsing}
-        \item{Calculating Risk \& Correlations}
+        \item{Calculating Correlations \& Risk}
         \item{Calculating Objectives}
         \item{Executing the GA}
     \end{itemize}
@@ -736,6 +699,54 @@
     dataset I will use in the experiment. This means the code reads the CSV files,
     performs the necessary processing to convert them into the Haskell types, and then
     basic statistical analysis to extract trades.
+
+    \textit{Calculating Correlations} is the implementation of the equation \ref{eq:Correlation}.
+    Additionally we need to correlate every stock to every other stock. Because equation
+    \ref{eq:DecoupleR} requires every stock included in the risk calculation has some value of
+    correlation for all other stocks.
+
+    Therefore in the worst case we need to do \(m!\) correlation calculations, each one requiring a
+    full traversal of all the trades in the stock. This gives a full time complexity of 
+    \(\bigO (nm!) \). This can be speed up a little bit in the actual implementation, firstly
+    equation \ref{eq:Correlation} can be done in a single pass instead of two. Secondly we can
+    half the number of permutations we need to do the correlation calculation for. Since we know
+    correlation is symmetric, i.e. if the correlation of \(C_{x,y} = z\) then the correlation
+    of \(C_{y,x}\) also equals \(z\). While this doesn't change the time complexity, it still helps
+    the execution time, as we only need half as many calculations. On top of this, and as explained
+    earlier, this correlation calculation can be run in parallel using the pure nature of the function.
+    All of equation \ref{eq:Correlation} is done in a unique threads using Haskell to abstract away
+    the thread management.
+
+    Furthermore, we can calculate the correlations ahead of the GA execution so this only needs to be
+    executed once and the results stored. In the implementation the results are stored as a symmetric
+    adjacency list with two stocks acting as a key to the value of the correlation between the stocks.
+    Hence this bad time complexity isn't a negligible worry.
+
+    \textit{Calculating Risk} is the implementation of the inner equation \ref{eq:DecoupleR} 
+    i.e. (\(\forall y \in m \to P(k|y)\)). This equation
+    requires the correlation list to be calculated, because of equation \ref{eq:Correlation} being a
+    part of equation \ref{eq:DecoupleR}. It can also be optimized such that the individual
+    probabilities of each stock (calculated by equation \ref{eq:StockProb}) are only needed to be
+    calculated once.
+
+    \textit{Calculating Objectives} is the implementation of equation \ref{eq:DecoupleG} and the complete
+    implementation of equation \ref{eq:DecoupleR} using the earlier risk calculation, these
+    equations both take a list of \(f\)'s as their input to be able to calculate \(G\) and \(R\).
+    And once again, this implementation takes advantage of Haskell's low cost parallelism to speed
+    up execution.
+
+    \textit{Executing the GA}, as explained earlier the Moo GA Library \cite{Moo} was used in
+    the implementation. The additional details added in my solution are the printing of the results,
+    the constraints specified by the laws of a portfolio, and the actual programming interface
+    between the equations and the library code.
+
+\subsection{Testing Method}
+
+
+
+\subsection{Results}
+
+\section{Conclusion}
 
 \pagebreak
 \bibliographystyle{IEEEtran}
