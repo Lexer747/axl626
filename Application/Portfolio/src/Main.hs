@@ -42,7 +42,7 @@ verbose :: Bool
 verbose = False
 
 toCSV :: Bool
-toCSV = False
+toCSV = True
 
 multiObjective :: Bool
 multiObjective = True
@@ -59,7 +59,7 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 5 * 60 --seconds
+timeLimit = 20 * 60 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
@@ -264,6 +264,8 @@ main = do
 \with f's: " ++ (show bestG)
         putStrLn details
         when toCSV $ do
-            mapM (\x -> printf "%.5f\n" x) $ bestG
+            mapM (\x -> printf "%.5f\n" x) bestG
             putStrLn ""
             printf "%.8f\n" total
+            putStrLn ""
+            foldMap (\(g:r:[]) -> printf "%.7f , %.7f\n" g r) $ map snd $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop

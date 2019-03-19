@@ -5,7 +5,7 @@
 \usepackage{csquotes}
 \usepackage{graphicx}
 \usepackage{titling}
-\graphicspath{ {./figures/} }
+\graphicspath{ {./figures/} {./../Results/} }
 \newcommand{\bigO}{\mathcal{O}}
 \renewcommand*{\thefootnote}{(\arabic{footnote})}
 
@@ -651,6 +651,10 @@
     NSGA-II, the cutting edge of multi-objective solution finding. This actually
     has a direct impact on the selection step of the GA.
 
+\subsection{NSGA-II vs Other Multi-Objective Algorithms}
+
+
+
 \section{Implementation Details \& The Experiment}
 
     Now that we have problem, and a method to solve it, all thats left is to actually
@@ -742,9 +746,50 @@
 
 \subsection{Testing Method}
 
+    The general testing method was as follows. Over the dataset, split it into moving windows
+    where each window covers a certain time range of data. The windowing is done to emulate
+    the process of eventually considering that old enough data will become less useful
+    as an indicator of future events. The only piece of data that will be kept regardless
+    of window size, is the \(BL\). This is to be more realistic about the worst case scenario.
+    As it could be seen as reasonable to say the \(BL\) of any asset is \(\infty\), if the value
+    of the asset becomes unsellable, this rather extreme view however essentially means all
+    algorithms would tell you to bet nothing. Since thats the superior strategy. Instead
+    this approach, takes into account the worst \(BL\) of any one stock over its lifetime.
+    Since almost every asset has the potential to fall as far as it once did. Even if we only
+    consider is most recent results in the window, its helpful to suspect an asset could
+    do that poorly again.
 
+    The next step is to choose the window size and the dataset of assets to be tested upon.
+    In my case I used my supervisor's dataset \cite{Dataset} and I elected to choose a window
+    size of 3 years.
+
+    After the window size and dataset is chosen the next stage is to run preliminary tests with
+    differing lengths of time to find the a reasonable amount of time to run the GA based on
+    the hardware. From that you have make a human decision to compromise the amount of time
+    you allow the GA to find a solution and how much time you actually have to test the GA.
+
+    Next, you actually run the GA from the start of your dataset over every window and record
+    the results. All thats left would be to compare these results the naive spread of the
+    portfolio, or any other investment strategy for that matter.
 
 \subsection{Results}
+
+    First the preliminary results of running the GA over 1 window (of 3 years) with different
+    times to determine how much time to spend. It is also useful as this graph also shows
+    the full pareto frontier.
+
+    % \pagebreak
+    \begin{figure}[h] % fig:HowTheParetoFrontierChangesWithGADuration_2017±1Window
+        \centering
+        \includegraphics[width=\textwidth]{HowTheParetoFrontierChangesWithGADuration_2017±1Window}
+        \caption{"Life Cycle" of A Genetic Algorithm}
+            \label{fig:HowTheParetoFrontierChangesWithGADuration_2017±1Window}
+    \end{figure}
+
+    The biggest takeaway from this graph is that time spent after 10 minutes was suffering
+    from diminishing returns. This was especially true for the risk - \(R\) - of the
+    portfolio. From this data I decided that 5 minutes would be enough time to
+    get good results while not wasting too much time.
 
 \section{Conclusion}
 
@@ -753,3 +798,15 @@
 \bibliography{Report}
 
 \end{document}
+
+% DEMO
+% learning ga myself
+% learning portfolio optimization
+% https://intrinio.com/
+
+% REPORT
+% 1 more page on GA about NSGA-2
+% why use NSGA-2 over scalarizing alteratives
+
+% show the signifance of the project
+% show the novelty

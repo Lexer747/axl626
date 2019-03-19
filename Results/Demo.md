@@ -110,7 +110,7 @@ the 2 biggest windows for the 5 minute graph.
 
 ### Pareto frontier
 
-![](HowTheParetoFrontierChangesWithGADuration_2018Window.png)
+![](HowTheParetoFrontierChangesWithGADuration_2017±1Window.png)
 
 For a real tool, this would be the output, and you could choose the portfolio which aligns
 with your risk level and gain amount.
