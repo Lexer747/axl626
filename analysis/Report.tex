@@ -5,6 +5,7 @@
 \usepackage{csquotes}
 \usepackage{graphicx}
 \usepackage{titling}
+\usepackage{float}
 \graphicspath{ {./figures/} {./../Results/} }
 \newcommand{\bigO}{\mathcal{O}}
 \renewcommand*{\thefootnote}{(\arabic{footnote})}
@@ -571,10 +572,9 @@
             by nature, but by an \textbf{Objective} function}
     \end{itemize}
 
-    % \pagebreak
     The general procedure of a GA is better explained with a diagram:
 
-    \begin{figure}[h] % fig:GA
+    \begin{figure}[H] % fig:GA
         \centering
         \includegraphics[width=\textwidth]{GA}
         \caption{"Life Cycle" of A Genetic Algorithm}\label{fig:GA}
@@ -653,6 +653,81 @@
 
 \subsection{NSGA-II vs Other Multi-Objective Algorithms}
 
+    As there exists multiple Pareto optimal solutions for our problem, what it means to "solve"
+    our problem, is not as simple as single objective problems. We actually want to create the
+    Pareto set of optimal solutions and then to form a single solution we have to choose one of
+    the Pareto solutions from that set.
+
+    There are two methodologies to go about this selection of a single solution. A \textit{priori}
+    methodology, in which the Pareto set is constrained by some rules provided by a user.
+    These rules result in a single solution being used each step of GA. The other
+    methodology is the \textit{posteriori} methodology, in which
+    the full set of Pareto optimal solutions is kept and a user must decide which individual
+    solution is kept only after the GA has finished execution.
+
+    Linear scalarizing \& Non-linear scalarizing are two priori ways to solve this problem
+    \cite{KaisaMarko, Moffaert}. Both of the cited papers give a range of linear and non-linear
+    functions which can be used either with weightings by the user, or utility functions.
+    To list a few: The simplest being a weighted average of all the objectives, from
+    which a single objective if found. Another version is a single point is chosen
+    in the answer space, then the distance to that point is calculated and used to
+    determine how good a solution is. A lower distance will mean its a better solution
+    \cite{Buchanan}.
+
+    To use utility functions as scalarizing solvers, this utility function will take
+    the resulting objectives and return and ordering of ranking. Upon which the highest
+    ranked is considered the best solution. This requires the user to construct
+    a function which accurately represents the interests of user. A simple way
+    to do this is to ask the user to list the objectives in a lexicographical order.
+    But in practice a utility function is very hard to create, and the simple
+    lexicographical solution is not well suited to our needs. As it requires
+    strictly preferable objectives.
+
+    To name some posteriori methods, there's Normal Boundary Intersection \cite{Indraneel},
+    Normal Constraint \cite{Messac}, Directed Search Domain \cite{Tohid}, and NSGA-II
+    \cite{DebPratapAgarwalMeyarivan}. All except NSGA-II work by constructing several
+    scalarizations, with each scalarization creating a Pareto optimal solution.
+    This also leads those algorithms to end up in local maximum far to often. And
+    don't get the full efficient frontier.
+
+    However NSGA-2 is different to the previous ones, and for the reason to be explained,
+    and because its specifically useful for our problem, this is the algorithm that
+    we use to find the Pareto frontier. To explain NSGA-2, first we need to explain
+    NSGA, and non-domination.
+
+    \textbf{Domination}: A solution \(x\) is said to dominate another solution \(y\) if:
+
+    \begin{align*}
+        & x \text{ is no worse than } y \text{ for all objectives} \\
+        & x \text{ is strictly better than } y \text{ in at least one objective} \\
+    \end{align*}
+
+    This is denoted hence forth as \(x \prec y\), and among a set of solutions \(P\)
+    the non dominated sub set \(P'\) are those that are not dominated by any member of
+    set \(P\). To follow on from this the non-dominate set of the multi-objective search
+    space, will be the global Pareto optimal set.
+
+    NSGA-II has the following procedure: perform a non-dominated sorting in the population
+    and classify them by front. i.e. sorted according ascending level of non-domination.
+
+    \begin{figure}[H]
+        % \centering
+        \includegraphics{NSGArank}
+    \end{figure}
+    From this example graph, we have split the data up into 3 sets which are non-dominated
+    by each other. The set contained by the blue and first line is a non dominated sub set
+    of the set between the two lines. The set between the two lines is also a non dominated
+    sub set of the final set. This allows us to assign a rank to each band.
+
+    The next step is to make the next generation of parents from the front ranking
+    set, as well as some random amount of the inferior bands. This population
+    then goes under the next steps in GA and the cycle repeated.
+
+    This method of multi-objective has some big advantages compared to the other methods,
+    the most important being that the pareto set is collected instead by using the non-dominated
+    sorting. While the solutions aren't guaranteed to be optimal pareto solutions, they
+    get very close. Furthermore this method was designed with GA's in mind and therefore is
+    optimized for this usage. Hence why I'm choosing to use NSGA-II in my solution.
 
 
 \section{Implementation Details \& The Experiment}
@@ -778,9 +853,8 @@
     times to determine how much time to spend. It is also useful as this graph also shows
     the full pareto frontier.
 
-    % \pagebreak
-    \begin{figure}[h] % fig:HowTheParetoFrontierChangesWithGADuration_2017-1Window
-        \centering
+    \begin{figure}[H] % fig:HowTheParetoFrontierChangesWithGADuration_2017-1Window
+        % \centering
         \includegraphics[width=\textwidth]{HowTheParetoFrontierChangesWithGADuration_2017-1Window}
         \caption{Preliminary : Pareto Frontier}
             \label{fig:HowTheParetoFrontierChangesWithGADuration_2017-1Window}
@@ -788,11 +862,31 @@
 
     The biggest takeaway from this graph is that it was very hard to improve \(R\) beyond
     the initial solutions. But the gain seemed to constantly improve given exponentially
-    more time.
-    TODO More analysis
+    more time. There was a significant jump in results from 1 minute to 3 minutes,
+    therefore I choose to do all future tests with 3 minutes. Once again this is slightly
+    arbitrary, since if wanted the "best" results I would've chosen 20 minutes (1200 seconds).
+    But that amount of time for a single run is a bit extreme.
 
-    
+    \begin{figure}[H] % fig:GainOfthePortfolio-OverDifferentWindows
+        % \centering
+        \includegraphics[width=\textwidth]{GainOfthePortfolio-OverDifferentWindows}
+        \caption{Gain of GA vs Naive vs UK interest}
+            \label{fig:GainOfthePortfolio-OverDifferentWindows}
+    \end{figure}
 
+    \begin{figure}[H] % fig:GeneralStockDistributionCombinedOverAllWindowsTested
+        % \centering
+        \includegraphics[width=\textwidth]{GeneralStockDistributionCombinedOverAllWindowsTested}
+        \caption{--}
+            \label{fig:GeneralStockDistributionCombinedOverAllWindowsTested}
+    \end{figure}
+
+    \begin{figure}[H] % fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow
+        % \centering
+        \includegraphics[width=\textwidth]{HowTheInduvidualPortfolioWasDistributedOverEachWindow}
+        \caption{--}
+            \label{fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow}
+    \end{figure}
 \section{Conclusion}
 
 \pagebreak

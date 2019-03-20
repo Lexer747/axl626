@@ -57,24 +57,12 @@ compare a naive split of the portfolio. i.e. a complete even distribution
 over the market. And the not doing anything strategy, of comparing it to
 interest rates.
 
-### Over 3 minutes:
-
-![](GainOfthePortfolio-OverDifferentWindows3min.png)
-
-### Over 5 minutes:
-
-![](GainOfthePortfolio-OverDifferentWindows5min.png)
+![](GainOfthePortfolio-OverDifferentWindows.png)
 
 You can see how the GA always outperforms the naive implementation. But only in
 later years does either outperform interest rates.
 
-### Over 3 minutes:
-
-![](HowTheInduvidualPortfolioWasDistributedOverEachWindow3min.png)
-
-### Over 5 minutes:
-
-![](HowTheInduvidualPortfolioWasDistributedOverEachWindow5min.png)
+![](HowTheInduvidualPortfolioWasDistributedOverEachWindow.png)
 
 In this 3 minute graph we can see an anomaly in the year 2014 and 2007, in which only ~60% of
 the portfolio budget was allocated. Because the solver is a GA, its hard
@@ -82,13 +70,7 @@ to know the reasons for this, since a GA is a black box. But even with this
 low allocation, it still outperforms the naive distribution and interest rates at
 the time.
 
-### Over 3 minutes:
-
-![](GeneralStockDistributionCombinedOverAllWindowsTested3min.png)
-
-### Over 5 minutes:
-
-![](GeneralStockDistributionCombinedOverAllWindowsTested5min.png)
+![](GeneralStockDistributionCombinedOverAllWindowsTested.png)
 
 Here we can clearly see that over all time in general the GA favours certain
 stocks. But interestingly enough the results are very different over the two runs.

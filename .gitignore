@@ -1,5 +1,7 @@
 Data.zip
 
+*.ps1
+
 # Latex related files:
 *.pdf
 *.log

@@ -45,7 +45,7 @@ completeHPR hpr i s = HPR {path = path hpr, name = name hpr, trades = trades hpr
     where r = appliedP hpr i s
 
 completeAllHPR :: [(String, String, Fundamental)] -> Integer -> String -> [HPR]
-completeAllHPR xs i s = map (\h -> completeHPR h i s) $ makeAllHPR xs
+completeAllHPR xs i s = parallelMap (\h -> completeHPR h i s) $ makeAllHPR xs
 
 --HPRk = (1 + (n Σ i=1 {fk * (-PLk,i / BLi) }) ) ^ Probk
 innerG :: Integer -> String -> Double -> HPR -> Maybe Double
@@ -99,6 +99,7 @@ decoupleR _ _ cs fAndHprs = product $ parallelMapMaybe inner fAndP
           hprs = map snd fAndHprs
 
 
-calcAnnum :: Integer -> Double -> Double
-calcAnnum i gain = gain ** (1 / ((2 * n) + 1))
-    where n = fromIntegral i
+calcAnnum :: Integer -> String -> [(Double, HPR)] -> Double
+calcAnnum i s fAndHprs = (sum $ map inner fAndHprs) / window where
+    inner (f,hpr) = f * (sum $ (selectDataSingle (checkAlmostEqYear i) hpr s))
+    window = fromIntegral $ (2 * i) + 1

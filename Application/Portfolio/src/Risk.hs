@@ -39,7 +39,7 @@ calcP :: [Double] -> Maybe Double
 calcP []           = Nothing
 calcP [_]          = Nothing
 calcP [_,_]        = Nothing
-calcP xs           = Just $ complCumulative (normalDistr mean (sqrt var)) 0
+calcP xs           = Just $ cumulative (normalDistr mean (sqrt var)) 0
     where mean = calcMean xs
           var  = calcVariance xs mean
 

@@ -42,7 +42,7 @@ verbose :: Bool
 verbose = False
 
 toCSV :: Bool
-toCSV = True
+toCSV = False
 
 multiObjective :: Bool
 multiObjective = True
@@ -59,7 +59,7 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 20 * 60 --seconds
+timeLimit = 3 * 60 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
@@ -246,7 +246,7 @@ main = do
 \Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "\
 \Number of data Points: " ++ (show $ findNumberOfPoints i s hprs) ++ "\n" ++ tab ++ "\
 \Naive f value: " ++ (show $ f i s hprs correlations (naivef len)) ++ "\n" ++ tab ++ "\
-\Per Annum value: " ++ (show $ calcAnnum i $ f i s hprs correlations (naivef len)) ++ "\n" ++ tab ++ "\
+\Per Annum value: " ++ (show $ calcAnnum i s (zip (naivef len) hprs)) ++ "\n" ++ tab ++ "\
 \Decoupled | Gain: " ++ (show naiveG) ++ " | Risk: " ++ (show naiveR) ++ "\n"
 
         putStrLn $ "Init complete: \n" ++ details
@@ -259,7 +259,7 @@ main = do
         putStrLn $ "\n\
 \Finished!\n" ++ tab ++ "\
 \Value achieved: " ++ (show total) ++ "\n" ++ tab ++"\
-\Per Anumn: " ++ (show $ calcAnnum i total) ++ "\n" ++ tab ++ "\
+\Per Anumn: " ++ (show $ calcAnnum i s (zip bestG hprs)) ++ "\n" ++ tab ++ "\
 \Decoupled | Gain: " ++ (show g) ++ " | Risk: " ++ (show r) ++ "\n" ++ tab ++ "\
 \with f's: " ++ (show bestG)
         putStrLn details
