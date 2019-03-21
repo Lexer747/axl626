@@ -66,20 +66,3 @@ applyBasedOnDate :: CompareFunc -> Date -> String -> String -> Bool
 applyBasedOnDate f Year  = compareYear f
 applyBasedOnDate f Month = compareMonth f
 applyBasedOnDate f Day   = compareDay f
-
---sort dates:
---if f x y then false 
---else !(f x y) || (== x y) then true
-sortDate :: CompareFunc -> String -> String -> Bool
-sortDate f x y =
-    if compareYear f x y
-        then True
-        else if compareYear (==) x y
-                 then if compareMonth f x y
-                          then True
-                          else if compareMonth (==) x y
-                                   then if compareDay f x y
-                                            then True
-                                            else False
-                                   else False
-                 else False

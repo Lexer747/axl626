@@ -4,7 +4,8 @@ module Risk (
         selectDataSingle,
         probK,
         calcCorrelate,
-        selectData
+        selectData,
+        calcMean
     ) where
 
 import Data.Maybe (mapMaybe)

@@ -7,7 +7,7 @@ module Fundamentals (
     ) where
 
 import qualified Data.Vector as V
-import Data.Maybe (maybeToList, mapMaybe)
+import Data.Maybe (maybeToList)
 
 import CSV
 import Types
@@ -58,6 +58,7 @@ innerG i baseDate f hpr = case (final input) of
     where final [] = Nothing
           final [_] = Nothing
           final [_,_] = Nothing
+          final [_,_,_] = Nothing
           -- if we don't have enough data ^
           final xs = Just $ 1 + (sum $ map inner xs)
           input = (selectDataSingle (checkAlmostEqYear i) hpr baseDate)
@@ -99,7 +100,21 @@ decoupleR _ _ cs fAndHprs = product $ parallelMapMaybe inner fAndP
           hprs = map snd fAndHprs
 
 
+normalize :: RealFrac a => a -> a -> a -> a -> a -> a
+normalize curMin curMax _ _ _ | curMin == curMax = error "normalize called with equal old min max"
+normalize curMin curMax newMin newMax cur = (((newMax - newMin) * (cur - curMin)) / (curMax - curMin)) + newMin
+
+transform :: [Double] -> [Double]
+transform [] = []
+transform (x:xs) = map (normalize curMin curMax 0 1) xs where
+    curMin = foldr min x xs
+    curMax = foldr max x xs
+
 calcAnnum :: Integer -> String -> [(Double, HPR)] -> Double
-calcAnnum i s fAndHprs = (sum $ map inner fAndHprs) / window where
-    inner (f,hpr) = f * (sum $ (selectDataSingle (checkAlmostEqYear i) hpr s))
+calcAnnum i s fAndHprs = ((sum $ map inner fAndHprs) / window) / (sum $ map fst fAndHprs) where
+    inner (f,hpr) = case prices hpr of
+                        [] -> 0
+                        [_] -> 0
+                        xs -> f * (sum $ transform xs)
+    prices h = selectDataSingle (checkAlmostEqYear i) h s
     window = fromIntegral $ (2 * i) + 1

@@ -244,10 +244,6 @@
     But we need a new calculation to find the risk of the portfolio. And furthermore we would
     like a way to correlate stocks together so that we can more wisely spread our money.
 
-    TODO: Drawdowns - why we want to find the overall risk
-    TODO: Maybe risk of ruin talk?
-
-
 \subsection{Mathematical Definition}
 
     Given the motivation from our the above sections, we would now like to formally define our
@@ -702,9 +698,9 @@
         & x \text{ is strictly better than } y \text{ in at least one objective} \\
     \end{align*}
 
-    This is denoted hence forth as \(x \prec y\), and among a set of solutions \(P\)
+    This is denoted in most papers as \(x \prec y\), to further this: Among a set of solutions \(P\)
     the non dominated sub set \(P'\) are those that are not dominated by any member of
-    set \(P\). To follow on from this the non-dominate set of the multi-objective search
+    set \(P\). To follow on from this the a non-dominated set of the multi-objective search
     space, will be the global Pareto optimal set.
 
     NSGA-II has the following procedure: perform a non-dominated sorting in the population
@@ -867,11 +863,11 @@
     arbitrary, since if wanted the "best" results I would've chosen 20 minutes (1200 seconds).
     But that amount of time for a single run is a bit extreme.
 
-    \begin{figure}[H] % fig:GainOfthePortfolio-OverDifferentWindows
+    \begin{figure}[H] % fig:BackTestingTheResultsOfTheGA
         % \centering
-        \includegraphics[width=\textwidth]{GainOfthePortfolio-OverDifferentWindows}
+        \includegraphics[width=\textwidth]{BackTestingTheResultsOfTheGA}
         \caption{Gain of GA vs Naive vs UK interest}
-            \label{fig:GainOfthePortfolio-OverDifferentWindows}
+            \label{fig:BackTestingTheResultsOfTheGA}
     \end{figure}
 
     \begin{figure}[H] % fig:GeneralStockDistributionCombinedOverAllWindowsTested
@@ -901,8 +897,8 @@
 % https://intrinio.com/
 
 % REPORT
-% 1 more page on GA about NSGA-2
-% why use NSGA-2 over scalarizing alteratives
+% -- 1 more page on GA about NSGA-2
+% -- why use NSGA-2 over scalarizing alteratives
 
 % show the signifance of the project
 % show the novelty

@@ -171,10 +171,6 @@ fixMutate old cur = do
 naivef :: Int -> [Double]
 naivef x = take x $ repeat $ 1 / (fromIntegral x)
 
-verfiy :: [Double] -> Bool
-verfiy xs = (sum xs <= 1) && (sum xs >= 0) && (foldr (&&) True (map ((<) 0) xs))
--- (show $ foldr (&&) True $ map (\ (a,_) -> verfiy a) gs)
-
 findNumberOfPoints :: Integer -> String -> [HPR] -> Int
 findNumberOfPoints i b hprs = sum $ map length $ selectData (checkAlmostEqYear i) hprs b
 
@@ -199,7 +195,7 @@ logStats i s hprs cs iterno pop = do
     if multiObjective 
         then (if verbose 
             then (let res = evalAllObjectives (multiObjectiveProblem i s hprs cs) pop in
-                  let ((g,bestG),(r, bestR)) = findBest res in
+                  let ((_,bestG),(_, bestR)) = findBest res in
                   putStrLn $ unwords $ [(show iterno), "Highest Gain:", (show bestG), "Lowest Risk:", (show bestR)])
             else do
                      putStr "."
@@ -264,8 +260,8 @@ main = do
 \with f's: " ++ (show bestG)
         putStrLn details
         when toCSV $ do
-            mapM (\x -> printf "%.5f\n" x) bestG
+            foldMap (\x -> printf "%.5f\n" x) bestG
             putStrLn ""
             printf "%.8f\n" total
             putStrLn ""
-            foldMap (\(g:r:[]) -> printf "%.7f , %.7f\n" g r) $ map snd $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop
+            foldMap (\(innerG:innerR:[]) -> printf "%.7f , %.7f\n" innerG innerR) $ map snd $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop

@@ -51,20 +51,27 @@ restart the program.
 
 ## Results
 
+### Pareto frontier
+
+![](HowTheParetoFrontierChangesWithGADuration_2017-1Window.png)
+
+For a real tool, this would be the output, and you could choose the portfolio which aligns
+with your risk level and gain amount. But in all future graphs only the highest \(G\)
+was chosen. This is arbitrarily done.
+
 After extracting the results from the program, and plotting them.
 Its also worth noting that to compare how well the problem was solved. The graphs
 compare a naive split of the portfolio. i.e. a complete even distribution
 over the market. And the not doing anything strategy, of comparing it to
-interest rates.
+interest rates. Here we only choose the 
 
-![](GainOfthePortfolio-OverDifferentWindows.png)
+![](BackTestingTheResultsOfTheGA.png)
 
-You can see how the GA always outperforms the naive implementation. But only in
-later years does either outperform interest rates.
+You can see how the GA tends to outperforms the naive implementation a majority of the time. But it does not always outperform interest rates, and for 
 
 ![](HowTheInduvidualPortfolioWasDistributedOverEachWindow.png)
 
-In this 3 minute graph we can see an anomaly in the year 2014 and 2007, in which only ~60% of
+In this 3 minute graph we can see an anomaly in the year and 2007, in which only ~60% of
 the portfolio budget was allocated. Because the solver is a GA, its hard
 to know the reasons for this, since a GA is a black box. But even with this
 low allocation, it still outperforms the naive distribution and interest rates at
@@ -73,29 +80,20 @@ the time.
 ![](GeneralStockDistributionCombinedOverAllWindowsTested.png)
 
 Here we can clearly see that over all time in general the GA favours certain
-stocks. But interestingly enough the results are very different over the two runs.
-Choosing one stock to analyze:
+stocks. Choosing one stock to analyze:
 
 * **AIRI : Air Industries Group** is a supplier for aeroplane parts.
   Which has done the exact opposite of consistently growing.
   It had a really well priced starting period, and then just crumbled during
   the 2007 economic crisis. It also doesn't have a wikipedia article.
 
-In the 3 minute graph you can see it was the least chosen stock over every time window.
-Whereas in the 5 minute graph, it was the 6th most chosen stock. 
-
 ![](AIRIStockPriceOverTime.png)
 
 Looking at their stock data you can see how its currently a fairly weak stock at current
-time. But had 2 runs of decent performance, the time in which it did well, lines up with
-the 2 biggest windows for the 5 minute graph.
+time. And furthermore had two very large spikes in performance. Interestingly enough
+the stock was not publicly available to trade until the year 2000. Which means that
+the 1998 run was actually investing in a stock which had a gain of 0.
 
-### Pareto frontier
-
-![](HowTheParetoFrontierChangesWithGADuration_2017-1Window.png)
-
-For a real tool, this would be the output, and you could choose the portfolio which aligns
-with your risk level and gain amount.
 
 ### Thanks for coming - Q & A
 
