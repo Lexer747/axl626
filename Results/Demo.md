@@ -29,7 +29,10 @@ But the principle is the same. For actually optimizing a portfolio.
 Once we have this set. I used Haskell to implement my solution.
 This involved, csv parsing<sup>2</sup>, calculating geometric mean, risk correlation,
 creating the two objectives, and finally setting up the genetic constants
-to run the GAs<sup>3</sup>.
+to run the GAs<sup>3</sup>. The GA used was NSGA-II, this is the latest iteration
+multiple-objective optimization.
+
+![](GA.png)
 
 For the actual experiments and collection of data I elected to go with a windowing
 technique. Where we only consider data within a certain time range, and only 
@@ -43,7 +46,7 @@ for my experiment, this was arbitrarily chosen.
 
 ``` sh
 cd C:\Users\Lexer\Documents\Uni\FYP\axl626\Application\Portfolio
-cabal run 2017 1
+cabal run 2015 1
 ```
 
 Bug in the GA library, sometimes a generation will just lock up. Temp-fix
