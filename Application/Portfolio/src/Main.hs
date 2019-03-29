@@ -10,6 +10,7 @@ import System.Environment (getArgs)
 import System.Exit
 import Text.Printf
 import Data.List (sortBy)
+import Data.HashMap.Strict (empty)
 
 import Fundamentals
 import CSV
@@ -43,7 +44,7 @@ verbose :: Bool
 verbose = False
 
 toCSV :: Bool
-toCSV = True
+toCSV = False
 
 ------------- CALC CORRELATIONS ------------
 
@@ -51,7 +52,7 @@ initCorrelationsAndData :: Integer -> String -> IO (Int, [HPR], Correlations)
 initCorrelationsAndData i s = do
                             p <- checkForErrors parseAll --see CSV
                             let hprs = completeAllHPR p i s --see CSV
-                            let cs = calcCorrelate hprs i s --see Risk
+                            let cs = calcCorrelate hprs i s empty --see Risk
                             return $ (length hprs, hprs, cs)
 
 ------------- GENETIC CONSTANTS ------------
@@ -173,7 +174,7 @@ logStats i s hprs cs iterno pop = if (toCSV) then return () else do
               let ((_,bestG),(_, medianG),(_,bestR)) = findBest res in
               putStrLn $ unwords $ [(show iterno), "Highest Gain:", (show bestG),"Medain Gain/Risk:" ,(show medianG),  "Lowest Risk:", (show bestR)])
         else do
-                 putStr "."
+                 putStr ("." ++ (show iterno))
                  hFlush stdout
 
 geneticAlgorithm :: Integer -> String -> Int -> [HPR] -> Correlations -> IO (Population Double)

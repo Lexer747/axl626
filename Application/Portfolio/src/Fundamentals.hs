@@ -99,7 +99,7 @@ decoupleR _ _ cs fAndHprs = product $ parallelMapMaybe inner fAndP
     where fAndP = zip (map fst fAndHprs) maybes
           inner (f, (Just p)) = Just $ 1 + (f * p)
           inner (_, Nothing)  = Nothing
-          maybes = map (probK hprs cs) hprs
+          maybes = parallelMap (probK hprs cs) hprs
           hprs = map snd fAndHprs
 
 

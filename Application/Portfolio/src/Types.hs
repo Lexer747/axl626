@@ -2,11 +2,13 @@ module Types (
         BaseData(..),
         HPR(..),
         Correlations,
-        getValue,
-        getValue2
+        getCorrelation,
     ) where
 
 import Control.DeepSeq
+import Data.HashMap.Strict
+import Data.Hashable
+import Prelude hiding (lookup)
 
 --adj_close (1), adj_open (5)
 data BaseData = BaseData {date :: String, close :: Double, open :: Double}
@@ -32,20 +34,17 @@ instance Show HPR where
 instance NFData HPR where
     rnf a = a `seq` ()
 
-type Correlations = [(HPR,HPR,Double)]
+--Hash a HPR on the name of it; therefore all stocks must have unique names
+instance Hashable HPR where
+    hash h = hash $ name h
+    hashWithSalt i h = hashWithSalt i $ name h
 
---Helper functions for working with maps encoded as lists of pairs
-getValue :: Eq a => a -> [(a,b)] -> b -> b
-getValue x ((a,b):_) _ | (x == a) = b
-getValue x (_:bs) b               = getValue x bs b
-getValue _ [] b                 = b
+type Correlations = HashMap (HPR,HPR) Double
 
---Another helper function for working with tupled maps as list of 3 pairs
-getValue2 :: Eq a => a -> a -> [(a,a,b)] -> Maybe b
-getValue2 x y ((a,a',b):_) | (x == a) && (y == a') = Just b --X -> Y = Z
-getValue2 x y ((a,a',b):_) | (x == a') && (y == a) = Just b --Y -> X = Z
-getValue2 x y (_:bs)                               = getValue2 x y bs
-getValue2 _ _ []                                   = Nothing
+getCorrelation :: HPR -> HPR -> Correlations -> Maybe Double
+getCorrelation h h' cs = case lookup (h,h') cs of
+    Just d -> Just d
+    Nothing -> lookup (h',h) cs
 
 -- Utility function for pretty printing
 summariseHPR :: Int -> HPR -> String

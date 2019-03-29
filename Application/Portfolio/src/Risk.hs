@@ -10,6 +10,7 @@ module Risk (
     ) where
 
 import Data.Maybe (mapMaybe)
+import Data.HashMap.Strict as HM hiding (foldr, mapMaybe, null, filter)
 import Statistics.Distribution.Normal (normalDistr)
 import Statistics.Distribution (Distribution(..))
 
@@ -21,14 +22,14 @@ calcMean :: [Double] -> Double
 calcMean xs = (sum xs) / (fromIntegral $ length xs)
 
 calcVariance :: [Double] -> Double -> Double
-calcVariance xs mean = let inner = map (\x -> (x - mean) ** 2) xs in
+calcVariance xs mean = let inner = parallelMap (\x -> (x - mean) ** 2) xs in
                        (sum inner) / (fromIntegral $ length xs)
 
 checkAlmostEqYear :: Integer -> String -> String -> Bool
 checkAlmostEqYear i = findBasedOnDate [((almostEq i),Year)] (&&)
 
 selectData :: (String -> String -> Bool) -> [HPR] -> String -> [[Double]]
-selectData f xs baseDate = filter (not . null) $ map (\h -> selectDataSingle f h baseDate) xs
+selectData f xs baseDate = filter (not . null) $ Prelude.map (\h -> selectDataSingle f h baseDate) xs
 
 selectDataSingle :: (String -> String -> Bool) -> HPR -> String -> [Double]
 selectDataSingle f h baseDate = mapMaybe g (trades h)
@@ -64,7 +65,7 @@ correlate :: Correlations -> [HPR] -> HPR -> Maybe Double
 correlate cs hprs h = case risk h of
         Just r  -> Just (foldr f r hprs)
         Nothing -> Nothing
-    where f h' prev = combineCorrelations prev (risk h') (getValue2 h' h cs)
+    where f h' prev = combineCorrelations prev (risk h') (getCorrelation h h' cs)
 
 combineCorrelations :: Double -> Maybe Double -> Maybe Double -> Double
 combineCorrelations p1 (Just p2) (Just c) | c >= 0 = (p1 + (p2 * c)) / (1 + c)--(p1 + (p2 * c)) / 1 + c
@@ -73,15 +74,15 @@ combineCorrelations p1 (Just p2) (Just c)          = (p1 + ((1 - p2) * c')) / (1
 combineCorrelations p1 _  _                        = p1 --in the case either is nothing
 
 
-calcCorrelate :: [HPR] -> Integer -> String -> Correlations
-calcCorrelate hprs i baseDate = parallelMapMaybe inner allData
+calcCorrelate :: [HPR] -> Integer -> String -> Correlations -> Correlations
+calcCorrelate hprs i baseDate baseCs = foldr inner baseCs allData
     where allData = createPermutations $ parallelMap (\h -> (h, g h, calcMean $ g h)) hprs
           g h = selectDataSingle (checkAlmostEqYear i) h baseDate
-          inner ((_, _, _),(_, [], _))      = Nothing
-          inner ((_, _, _),(_, [_], _))     = Nothing
-          inner ((_, [], _),(_, _, _))      = Nothing
-          inner ((_, [_], _),(_, _, _))     = Nothing
-          inner ((h1, d1, m1),(h2, d2, m2)) = Just (h1, h2, calcCorrelatePure d1 d2 m1 m2 (0,0,0))
+          inner ((_, _, _),(_, [], _)) cs      = cs
+          inner ((_, _, _),(_, [_], _)) cs     = cs
+          inner ((_, [], _),(_, _, _)) cs      = cs
+          inner ((_, [_], _),(_, _, _)) cs     = cs
+          inner ((h1, d1, m1),(h2, d2, m2)) cs = insert (h1, h2) (calcCorrelatePure d1 d2 m1 m2 (0,0,0)) cs
 
 calcCorrelatePure :: [Double] -> [Double] -> 
                      Double -> Double -> 

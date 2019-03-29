@@ -34,6 +34,8 @@ executable Portfolio
                      , moo >= 1.2
                      , parallel >= 3.1
                      , deepseq >= 1.1
+                     , unordered-containers >= 0.2.9
+                     , hashable >= 1.2.7
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options: -w -O3 -threaded "-with-rtsopts=-N"
