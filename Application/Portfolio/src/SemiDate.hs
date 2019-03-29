@@ -2,7 +2,8 @@ module SemiDate (
         CompareFunc,
         Date(..),
         findBasedOnDate,
-        almostEq
+        almostEq,
+        adjustYear
     ) where
 
 --global format of a date, as a string
@@ -60,6 +61,10 @@ findBasedOnDate :: [(CompareFunc, Date)] -> (Bool -> Bool -> Bool) -> String -> 
 findBasedOnDate [] _ _ _ = error "findBasedOnDate called with no compare functions"
 findBasedOnDate fs combine x y = foldr1 combine compared
     where compared = map (\(f,d) -> applyBasedOnDate f d x y) fs
+
+adjustYear :: String -> (Integer -> Integer) -> String
+adjustYear (x1:x2:x3:x4:xs) f = (show $ f x) ++ xs
+    where x = read (x1:x2:x3:x4:[])
 
 -- Pattern match the date to the correct compare function
 applyBasedOnDate :: CompareFunc -> Date -> String -> String -> Bool

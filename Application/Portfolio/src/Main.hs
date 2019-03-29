@@ -9,6 +9,7 @@ import System.IO
 import System.Environment (getArgs)
 import System.Exit
 import Text.Printf
+import Data.List (sortBy)
 
 import Fundamentals
 import CSV
@@ -42,10 +43,7 @@ verbose :: Bool
 verbose = False
 
 toCSV :: Bool
-toCSV = False
-
-multiObjective :: Bool
-multiObjective = True
+toCSV = True
 
 ------------- CALC CORRELATIONS ------------
 
@@ -81,22 +79,9 @@ elitesize = 1
 
 ------------- GENETIC EQUATIONS ------------
 
--- Our function we want to optimize, its fullG partially applied with the stocks and correlations
-f :: Integer -> String -> [HPR] -> Correlations -> [Double] -> Double
-f i s hprs cs xs = if isNaN g then error $ "NaN caused by: " ++ (show xs)
-                          else g
-    where g = fullG i s cs (zip xs hprs) --see Fundamentals
-
-partialf :: Integer -> String -> [HPR] -> Correlations -> [Double] -> (Double, Double)
-partialf i s hprs cs xs = (decoupleG i s cs (zip xs hprs), decoupleR i s cs (zip xs hprs))
-
 --init a list of lists of potential f's
 initGenome :: Int -> Rand [Genome Double]
 initGenome i = customConstrainedGenomes popsize i
-
---choose from the mutations with a roulette, sticking to the constraints
-select :: SelectionOp Double
-select = rouletteSelect elitesize
 
 crossover :: CrossoverOp Double
 crossover = onePointCrossover crossoverProb
@@ -105,14 +90,11 @@ crossover = onePointCrossover crossoverProb
 mutate :: MutationOp Double
 mutate = customMutate mutateProb
 
---give the 'nextGeneration' function all the parameters it needs to evaluate
---and select the most successful ones to carry their genes on
-step :: Integer -> String -> [HPR] -> Correlations -> StepGA Rand Double
-step i s hprs cs = nextGeneration Maximizing (f i s hprs cs) select elitesize crossover mutate
-
 multiObjectiveProblem :: Integer -> String -> [HPR] -> Correlations -> MultiObjectiveProblem ([Double] -> Double)
 multiObjectiveProblem i s hprs cs = [(Maximizing,(\xs -> decoupleG i s cs (zip xs hprs))),(Minimizing,(\xs -> decoupleR i s cs (zip xs hprs)))]
 
+--give the 'nextGeneration' function all the parameters it needs to evaluate
+--and select the most successful ones to carry their genes on
 multiObjectiveStep :: Integer -> String -> [HPR] -> Correlations -> StepGA Rand Double
 multiObjectiveStep i s hprs cs = stepNSGA2bt (multiObjectiveProblem i s hprs cs) crossover mutate
 
@@ -174,40 +156,25 @@ naivef x = take x $ repeat $ 1 / (fromIntegral x)
 findNumberOfPoints :: Integer -> String -> [HPR] -> Int
 findNumberOfPoints i b hprs = sum $ map length $ selectData (checkAlmostEqYear i) hprs b
 
-findBest :: [MultiPhenotype Double] -> ((Genome Double, [Objective]), (Genome Double, [Objective]))
-findBest []     = error "Empty population"
-findBest ((a,x):xs) = findBest_help xs (a,x) (a,x)
-
-findBest_help :: [MultiPhenotype Double] -> (Genome Double, [Objective]) -> (Genome Double, [Objective]) -> ((Genome Double, [Objective]), (Genome Double, [Objective]))
-findBest_help ((a,[g,r]):xs) (_,[bestG,_])  (_,[bestR,_])  | ((g > bestG) && (r < bestR)) = findBest_help xs (a,[g,r]) (a,[g,r])
-findBest_help ((a,[g,r]):xs) (_,[bestG,_])  (c,[bestR,r']) | (g > bestG)                  = findBest_help xs (a,[g,r]) (c,[bestR,r'])
-findBest_help ((a,[g,r]):xs) (b,[bestG,g']) (_,[bestR,_])  | (r < bestR)                  = findBest_help xs (b,[bestG,g']) (a,[g,r])
-findBest_help (_:xs)         g'             r'                                            = findBest_help xs g' r'
-findBest_help []             g'             r'                                            = (g',r')
+findBest :: Ord b => [(a,[b])] -> ((a,[b]),(a,[b]),(a,[b]))
+findBest xs = (head sorted, sorted !! ((length sorted) `div` 2) , last sorted)
+    where sorted = sortBy (\(_,(g1:r1:_)) (_,(g2:r2:_)) ->
+                    case (flip compare g1 g2) of
+                        EQ -> compare r1 r2
+                        _ -> flip compare g1 g2) xs
 
 logStats :: Integer -> String -> [HPR] -> Correlations -> Int -> Population Double -> IO ()
-logStats i s hprs cs iterno pop = do
-    when (iterno == 0) $
-        if verbose then (if multiObjective 
-                            then putStrLn "# Generation best"
-                            else putStrLn "# Generation best median worst")
-                   else putStrLn "Running (Each '.' represents a generation)"
-    if multiObjective 
-        then (if verbose 
-            then (let res = evalAllObjectives (multiObjectiveProblem i s hprs cs) pop in
-                  let ((_,bestG),(_, bestR)) = findBest res in
-                  putStrLn $ unwords $ [(show iterno), "Highest Gain:", (show bestG), "Lowest Risk:", (show bestR)])
-            else do
-                     putStr "."
-                     hFlush stdout)
-        else (let gs = bestFirst Maximizing $ pop in
-              let (_,best) = head gs in
-              let (_,median) = gs !! (length gs `div` 2) in
-              let (_,worst) = last gs in
-              if verbose then putStrLn $ unwords [(show iterno), (take 5 $ show best), (take 5 $ show median), (take 5 $ show worst)]
-                           else do
-                                    putStr "."
-                                    hFlush stdout)
+logStats i s hprs cs iterno pop = if (toCSV) then return () else do
+    when (iterno == 0) (
+        if verbose then putStrLn "# Generation best"
+                   else putStrLn "Running (Each '.' represents a generation)")
+    if verbose 
+        then (let res = evalAllObjectives (multiObjectiveProblem i s hprs cs) pop in
+              let ((_,bestG),(_, medianG),(_,bestR)) = findBest res in
+              putStrLn $ unwords $ [(show iterno), "Highest Gain:", (show bestG),"Medain Gain/Risk:" ,(show medianG),  "Lowest Risk:", (show bestR)])
+        else do
+                 putStr "."
+                 hFlush stdout
 
 geneticAlgorithm :: Integer -> String -> Int -> [HPR] -> Correlations -> IO (Population Double)
 geneticAlgorithm i s genomeLen hprs cs = do
@@ -215,8 +182,7 @@ geneticAlgorithm i s genomeLen hprs cs = do
     where innerLoop = loopIO
                     [DoEvery 1 (logStats i s hprs cs), (TimeLimit timeLimit)]
                     (Generations maxIterations)
-                    (if multiObjective then (multiObjectiveStep i s hprs cs)
-                                       else (step i s hprs cs))
+                    (multiObjectiveStep i s hprs cs)
 
 tab :: String
 tab = "    "
@@ -231,37 +197,48 @@ main = do
             exitFailure
         let i = read $ a !! 1
         (len, hprs, correlations) <- initCorrelationsAndData i s
-        let (naiveG, naiveR) = partialf i s hprs correlations (naivef len)
         let details = tab ++ "\
 \Year Range in use: " ++ (take 4 s) ++ " ± " ++ (show i) ++ "\n" ++ tab ++ "\
 \Number of stocks: " ++ (show len) ++ "\n" ++ tab ++ "\
 \Number of correlations: " ++ (show $ length correlations) ++ "\n" ++ tab ++ "\
 \Time to run: " ++ (show timeLimit) ++ "s\n" ++ tab ++ "\
 \Population size: " ++ (show popsize) ++ "\n" ++ tab ++ "\
-\MultiObjective?: " ++ (show multiObjective) ++ "\n" ++ tab ++ "\
 \Elite Size: " ++ (show elitesize) ++ "\n" ++ tab ++ "\
 \Number of data Points: " ++ (show $ findNumberOfPoints i s hprs) ++ "\n" ++ tab ++ "\
-\Naive f value: " ++ (show $ f i s hprs correlations (naivef len)) ++ "\n" ++ tab ++ "\
-\Per Annum value: " ++ (show $ calcAnnum i s (zip (naivef len) hprs)) ++ "\n" ++ tab ++ "\
-\Decoupled | Gain: " ++ (show naiveG) ++ " | Risk: " ++ (show naiveR) ++ "\n"
+\Naive f Forward Test: " ++ (show $ forwardTest i s (zip (naivef len) hprs)) ++ "\n" ++ tab ++ "\
+\Best Stock: " ++ (show $ findBestStock i s hprs) ++ "\n" ++ tab ++ "\
+\Best Stock Forward Test: " ++ (show $ forwardTest i s (zip (createSpread hprs $ fst $ findBestStock i s hprs) hprs))
 
-        putStrLn $ "Init complete: \n" ++ details
         finalPop <- geneticAlgorithm i s len hprs correlations
-        let bestG =  if multiObjective 
-                            then fst $ fst (findBest $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop)
-                            else fst (head . bestFirst Maximizing $ finalPop)
-        let total = f i s hprs correlations bestG
-        let (g, r) = partialf i s hprs correlations bestG
-        putStrLn $ "\n\
-\Finished!\n" ++ tab ++ "\
-\Value achieved: " ++ (show total) ++ "\n" ++ tab ++"\
-\Per Anumn: " ++ (show $ calcAnnum i s (zip bestG hprs)) ++ "\n" ++ tab ++ "\
-\Decoupled | Gain: " ++ (show g) ++ " | Risk: " ++ (show r) ++ "\n" ++ tab ++ "\
-\with f's: " ++ (show bestG)
-        putStrLn details
+        let (bestG,medianG,bestR) = findBest $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop
+        when (not toCSV) $ do 
+            putStrLn $ "\n\
+    \Finished!\n" ++ tab ++ "\
+    \Best G Forward Test: " ++ (show $ forwardTest i s (zip (fst bestG) hprs)) ++ "\n" ++ tab ++ "\
+    \Medain G R Forward Test: " ++ (show $ forwardTest i s (zip (fst medianG) hprs)) ++ "\n" ++ tab ++ "\
+    \Best R Forward Test: " ++ (show $ forwardTest i s (zip (fst bestR) hprs)) ++ "\n" ++ tab ++ "\
+    \Best G Decoupled: " ++ (show $ snd bestG) ++ "\n" ++ tab ++ "\
+    \Medain G R Decoupled: " ++ (show $ snd medianG) ++ "\n" ++ tab ++ "\
+    \Best R Decoupled: " ++ (show $ snd bestR) ++ "\n" ++ tab ++ "\
+    \with Best G f's: " ++ (show $ fst bestG) ++ "\n" ++ tab ++ "\
+    \with Median G R f's: " ++ (show $ fst medianG) ++ "\n" ++ tab ++ "\
+    \with Best R f's: " ++ (show $ fst bestR)
+            putStrLn details
         when toCSV $ do
-            foldMap (\x -> printf "%.5f\n" x) bestG
+            printf 
+                "%s ± %d, %.7f, %s, %.7f, %.7f, %.7f, %.7f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f" 
+                (take 4 s)
+                i
+                (forwardTest i s (zip (naivef len) hprs))
+                (name $ fst $ findBestStock i s hprs)
+                (forwardTest i s (zip (createSpread hprs $ fst $ findBestStock i s hprs) hprs))
+                (forwardTest i s (zip (fst bestG) hprs))
+                (forwardTest i s (zip (fst medianG) hprs))
+                (forwardTest i s (zip (fst bestR) hprs))
+                (head $ snd bestG) (last $ snd bestG)
+                (head $ snd medianG) (last $ snd medianG)
+                (head $ snd bestR) (last $ snd bestR)
+        {-
+            foldMap (\x -> printf "%.5f\n" x) $ fst bestG
             putStrLn ""
-            printf "%.8f\n" total
-            putStrLn ""
-            foldMap (\(innerG:innerR:[]) -> printf "%.7f , %.7f\n" innerG innerR) $ map snd $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop
+            foldMap (\(innerG:innerR:[]) -> printf "%.7f , %.7f\n" innerG innerR) $ map snd $ evalAllObjectives (multiObjectiveProblem i s hprs correlations) finalPop-}

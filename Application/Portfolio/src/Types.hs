@@ -17,6 +17,7 @@ data HPR = HPR {
         path :: String,
         name:: String,
         trades :: [(Double, String)],
+        prices :: [(Double, Double, String)],
         maxLoss :: Double,
         risk :: Maybe Double
     }
@@ -48,7 +49,7 @@ getValue2 _ _ []                                   = Nothing
 
 -- Utility function for pretty printing
 summariseHPR :: Int -> HPR -> String
-summariseHPR i h = (show i) ++ ". \"" ++ (name h) ++ "\"; BL = " ++ (show $ maxLoss h) ++ ";" ++ (succinctList $ trades h)
+summariseHPR i h = (show i) ++ ". \"" ++ (name h) ++ "\"; BL = " ++ (show $ maxLoss h) ++ ";" ++ (succinctList $ trades h) ++ ";" ++ (succinctList $ prices h)
 
 succinctList :: (Show a) => [a] -> String
 succinctList xs | length xs <= 4 = show xs

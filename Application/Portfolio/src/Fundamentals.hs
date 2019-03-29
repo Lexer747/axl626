@@ -3,7 +3,9 @@ module Fundamentals (
         fullG,
         decoupleG,
         decoupleR,
-        calcAnnum
+        forwardTest,
+        findBestStock,
+        createSpread
     ) where
 
 import qualified Data.Vector as V
@@ -13,6 +15,7 @@ import CSV
 import Types
 import Risk
 import ParallelUtils
+import SemiDate
 
 --given an input, strip out unnecessary data
 getData :: (String, String, Fundamental) -> (String, String, [BaseData])
@@ -24,16 +27,16 @@ getData (p,n,vector) = (p,n,map parse list)
 --note this does not find the risk, use completeHPR to do so
 makeHPR :: (String, String, [BaseData]) -> HPR
 makeHPR (_,_,[]) = error "makeHPR called with empty list, should have atleast one element"
-makeHPR (p,n,(x:xs)) = makeHPR_help (p,n,xs) trade [(trade, date x)]
+makeHPR (p,n,(x:xs)) = makeHPR_help (p,n,xs) trade [(trade, date x)] [(open x, close x, date x)]
     where trade = (close x) - (open x)
 
 --expected -Wmissing-fields
-makeHPR_help :: (String, String, [BaseData]) -> Double -> [(Double, String)] -> HPR
-makeHPR_help (p,n,(x:xs)) bl acc = case trade < bl of
-        True  -> makeHPR_help (p,n,xs) trade ((trade, date x):acc)
-        False -> makeHPR_help (p,n,xs) bl    ((trade, date x):acc)
+makeHPR_help :: (String, String, [BaseData]) -> Double -> [(Double, String)] -> [(Double, Double, String)] -> HPR
+makeHPR_help (p,n,(x:xs)) bl acc pricesAcc = case trade < bl of
+        True  -> makeHPR_help (p,n,xs) trade ((trade, date x):acc) ((open x, close x, date x):pricesAcc)
+        False -> makeHPR_help (p,n,xs) bl    ((trade, date x):acc) ((open x, close x, date x):pricesAcc)
     where trade = (close x) - (open x)
-makeHPR_help (p,n,[])     bl acc = HPR {path = p, name = n,trades = acc, maxLoss = bl}
+makeHPR_help (p,n,[])     bl acc pricesAcc = HPR {path = p, name = n,trades = acc, maxLoss = bl, prices = pricesAcc}
 
 --Map over all CSV files and make all of them into the HPR representation
 makeAllHPR :: [(String, String, Fundamental)] -> [HPR]
@@ -41,7 +44,7 @@ makeAllHPR = parallelMap (makeHPR . getData)
 
 --given a HPR from makeHPR, we can fill in the risk field
 completeHPR :: HPR -> Integer -> String -> HPR
-completeHPR hpr i s = HPR {path = path hpr, name = name hpr, trades = trades hpr, maxLoss = maxLoss hpr, risk = r}
+completeHPR hpr i s = HPR {path = path hpr, name = name hpr, trades = trades hpr, maxLoss = maxLoss hpr, prices = prices hpr, risk = r}
     where r = appliedP hpr i s
 
 completeAllHPR :: [(String, String, Fundamental)] -> Integer -> String -> [HPR]
@@ -100,21 +103,35 @@ decoupleR _ _ cs fAndHprs = product $ parallelMapMaybe inner fAndP
           hprs = map snd fAndHprs
 
 
+{-
 normalize :: RealFrac a => a -> a -> a -> a -> a -> a
 normalize curMin curMax _ _ _ | curMin == curMax = error "normalize called with equal old min max"
 normalize curMin curMax newMin newMax cur = (((newMax - newMin) * (cur - curMin)) / (curMax - curMin)) + newMin
 
 transform :: [Double] -> [Double]
 transform [] = []
-transform (x:xs) = map (normalize curMin curMax 0 1) xs where
+transform (x:xs) = map (normalize curMin curMax 0 1) (x:xs) where
     curMin = foldr min x xs
     curMax = foldr max x xs
+-}
 
-calcAnnum :: Integer -> String -> [(Double, HPR)] -> Double
-calcAnnum i s fAndHprs = ((sum $ map inner fAndHprs) / window) / (sum $ map fst fAndHprs) where
-    inner (f,hpr) = case prices hpr of
-                        [] -> 0
-                        [_] -> 0
-                        xs -> f * (sum $ transform xs)
-    prices h = selectDataSingle (checkAlmostEqYear i) h s
-    window = fromIntegral $ (2 * i) + 1
+forwardTest :: Integer -> String -> [(Double, HPR)] -> Double
+forwardTest i s fAndHprs = sum $ map inner fAndHprs where
+    inner (f,h) = f * (findIncrease 0 (adjustYear s (+ (1 + i))) h)
+
+findIncrease :: Integer -> String -> HPR -> Double
+findIncrease i s hpr = case set of
+            [] -> 0
+            xs -> ((snd $ last xs) / (fst $ head xs)) - 1
+    where
+        set = selectPricesSingle (checkAlmostEqYear i) hpr s
+
+findBestStock :: Integer -> String -> [HPR] -> (HPR, Double)
+findBestStock i s hprs = foldr (\(newH,new) (oldH,old) -> 
+        if new > old
+            then (newH, new)
+            else (oldH, old)) base hs
+    where (base:hs) = zip hprs $ map (findIncrease i s) hprs
+
+createSpread :: (Eq a) => [a] -> a -> [Double]
+createSpread xs x = map (\y -> if y == x then 1 else 0) xs

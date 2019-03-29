@@ -2,6 +2,7 @@ module Risk (
         checkAlmostEqYear,
         appliedP,
         selectDataSingle,
+        selectPricesSingle,
         probK,
         calcCorrelate,
         selectData,
@@ -34,6 +35,12 @@ selectDataSingle f h baseDate = mapMaybe g (trades h)
     where g (x,d) = case (f baseDate d) of
                         True -> Just x
                         False -> Nothing
+
+selectPricesSingle :: (String -> String -> Bool) -> HPR -> String -> [(Double, Double)]
+selectPricesSingle f h baseDate = mapMaybe g (prices h)
+    where g (o,c,d) = case (f baseDate d) of
+                          True -> Just (o,c)
+                          False -> Nothing
 
 --calculate the risk of a series of points
 calcP :: [Double] -> Maybe Double
