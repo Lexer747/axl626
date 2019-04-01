@@ -56,11 +56,16 @@
     \end{abstract}
 \end{titlingpage}
 
-\section{Introduction}
+\tableofcontents
+\pagebreak
+
+\section{Introduction To Portfolio Optimization}
 
     A portfolio is a collection of economic assets, and the optimization of such an
     entity is the process of maximizing its return over time, while minimizing the
     risk of the collection.
+
+    TODO: Why is it important
 
     More specifically, in the case of this project, the assets we are analyzing are
     stocks. Whereas in the more general case, a portfolio would consist of choosing
@@ -84,7 +89,7 @@
     by my supervisor, and formulating an experiment to test whether using
     multi-objective genetic algorithms come to good solutions.
 
-\subsection{Kelly Criterion \& Assumptions}
+\subsection{Portfolio Optimization \& Assumptions}
 
     Kelly Criterion \cite{Kelly} is a great theoretical achievement, such a simple formula so
     perfectly describes how to play a system in order to gain the most from it. In Fact
@@ -93,7 +98,7 @@
     game. Hence why we need to adapt the equations so that we can try to apply them to the
     real world. As well as dealing with more than one stock.
 
-    A big assumption which is being made from now on, by other papers - sometimes implicitly,
+    A big assumption which is being made from now on, by other papers about portfolio optimization - sometimes implicitly,
     is that we can model a stock as a random variable. This is a large assumption. It
     implies, from past data, we can construct a model which will be able
     to predict the probabilities associated with different outcomes of future events.
@@ -247,7 +252,7 @@
     independently.
 
 
-\subsection{Risk}
+\subsection{Risk - A New Interpretation}
 
     Linking back to Kelly Criterion, the riskiness of a random variable is accounted for
     when use Kelly's formula, equation \ref{eq:Kelly} needs no further calculations
@@ -258,7 +263,7 @@
     But we need a new calculation to find the risk of the portfolio. And furthermore we would
     like a way to correlate stocks together so that we can more wisely spread our money.
 
-\subsection{Mathematical Definition}
+\subsubsection{Mathematical Definition}
 
     Given the motivation from our the above sections, we would now like to formally define our
     evaluation function for how well a portfolio performs given a set of \(f\)'s. Which describes
@@ -498,6 +503,8 @@
     with every other stock in the set } m &&
     \end{flalign*}
 
+\subsection{Inspiration and Novelty?}
+
     Now we can use these functions separately to evaluate both risk and reward of the
     portfolio. You get a Pareto Set \cite{Kaisa}. A non dominated efficient frontier. Fortunately
     this is not a "problem" in some sense, as a choice of risk vs reward can then be made
@@ -507,6 +514,8 @@
     unique. However, Ralph's work \cite{Ralph} is what inspired this line of thought
     and furthermore it is the basis of my work for equation \ref{eq:DecoupleR}, as well as
     the aggregate for equation \ref{eq:DecoupleG}.
+
+    TODO: Summarize main contributions
 
 \section{Solving \(f\) with respect to \(G\) and \(R\)}
 

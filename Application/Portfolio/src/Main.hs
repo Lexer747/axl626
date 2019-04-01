@@ -44,7 +44,7 @@ verbose :: Bool
 verbose = False
 
 toCSV :: Bool
-toCSV = False
+toCSV = True
 
 ------------- CALC CORRELATIONS ------------
 
@@ -58,7 +58,7 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 3 * 60 --seconds
+timeLimit = 60 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
@@ -174,7 +174,7 @@ logStats i s hprs cs iterno pop = if (toCSV) then return () else do
               let ((_,bestG),(_, medianG),(_,bestR)) = findBest res in
               putStrLn $ unwords $ [(show iterno), "Highest Gain:", (show bestG),"Medain Gain/Risk:" ,(show medianG),  "Lowest Risk:", (show bestR)])
         else do
-                 putStr ("." ++ (show iterno))
+                 putStr "."
                  hFlush stdout
 
 geneticAlgorithm :: Integer -> String -> Int -> [HPR] -> Correlations -> IO (Population Double)
@@ -227,7 +227,7 @@ main = do
             putStrLn details
         when toCSV $ do
             printf 
-                "%s ± %d, %.7f, %s, %.7f, %.7f, %.7f, %.7f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f" 
+                "%s ± %d; %.7f; %s; %.7f; %.7f; %.7f; %.7f; [" 
                 (take 4 s)
                 i
                 (forwardTest i s (zip (naivef len) hprs))
@@ -236,9 +236,12 @@ main = do
                 (forwardTest i s (zip (fst bestG) hprs))
                 (forwardTest i s (zip (fst medianG) hprs))
                 (forwardTest i s (zip (fst bestR) hprs))
-                (head $ snd bestG) (last $ snd bestG)
-                (head $ snd medianG) (last $ snd medianG)
-                (head $ snd bestR) (last $ snd bestR)
+            foldMap (\x  -> printf "%.5f, " x) (fst bestG)
+            printf "]; ["
+            foldMap (\x  -> printf "%.5f, " x) (fst medianG)
+            printf "]; ["
+            foldMap (\x  -> printf "%.5f, " x) (fst bestR)
+            printf "]"
         {-
             foldMap (\x -> printf "%.5f\n" x) $ fst bestG
             putStrLn ""
