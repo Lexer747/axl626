@@ -846,7 +846,9 @@
     the process of eventually considering that old enough data will become less useful
     as an indicator of future events. The only piece of data that will be kept regardless
     of window size, is the \(BL\). This is to be more realistic about the worst case scenario.
-    As it could be seen as reasonable to say the \(BL\) of any asset is \(\infty\), if the value
+    As it could be seen as reasonable to say the \(BL\) of any asset is \(\infty\), if
+    the value
+
     of the asset becomes unsellable, this rather extreme view however essentially means all
     algorithms would tell you to bet nothing. Since thats the superior strategy. Instead
     this approach, takes into account the worst \(BL\) of any one stock over its lifetime.
@@ -898,35 +900,81 @@
 
     The next step was to run the GA and actually compare the results to other methods.
     The comparisons I have chosen are: A naive spread, which splits up its initial wealth
-    evenly over every stock. And a litmus test method, which simply takes the "best" performing
-    stock from the window, and puts all its wealth on that stock.
+    evenly over every stock; a litmus test method, which simply takes the "best" performing
+    stock from the window, and puts all its wealth on that stock; and finally
+    comparing it to putting you money in a bank offering UK national interest rates
+    \cite{BankOfE}.
 
     For verification, by attempting to ensure the results aren't an anomaly, the GA was run 10
-    times for each window. This is so we can see how consistent the GA is at producing
+    times for each window. This is to help determine how consistent the GA is at producing
     similar performing portfolio's. And to compare how diverse the actual allocation
-    over the stocks is. It was also run over many windows, to also get more information
+    of the stocks is. It was also run over many windows, to get more information
     on how different economic climates affect the performance. Finally, from the pareto
-    set of portfolio's produced by the GA, it could have been worth it to test all
-    of them produced by the GA. But instead I thought It would be more realistic to choose
-    the extremes from the GA. So only 3 are chosen. Sorting the set of portfolio's
-    lexicographically, with the \(G\) and \(R\) values for the comparison. Where \(R\)
-    was minimized. I then elected to choose, the first element from this set, the middle
-    element, and the last element. These 3 portfolio's were then carried forward and tested.
-    From here on out these 3 portfolio's are referred to as Highest \(G\) (the first element),
-    the Median \(G\/R\) (the middle element), and the Lowest \(R\) (the last element).
+    set of portfolio's produced by the GA, only 3 are chosen. It could have been worth
+    it to test all of the portfolio's produced by the GA. But since you can only
+    chose a single portfolio from the set, its realistic unfeasible to expect to
+    test all the portfolio's. Since a human should make a choice about how much
+    they prefer \(G\) (gain) or \(R\) (risk) and then choose a portfolio which most
+    aligns with there preferred values. To emulate this human I will chose 3
+    portfolio's to test, representing 3 different peoples decision making; a risk
+    averse person, a risk neutral person, and a risk sensitive person. Obviously
+    this a simplification of decision making, however, some method of choosing
+    test portfolio's is needed.
 
-    \begin{figure}[H] % fig:AComparisonOfPortfolios
+    To do this, the pareto set is sorted lexicographically, with the \(G\) and \(R\)
+    values for the comparison method. Where \(R\) was minimized. I then elected to choose,
+    the first element from this set, the middle element, and the last element.
+    These 3 portfolio's were then carried forward and tested. From here on out
+    these 3 portfolio's are referred to as Highest \(G\) (the first element),
+    the Median \(G/R\) (the middle element), and the Lowest \(R\) (the last element).
+    Hence representing the 3 different people.
+
+    \begin{figure}[H] % fig:AComparisonOfPortfolios 
         % \centering
         \includegraphics[width=\textwidth]{AComparisonOfPortfolios}
-        \caption{Results from The Test}
+        \caption{Results from The Test. See appendix \ref{apd:AComparisonOfPortfoliosTable} for raw values}
             \label{fig:AComparisonOfPortfolios}
-        \begin{tabular}
-            {p{.09\textwidth}|p{.075\textwidth}|p{.075\textwidth}|p{.135\textwidth}|p{.135\textwidth}|p{.135\textwidth}|p{.135\textwidth}}
-            \bfseries Year Range & \bfseries Naive Spread & \bfseries Best Stock & \bfseries Best Stock From Range & \bfseries Highest G Portfolio & \bfseries Median G/R Portfolio & \bfseries Lowest R Portfolio
-            \csvreader[head to column names]{figures/AComparisonOfPortfoliosTable.csv}{}
-            {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv&\csvcolv&\csvcolvi&\csvcolvii}
-        \end{tabular}
     \end{figure}
+
+    Its evident from this graph that one result is missing and goes off the graph. This
+    is the result from the 2007 window, and the appendix \ref{apd:AComparisonOfPortfoliosTable}
+    shows the gain was 436.23\%. This results made the graph unreadable. As to analysis
+    from this result we can see that the GA doesn't consistently outperform our basic
+    tests. There are years which it is outperformed by either the best stock, or a naive
+    spread, or UK interest. And there are years in which it outperforms those methods.
+    Taking a closer
+    look at one window, say 2004. We can see the prominence of the best stock method
+    failing dramatically here, losing 29.71\% of the portfolio's value. Whereas
+    the portfolio's chosen by the naive spread, risk averse, risk neutral, risk
+    sensitive, and interest rate, all increase the value of the portfolio. However
+    whats disappointing is that the best performing portfolio was simply the naive spread.
+    Even the risk averse portfolio, only performs ~half as well as the naive spread.
+
+    \begin{figure}[H] % fig:MeanAndVarianceOfPortfolioTypes
+        % \centering
+        \includegraphics[width=\textwidth]{MeanAndVarianceOfPortfolioTypes}
+        \caption{Measuring the Variance and Average Results from the different Methods. See \ref{apd:MeanAndVarianceOfPortfolioTypes} for raw results.}
+            \label{fig:MeanAndVarianceOfPortfolioTypes}
+    \end{figure}
+
+    Averaging out all of the windows to try and get a better picture how it generally
+    performs is done in figure \ref{fig:MeanAndVarianceOfPortfolioTypes}. In this graph
+    we can see that on average: the naive spread, and the best stock actually performed
+    better, than any other option. Which while disappointing for our algorithm, there
+    is one good takeaway from this graph.
+
+    The variance of the portfolio's produced by the GA are not only lower, meaning that
+    when it loses it does so less. And when it wins it also does so less. This is a
+    desirable trait for the algorithm to have. Furthermore the risk formulation
+    actually appears to work. The portfolios which elected to have lower \(R\)
+    had a lower variance and hence are less risky. The lowest risk portfolio's
+    had a 10x improvement in risk compared to the median portfolios, and 20x
+    compared to the highest \(G\) portfolios.
+
+    For completeness I also plotted the actual portfolio's created by the GA, as this
+    would indicate if the GA was over fitting or finding local maximums.
+
+    
 
 \section{Conclusions}
 
@@ -934,17 +982,54 @@
 \pagebreak
 \bibliographystyle{IEEEtran}
 \bibliography{Report}
+\pagebreak
+
+\appendix
+
+\section{Appendix: Results}
+
+\subsection{A Comparison Of Portfolios Table}
+    \begin{table}[H]\label{apd:AComparisonOfPortfoliosTable}
+        \begin{tabular}
+            {p{.09\textwidth}|p{.075\textwidth}|p{.075\textwidth}|p{.12\textwidth}|p{.12\textwidth}|p{.12\textwidth}|p{.12\textwidth}|p{.09\textwidth}}
+            \bfseries Year Range & \bfseries Naive Spread & \bfseries Best Stock & \bfseries Best Stock From Range & \bfseries Highest G Portfolio & \bfseries Median G/R Portfolio & \bfseries Lowest R Portfolio & \bfseries UK Interest
+            \csvreader[head to column names]{figures/AComparisonOfPortfoliosTable.csv}{}
+            {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv&\csvcolv&\csvcolvi&\csvcolvii&\csvcolviii}
+        \end{tabular}
+    \end{table}
+
+\subsection{Mean and Variance of Portfolio Types}
+    \begin{table}[H]\label{apd:MeanAndVarianceOfPortfolioTypes}
+        \begin{tabular}
+            {p{.09\textwidth}|p{.09\textwidth}|p{.09\textwidth}|p{.13\textwidth}|p{.15\textwidth}|p{.13\textwidth}|p{.12\textwidth}}
+            \bfseries - & \bfseries Naive Spread & \bfseries Best Stock & \bfseries Highest G Portfolio & \bfseries Median G/R Portfolio & \bfseries Lowest R Portfolio & \bfseries UK Interest
+            \csvreader[head to column names]{figures/MeanAndVarianceOfPortfolioTypes.csv}{}
+            {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv&\csvcolv&\csvcolvi&\csvcolvii}
+        \end{tabular}
+    \end{table}
+
+\subsection{Highest \(G\) Portfolio Distributions}
+    \begin{figure}[H] % fig:HighestGPortfolioDistributions
+        % \centering
+        \includegraphics[width=\textwidth]{HighestGPortfolioDistributions}
+        \caption{-}
+            \label{fig:HighestGPortfolioDistributions}
+    \end{figure}
+
+\subsection{Median \(G/R\) Portfolio Distributions}
+    \begin{figure}[H] % fig:MedianGRPortfolioDistributions
+        % \centering
+        \includegraphics[width=\textwidth]{MedianGRPortfolioDistributions}
+        \caption{-}
+            \label{fig:LowestRPortolioDistributions}
+    \end{figure}
+
+\subsection{Lowest \(R\) Portfolio Distributions}
+    \begin{figure}[H] % fig:LowestRPortolioDistributions
+        % \centering
+        \includegraphics[width=\textwidth]{LowestRPortolioDistributions}
+        \caption{-}
+            \label{fig:LowestRPortolioDistributions}
+    \end{figure}
 
 \end{document}
-
-% DEMO
-% learning ga myself
-% learning portfolio optimization
-% https://intrinio.com/
-
-% REPORT
-% -- 1 more page on GA about NSGA-2
-% -- why use NSGA-2 over scalarizing alteratives
-
-% show the signifance of the project
-% show the novelty
