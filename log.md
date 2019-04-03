@@ -81,3 +81,8 @@ More work on report.
 # Week 18 (15/03/2019)
 
 A lot of report write up, analysis of the results.
+
+# Week 19 (22/03/2019)
+
+After Demo, the testing was realised to be flawed. Re-wrote the test code, and ran a much
+bigger sample size. Also improved one of the algorithms.

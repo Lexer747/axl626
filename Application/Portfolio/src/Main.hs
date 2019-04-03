@@ -58,7 +58,7 @@ initCorrelationsAndData i s = do
 ------------- GENETIC CONSTANTS ------------
 
 timeLimit :: Double
-timeLimit = 60 --seconds
+timeLimit = 1 --seconds
 
 maxIterations :: Int
 maxIterations = 5000
@@ -241,7 +241,8 @@ main = do
             foldMap (\x  -> printf "%.5f, " x) (fst medianG)
             printf "]; ["
             foldMap (\x  -> printf "%.5f, " x) (fst bestR)
-            printf "]"
+            printf "]\n"
+            foldMap (\x -> printf "%s, " x) $ map (\x -> reverse $ drop 10 $ reverse $ name x) hprs
         {-
             foldMap (\x -> printf "%.5f\n" x) $ fst bestG
             putStrLn ""

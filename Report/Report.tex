@@ -6,7 +6,8 @@
 \usepackage{graphicx}
 \usepackage{titling}
 \usepackage{float}
-\graphicspath{ {./figures/} {./../Results/} }
+\usepackage{csvsimple}
+\graphicspath{ {./figures/}}
 \newcommand{\bigO}{\mathcal{O}}
 \renewcommand*{\thefootnote}{(\arabic{footnote})}
 
@@ -866,6 +867,13 @@
     the results. All thats left would be to compare these results the naive spread of the
     portfolio, or any other investment strategy for that matter.
 
+    The actual evaluation I am going to use is forward testing the portfolio. This means that
+    the fractional amounts to put on each stock are "placed" on those stocks. Then you
+    calculate how much money would be made over the next year with those fractions. This test
+    is good because the Portfolio will be tested against data it hasn't been trained on.
+    So a window size of 3 would mean you need data from 4 years i.e. a window of 2000 to 2003
+    would be tested on how much money it would make in 2004.
+
 \subsection{Results}
 
     First the preliminary results of running the GA over 1 window (of 3 years) with different
@@ -888,109 +896,40 @@
     each duration is only 1, so 3 minutes was more a estimated timing based loosely
     on this result.
 
-    Next I ran the GA over more windows to see how it performs:
+    The next step was to run the GA and actually compare the results to other methods.
+    The comparisons I have chosen are: A naive spread, which splits up its initial wealth
+    evenly over every stock. And a litmus test method, which simply takes the "best" performing
+    stock from the window, and puts all its wealth on that stock.
 
-    \begin{figure}[H] % fig:BackTestingTheResultsOfTheGA
+    For verification, by attempting to ensure the results aren't an anomaly, the GA was run 10
+    times for each window. This is so we can see how consistent the GA is at producing
+    similar performing portfolio's. And to compare how diverse the actual allocation
+    over the stocks is. It was also run over many windows, to also get more information
+    on how different economic climates affect the performance. Finally, from the pareto
+    set of portfolio's produced by the GA, it could have been worth it to test all
+    of them produced by the GA. But instead I thought It would be more realistic to choose
+    the extremes from the GA. So only 3 are chosen. Sorting the set of portfolio's
+    lexicographically, with the \(G\) and \(R\) values for the comparison. Where \(R\)
+    was minimized. I then elected to choose, the first element from this set, the middle
+    element, and the last element. These 3 portfolio's were then carried forward and tested.
+    From here on out these 3 portfolio's are referred to as Highest \(G\) (the first element),
+    the Median \(G\/R\) (the middle element), and the Lowest \(R\) (the last element).
+
+    \begin{figure}[H] % fig:AComparisonOfPortfolios
         % \centering
-        \includegraphics[width=\textwidth]{BackTestingTheResultsOfTheGA}
-        \caption{Gain of GA vs Naive vs UK interest}
-            \label{fig:BackTestingTheResultsOfTheGA}
+        \includegraphics[width=\textwidth]{AComparisonOfPortfolios}
+        \caption{Results from The Test}
+            \label{fig:AComparisonOfPortfolios}
+        \begin{tabular}
+            {p{.09\textwidth}|p{.075\textwidth}|p{.075\textwidth}|p{.135\textwidth}|p{.135\textwidth}|p{.135\textwidth}|p{.135\textwidth}}
+            \bfseries Year Range & \bfseries Naive Spread & \bfseries Best Stock & \bfseries Best Stock From Range & \bfseries Highest G Portfolio & \bfseries Median G/R Portfolio & \bfseries Lowest R Portfolio
+            \csvreader[head to column names]{figures/AComparisonOfPortfoliosTable.csv}{}
+            {\\\hline\csvcoli&\csvcolii&\csvcoliii&\csvcoliv&\csvcolv&\csvcolvi&\csvcolvii}
+        \end{tabular}
     \end{figure}
-
-    To create figure \ref{fig:BackTestingTheResultsOfTheGA} the GA was run the same way as
-    figure \ref{fig:HowTheParetoFrontierChangesWithGADuration_2017-1Window}. From the
-    frontier of that test, arbitrarily, I then choose the highest \(G\) scoring result.
-    This portfolio was then back tested on the exact window it was trained on. This
-    means the \(f\)'s were invested as described and the bar on the graph shows
-    how return on investment per annum the portfolio had.
-
-    A clear trend is that the GA outperforms the naive spread, very consistently.
-    Only in 3 windows does the naive spread do better than any GA run: 2007, 2008, 2017.
-    But the naive spread still lost money in 2007 and 2008. Making 2017 an outstanding result,
-    as one could word that to say naive was better than the GA 3\% of the time.
-    Overall from the two runs of the GA, 68\% of the time the GA turned a profit.
-    And only 57\% of the time did the GA actually beat UK national interest.
-
-    However, when the GA did beat out the other options it did so by a large margin. In
-    the 2014 window both runs made over 30\% return per year over 3 years! This is also true
-    in the inverse. When the GA lost to the other options it did so by a large margin.
-    In 2007 window the GA first run lost 30\% and the second run
-    lost 75\% of the original investment, per annum! This huge variation is slightly worrying
-    and does not lead to good conclusions about the reliability of this method.
-
-    Some of this variation could be explained away as the fact that I elected to choose the
-    highest \(G\) scoring portfolio's, which consequently tended to have the highest \(R\)
-    score.
-
-    \begin{figure}[H] % fig:GeneralStockDistributionCombinedOverAllWindowsTested % fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow
-        \centering
-        \includegraphics[width=\textwidth - 1in]{GeneralStockDistributionCombinedOverAllWindowsTested}
-        \caption{Selectiveness of the GA}
-            \label{fig:GeneralStockDistributionCombinedOverAllWindowsTested}
-        \includegraphics[width=\textwidth - 1in]{HowTheInduvidualPortfolioWasDistributedOverEachWindow}
-        \caption{Distribution over each window}
-            \label{fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow}
-    \end{figure}
-
-    This is the results of the GA run 2, and plotting the \(f\)'s from each window as
-    a stacked chart. What is obviously apparent here is that the GA definitely favours
-    certain stocks, and even more apparently in figure
-    \ref{fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow} it does not always
-    do a good job at distributing a diverse spread. In figure
-    \ref{fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow} in the 1998 window
-    you can see how 2 stocks are favored very heavily, AIRI and AKO B. Interestingly
-    enough AIRI was not a traded stock till the year 2000, which means that in 1998
-    investing in AIRI was the equivalent to not investing at all. As the implementation
-    specifies a stock which no data for that window has gain of 0.
-
-    Additionally in the window 2001 in figure
-    \ref{fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow} Over 55\% of the portfolio
-    is in a single stock AINV, which is not distributed evenly at all. This contrasts
-    completely to 2010 where a very good spread is achieved, the high value stocks are found
-    and invested in more, but it still had a good spread over the less good stocks to
-    increase diversity.
-
-    From figure \ref{fig:GeneralStockDistributionCombinedOverAllWindowsTested} its
-    clear that over time a fairly good spread is achieved, but there are some definite
-    outliers which are invested in far more than other stocks. AKO A and AKO B make up
-    20\% of all investments over all windows. Which is very high compared an even spread
-    in which they would take up 10\% of all investments over all windows.
 
 \section{Conclusions}
 
-    From the results the GA performed adequately, its a high risk
-    high reward strategy. It could certainly do with improvements and further testing.
-    Such as: Forward testing the results; and a different selection of portfolio's
-    from the pareto frontier. Additionally more runs of the GA are definitely required
-    to get a larger sample size of its real world performance. Then some measure of
-    means test to check whether the results are just due to variance,
-    before any real conclusions can be draw about the strength of the method. This
-    project is still a good first step into using the novel risk correlation
-    as a second objective when optimizing portfolios. It makes excellent use
-    of the advancements in multi-objective GAs, NSGA-II is the perfect partner.
-
-    Compared to previously described portfolio schemes
-    \cite{Markowitz, ValueAtRisk, Ghaoui, Robert, SidWard} this scheme and solution
-    is not tested well enough to be considered a viable alternative. Furthermore
-    I'm not an economist. This scheme would benefit greatly from some criticism
-    from actual economists. As well as real world use alongside the other methods
-    for a much better test of the solution. My results also tie back in with
-    Random walk mentality, its hard to tell if this solution will ever
-    work in the long run.
-
-    In terms of implementation I am pleased with how small the actual code base needed to
-    be to implement such a complex system. This is definitely helped by the language choice,
-    the inherent parallelism gained, and pure mathematical functions made this
-    implementation very compact. There could be definite improvement in the
-    program if it were to be a real tool with respect to usability and customization. Figures
-    \ref{fig:HowTheParetoFrontierChangesWithGADuration_2017-1Window},
-    \ref{fig:BackTestingTheResultsOfTheGA},
-    \ref{fig:GeneralStockDistributionCombinedOverAllWindowsTested}, and
-    \ref{fig:HowTheInduvidualPortfolioWasDistributedOverEachWindow} were all hand
-    crafted from the results. Whereas building in a direct graphing tool would make
-    analysis much easier. It could also be extended to incorporate other assets.
-    This would be an easy change to make, but could also have an API to do so
-    to make it infinitely extend-able.
 
 \pagebreak
 \bibliographystyle{IEEEtran}
