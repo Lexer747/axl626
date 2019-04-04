@@ -66,8 +66,6 @@
     entity is the process of maximizing its return over time, while minimizing the
     risk of the collection.
 
-    TODO: Why is it important
-
     More specifically, in the case of this project, the assets we are analyzing are
     stocks. Whereas in the more general case, a portfolio would consist of choosing
     assets over multiple markets of completely different types. Such as: the price of 
@@ -78,9 +76,18 @@
     in his famous paper. He talks about the geometry of the Risk Reward space
     of portfolio's in an abstract way. This was developed further into more specific
     forms: Value at Risk \cite{ValueAtRisk, Ghaoui}, Mean Variance Model (named
-    after Markowitz's paper) \cite{Robert, SidWard} and many many more.
+    after Markowitz's paper) \cite{Robert, SidWard} and many, many more.
     The full review of all these other optimization solutions is best left
-    to economists.
+    to economists. Ultimately portfolio optimization is a classical and important
+    problem in economics. Its a useful problem to solve as one would like to
+    not waste time investing in a low risk/low reward portfolio if the same
+    effect could be achieved using risk free investments. Compounding
+    that with the fact that a higher risk/higher return portfolio could
+    be more desirable. Modern portfolio theory is about finding the "efficient
+    frontier" of portfolios which are the spectrum of portfolios ranging from
+    high risk to low risk. Then an individual investor can choose a portfolio
+    from this frontier based on how willing they are to a accept a level of
+    risk.
 
     The focus of this project is to use the incredibly hard computable nature
     of this problem, and solve it with insight from computer science. The focus
@@ -88,7 +95,10 @@
     presented in these various papers - in our case, geometric mean \& risk
     correlation - then applying them to the rich data set provided
     by my supervisor, and formulating an experiment to test whether using
-    multi-objective genetic algorithms come to good solutions.
+    multi-objective genetic algorithms come to good solutions. In essence
+    the application of risk correlation with multi-objective genetic algorithms
+    to find the "efficient frontier" of portfolios. And then giving the choice
+    to an investor about which portfolios to choose.
 
 \subsection{Portfolio Optimization \& Assumptions}
 
@@ -473,7 +483,7 @@
     objective genetic algorithms to solve it. The motivation for this is to balance risk
     and reward independently, contrasting to the original \(G\) which lowers the gain
     by coupling it with the risk exponentially. We would also gain a Pareto set of
-    optimal portfolios to choose from, if one was more risk averse then you could choose
+    optimal portfolio's to choose from, if one was more risk averse then you could choose
     a less risky portfolio from the set.
 
     \begin{equation}\label{eq:DecoupleG}
@@ -507,16 +517,20 @@
 \subsection{Inspiration and Novelty?}
 
     Now we can use these functions separately to evaluate both risk and reward of the
-    portfolio. You get a Pareto Set \cite{Kaisa}. A non dominated efficient frontier. Fortunately
+    portfolio. You get a Pareto Set \cite{Kaisa} - A non dominated efficient frontier. Fortunately
     this is not a "problem" in some sense, as a choice of risk vs reward can then be made
-    by a human. To the best of my current knowledge equation \ref{eq:DecoupleR} is a new
+    by a human. To the best of my current knowledge, equation \ref{eq:DecoupleR} is a new
     way of thinking about the risk of the portfolio.
     Section \ref{section:CalcR} reaches a conclusion which I believe to be
     unique. However, Ralph's work \cite{Ralph} is what inspired this line of thought
     and furthermore it is the basis of my work for equation \ref{eq:DecoupleR}, as well as
     the aggregate for equation \ref{eq:DecoupleG}.
 
-    TODO: Summarize main contributions
+    It was the most natural mathematical solution, given our stocks can not be fully modeled
+    as a random variable. Estimating the chance of success using a normal distribution
+    adjusted to a stocks value, gives insight into the stock. Which is useful for calculating
+    a risk value for something which is inherently hard to quantify. The number calculated
+    will never be a perfect representation of the risk. But, a helpful indicator.
 
 \section{Solving \(f\) with respect to \(G\) and \(R\)}
 
@@ -624,7 +638,9 @@
 
     which more simply states, we can't bet more than our entire wealth over all the stocks or
     a negative bet. And on a single stock we can't place a negative bet more than our
-    entire portfolio.
+    entire portfolio. \textbf{Note:} This is very different from how most genetic algorithms
+    are implemented. They tend to be implemented as sequence of binary digits which makes
+    mutation, and crossover easier. 
 
     The \textit{Select} state is a function which takes all pairs of evaluated genomes
     and their fitness. And based on how well each genome performs, will cull the
@@ -817,9 +833,10 @@
     the thread management.
 
     Furthermore, we can calculate the correlations ahead of the GA execution so this only needs to be
-    executed once and the results stored. In the implementation the results are stored as a symmetric
-    adjacency list with two stocks acting as a key to the value of the correlation between the stocks.
-    Hence this bad time complexity isn't a negligible worry.
+    executed once and the results stored. In the implementation the results are stored in a hash map,
+    with a slightly modified look up function. Which when given a key as a pair of stocks, it will
+    search for both permutations of this key, as only 1 is input to the table. This makes the
+    get time essentially constant, speeding up execution greatly.
 
     \textit{Calculating Risk} is the implementation of the inner equation \ref{eq:DecoupleR} 
     i.e. (\(\forall y \in m \to P(k|y)\)). This equation
@@ -907,25 +924,25 @@
 
     For verification, by attempting to ensure the results aren't an anomaly, the GA was run 10
     times for each window. This is to help determine how consistent the GA is at producing
-    similar performing portfolio's. And to compare how diverse the actual allocation
+    similar performing portfolios. And to compare how diverse the actual allocation
     of the stocks is. It was also run over many windows, to get more information
     on how different economic climates affect the performance. Finally, from the pareto
-    set of portfolio's produced by the GA, only 3 are chosen. It could have been worth
-    it to test all of the portfolio's produced by the GA. But since you can only
+    set of portfolios produced by the GA, only 3 are chosen. It could have been worth
+    it to test all of the portfolios produced by the GA. But since you can only
     chose a single portfolio from the set, its realistic unfeasible to expect to
-    test all the portfolio's. Since a human should make a choice about how much
+    test all the portfolios. Since a human should make a choice about how much
     they prefer \(G\) (gain) or \(R\) (risk) and then choose a portfolio which most
     aligns with there preferred values. To emulate this human I will chose 3
-    portfolio's to test, representing 3 different peoples decision making; a risk
+    portfolios to test, representing 3 different peoples decision making; a risk
     averse person, a risk neutral person, and a risk sensitive person. Obviously
     this a simplification of decision making, however, some method of choosing
-    test portfolio's is needed.
+    test portfolios is needed.
 
     To do this, the pareto set is sorted lexicographically, with the \(G\) and \(R\)
     values for the comparison method. Where \(R\) was minimized. I then elected to choose,
     the first element from this set, the middle element, and the last element.
-    These 3 portfolio's were then carried forward and tested. From here on out
-    these 3 portfolio's are referred to as Highest \(G\) (the first element),
+    These 3 portfolios were then carried forward and tested. From here on out
+    these 3 portfolios are referred to as Highest \(G\) (the first element),
     the Median \(G/R\) (the middle element), and the Lowest \(R\) (the last element).
     Hence representing the 3 different people.
 
@@ -944,8 +961,8 @@
     spread, or UK interest. And there are years in which it outperforms those methods.
     Taking a closer
     look at one window, say 2004. We can see the prominence of the best stock method
-    failing dramatically here, losing 29.71\% of the portfolio's value. Whereas
-    the portfolio's chosen by the naive spread, risk averse, risk neutral, risk
+    failing dramatically here, losing 29.71\% of the portfolios value. Whereas
+    the portfolios chosen by the naive spread, risk averse, risk neutral, risk
     sensitive, and interest rate, all increase the value of the portfolio. However
     whats disappointing is that the best performing portfolio was simply the naive spread.
     Even the risk averse portfolio, only performs ~half as well as the naive spread.
@@ -963,21 +980,79 @@
     better, than any other option. Which while disappointing for our algorithm, there
     is one good takeaway from this graph.
 
-    The variance of the portfolio's produced by the GA are not only lower, meaning that
+    The variance of the portfolios produced by the GA are not only lower, meaning that
     when it loses it does so less. And when it wins it also does so less. This is a
     desirable trait for the algorithm to have. Furthermore the risk formulation
     actually appears to work. The portfolios which elected to have lower \(R\)
-    had a lower variance and hence are less risky. The lowest risk portfolio's
-    had a 10x improvement in risk compared to the median portfolios, and 20x
-    compared to the highest \(G\) portfolios.
+    had a lower variance and hence are less risky. The lowest risk portfolios
+    had a 10\(\times\) improvement in risk compared to the median portfolios, and 20\(\times\)
+    compared to the highest \(G\) portfolios. As you can also see from the graph the best
+    stock method was incredibly variable. This partly due to the outlier in the 2007
+    window, and also due to large losses in 2006 and 2015. The best stock method
+    is much riskier, which explains its extremely high variance of 129.94\%.
 
-    For completeness I also plotted the actual portfolio's created by the GA, as this
-    would indicate if the GA was over fitting or finding local maximums.
+    This also links into the graph drawn in appendix \ref{apd:PerformanceOfPortfolioTypes}
+    which takes the best portfolio from each window, and counts the number of each.
+    And as is evident from the graph, the portfolios produced by the GA, do not
+    do very well. Highest \(G\) portfolios manage to win 4 times, but both
+    Median \(G/R\) and Lowest \(R\) fail to win a single time. Furthermore 3
+    times UK interest (a.k.a the doing nothing with your money strategy)
+    also wins, which shows how every method is still not consistent enough to
+    be risk free.
 
-    
+    For completeness I also plotted the actual portfolios created by the GA, as this
+    would indicate if the GA was over fitting or finding local maximums. These can
+    be found in the appendix at \ref{apd:HighestGPortfolioDistributions},
+    \ref{apd:MedianGRPortfolioDistributions}, and
+    \ref{apd:LowestRPortolioDistributions}. The obvious takeaway from these is that
+    emergent property of less variance can be explained by the GA's "choice" to
+    simply not invest when minimizing \(R\). Humorously the fact that this is emergent
+    is a simple fact that you risk less, by playing less. Which is good that the GA
+    "discovered" this property, but also against the spirit of what portfolio
+    optimization aims to achieve. It may be worth testing with the additional
+    constraint on the GA to ensure it always spends all the portfolio. The Medain
+    \(G/R\) portfolios never allocates more than \textasciitilde75\% of a portfolio,
+    and the Lowest \(R\) never allocates more than \textasciitilde50\%!
 
-\section{Conclusions}
+    Another key distinction when comparing the three graphs is that the change in
+    portfolio distribution over time windows is vastly different. The Highest
+    \(G\) graph, \ref{apd:HighestGPortfolioDistributions}, show large amounts
+    of variation year on year. Which looks like an attempt to adapt the portfolio
+    to best stocks at the cost of riskier gains. Whereas the Lowest \(R\) graph
+    shows good consistency across the years. This is very intriguing as the
+    GA was still run on the exact same data, i.e. both only had 3 years of data to
+    analyze. Yet the Lowest \(R\) portfolios tended to still choose the same stocks,
+    with only minor variation each window.
 
+    Finally one other measure to evaluate the algorithm is how consistent the portfolios
+    are when run on the same data. Since we ran 10 tests on each window, we have a reasonable
+    sample size to check with.
+
+    \begin{figure}[H] % fig:VarianceOfPortfoliosOverTests
+        % \centering
+        \includegraphics[width=\textwidth]{VarianceOfPortfoliosOverTests}
+        \caption{-}
+            \label{fig:VarianceOfPortfoliosOverTests}
+    \end{figure}
+
+    Figure \ref{fig:VarianceOfPortfoliosOverTests} plots the average variance of the variance's for
+    each stock over the 10 tests. Another way to think about this is that, taking the allocated
+    portfolios from the 10 tests. Consider the value assigned by the 10 tests for 1 stock in
+    particular. Calculate the variance of those values. Now do this for every stock. Find the
+    average of these variances. This value is then plotted to Figure
+    \ref{fig:VarianceOfPortfoliosOverTests}. From this graph its important to note the scale of
+    the y-axis, which is very small. The actual variance of the portfolios appears to be very
+    good, if slightly random. Although this is expected of a genetic algorithm.
+
+\section{Conclusion}
+
+\subsection{How Well Has This Algorithm Performed?}
+
+
+
+\subsection{Did The Implementation Accurately Implement The Algorithm?}
+
+\subsection{Is This Algorithm Actually Useful For Real World Portfolio Optimization?}
 
 \pagebreak
 \bibliographystyle{IEEEtran}
@@ -988,8 +1063,8 @@
 
 \section{Appendix: Results}
 
-\subsection{A Comparison Of Portfolios Table}
-    \begin{table}[H]\label{apd:AComparisonOfPortfoliosTable}
+\subsection{A Comparison Of Portfolios Table}\label{apd:AComparisonOfPortfoliosTable}
+    \begin{table}[H]
         \begin{tabular}
             {p{.09\textwidth}|p{.075\textwidth}|p{.075\textwidth}|p{.12\textwidth}|p{.12\textwidth}|p{.12\textwidth}|p{.12\textwidth}|p{.09\textwidth}}
             \bfseries Year Range & \bfseries Naive Spread & \bfseries Best Stock & \bfseries Best Stock From Range & \bfseries Highest G Portfolio & \bfseries Median G/R Portfolio & \bfseries Lowest R Portfolio & \bfseries UK Interest
@@ -998,8 +1073,8 @@
         \end{tabular}
     \end{table}
 
-\subsection{Mean and Variance of Portfolio Types}
-    \begin{table}[H]\label{apd:MeanAndVarianceOfPortfolioTypes}
+\subsection{Mean and Variance of Portfolio Types}\label{apd:MeanAndVarianceOfPortfolioTypes}
+    \begin{table}[H]
         \begin{tabular}
             {p{.09\textwidth}|p{.09\textwidth}|p{.09\textwidth}|p{.13\textwidth}|p{.15\textwidth}|p{.13\textwidth}|p{.12\textwidth}}
             \bfseries - & \bfseries Naive Spread & \bfseries Best Stock & \bfseries Highest G Portfolio & \bfseries Median G/R Portfolio & \bfseries Lowest R Portfolio & \bfseries UK Interest
@@ -1008,28 +1083,28 @@
         \end{tabular}
     \end{table}
 
-\subsection{Highest \(G\) Portfolio Distributions}
-    \begin{figure}[H] % fig:HighestGPortfolioDistributions
+\subsection{Performance Of Portfolio Types}\label{apd:PerformanceOfPortfolioTypes}
+    \begin{figure}[H]
+        % \centering
+        \includegraphics[width=\textwidth]{PerformanceOfPortfolioTypes}
+    \end{figure}
+
+\subsection{Highest \(G\) Portfolio Distributions}\label{apd:HighestGPortfolioDistributions}
+    \begin{figure}[H]
         % \centering
         \includegraphics[width=\textwidth]{HighestGPortfolioDistributions}
-        \caption{-}
-            \label{fig:HighestGPortfolioDistributions}
     \end{figure}
 
-\subsection{Median \(G/R\) Portfolio Distributions}
-    \begin{figure}[H] % fig:MedianGRPortfolioDistributions
+\subsection{Median \(G/R\) Portfolio Distributions}\label{apd:MedianGRPortfolioDistributions}
+    \begin{figure}[H]
         % \centering
         \includegraphics[width=\textwidth]{MedianGRPortfolioDistributions}
-        \caption{-}
-            \label{fig:LowestRPortolioDistributions}
     \end{figure}
 
-\subsection{Lowest \(R\) Portfolio Distributions}
-    \begin{figure}[H] % fig:LowestRPortolioDistributions
+\subsection{Lowest \(R\) Portfolio Distributions}\label{apd:LowestRPortolioDistributions}
+    \begin{figure}[H]
         % \centering
         \includegraphics[width=\textwidth]{LowestRPortolioDistributions}
-        \caption{-}
-            \label{fig:LowestRPortolioDistributions}
     \end{figure}
 
 \end{document}
