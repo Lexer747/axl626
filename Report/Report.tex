@@ -12,11 +12,11 @@
 \renewcommand*{\thefootnote}{(\arabic{footnote})}
 
 %------------ MARGINS ----------
-\addtolength{\oddsidemargin}{-.875in}
-\addtolength{\evensidemargin}{-.875in}
-\addtolength{\textwidth}{1.75in}
-\addtolength{\topmargin}{-.875in}
-\addtolength{\textheight}{1.75in}
+\addtolength{\oddsidemargin}{-.75in}
+\addtolength{\evensidemargin}{-.75in}
+\addtolength{\textwidth}{1.5in}
+\addtolength{\topmargin}{-.75in}
+\addtolength{\textheight}{1.5in}
 
 %------------ START DOCUMENT ----------
 \begin{document}
@@ -26,34 +26,48 @@
     \centering\par
     {\huge University of Birmingham\par}
     {\small School of Computer Science\par}
-        \vspace{0.9cm}
+        \vspace{0.8cm}
     {\Large Final Year Project\par}
-        \vspace{0.9cm}
+        \vspace{0.8cm}
     {\Huge\bfseries Portfolio Optimization Using Geometric Mean, Risk Correlation 
         \& Multi-Objective Genetic Algorithms\par}
-        \vspace{3cm}
+        \vspace{1.7cm}
     {\Large Alex Lewis\par}
-        \vspace{0.9cm}
+    {\large 1638326 \par}
+        \vspace{1cm}
     {\tiny Supervised by\par}
     {\Large Shan He\par}
-        \vspace{0.9cm}
+        \vspace{0.7cm}
     {\large \today \par}
-        \vspace{0.5cm}
+        \vspace{0.3cm}
         \hrulefill
-        \vspace{0.5cm}
+        \vspace{0.3cm}
     \begin{abstract}
             \vspace{0.1cm}
-            An exploration of portfolio optimization theory with a classical geometric
-            mean objective, and a novel risk correlation technique to create a secondary
-            objective. Thus creating a multi-objective problem which can be applied to
-            latest iteration of genetic algorithms - NSGA-II, this more computer science
-            based approach tackles portfolio optimization from a new angle. Using the
-            implementation documented in this project, the first steps of testing the
-            viability of the solutions are then considered. And the space is opened
-            up for future real world tests and possible extensions to the risk
-            correlation technique. The results achieved in this project are not
-            robust enough to replace any existing solutions, and with further testing
-            could prove to be a viable alternative to the current options.
+            In modern portfolio theory an optimal portfolio is one which balances
+            risk and reward. An efficient portfolio is one which lies along the
+            edge of portfolios which cannot physically have higher return without
+            increased risk. Portfolio optimization is the process of finding these
+            efficient portfolios, and it's crucial from an investment standpoint
+            so that an informed decision can be made as to how risky a portfolio
+            is compared to its predicted return. An under explored area is risk
+            evaluation. It is normally done using the Mean-Variance model, or
+            value at risk. I propose a novel technique to find the correlation
+            of assets inside a portfolio, and associating some mathematical
+            value to this correlation. This set of calculations was applied
+            from every asset to find the riskiness of a portfolio. Combining
+            this with the classic return prediction of the geometric mean creates
+            a multi-objective problem. This can then be efficiently solved
+            using the latest iteration of genetic algorithms - NSGA-II.
+            This more computer science oriented approach aims to tackle portfolio
+            optimization from a new angle. The resulting approach ended up
+            under-performing compared to more simple portfolios, but the new
+            approach to risk showed promise. The portfolios produced had much reduced
+            variance, as well as providing a level of user control to more accurately
+            select how risky to make their portfolios, while maintaining an efficient
+            portfolio. With further work on the usage of risk correlation, portfolios
+            could be much improved by optimizing for this objective and hopefully
+            a return to match other portfolio creation methods.
     \end{abstract}
 \end{titlingpage}
 
@@ -68,22 +82,25 @@
 
     More specifically, in the case of this project, the assets we are analyzing are
     stocks. Whereas in the more general case, a portfolio would consist of choosing
-    assets over multiple markets of completely different types. Such as: the price of 
-    materials, currencies, bonds, etc. 
+    assets over multiple markets of completely different types, such as: the price of 
+    materials, currencies, bonds, etc.
 
-    A lot of work is already based on this simple premise of min-maxing risk and
-    reward, it was first discussed by Harry Markowitz in 1952 \cite{Markowitz}
+    A lot of work is already based on this simple premise of min-maxing - risk and
+    reward. It was first discussed by Harry Markowitz in 1952 \cite{Markowitz}
     in his famous paper. He talks about the geometry of the Risk Reward space
-    of portfolio's in an abstract way. This was developed further into more specific
+    of portfolio's in an abstract way. Thus creating the concept of the efficient frontier.
+    This was developed further into more specific, and more mathematically implementable
     forms: Value at Risk \cite{ValueAtRisk, Ghaoui}, Mean Variance Model (named
     after Markowitz's paper) \cite{Robert, SidWard} and many, many more.
     The full review of all these other optimization solutions is best left
-    to economists. Ultimately portfolio optimization is a classical and important
-    problem in economics. Its a useful problem to solve as one would like to
+    to economists. To gloss over the details, and to reach a summary: portfolio
+    optimization is a classical and important problem in economics, which has
+    been studied in great detail. It's been studied because it's such a useful
+    problem to solve as one would like to
     not waste time investing in a low risk/low reward portfolio if the same
-    effect could be achieved using risk free investments. Compounding
+    effect could be achieved using risk-free investments. Compounding
     that with the fact that a higher risk/higher return portfolio could
-    be more desirable. Modern portfolio theory is about finding the "efficient
+    be more desirable. Modern portfolio theory is about finding the ``efficient
     frontier" of portfolios which are the spectrum of portfolios ranging from
     high risk to low risk. Then an individual investor can choose a portfolio
     from this frontier based on how willing they are to a accept a level of
@@ -92,25 +109,25 @@
     The focus of this project is to use the incredibly hard computable nature
     of this problem, and solve it with insight from computer science. The focus
     is not to fully solve portfolio optimization, but rather taking the problems
-    presented in these various papers - in our case, geometric mean \& risk
-    correlation - then applying them to the rich data set provided
-    by my supervisor, and formulating an experiment to test whether using
-    multi-objective genetic algorithms come to good solutions. In essence
+    presented in these various papers, namely: finding portfolios on the
+    `efficient frontier', and proceeding to formulate and experiment to test
+    whether using genetic algorithms come to good solutions. More technically,
     the application of risk correlation with multi-objective genetic algorithms
-    to find the "efficient frontier" of portfolios. And then giving the choice
-    to an investor about which portfolios to choose.
+    to find the ``efficient frontier" of portfolios. From those portfolios a choice
+    would be given to an investor.
 
-\subsection{Portfolio Optimization \& Assumptions}
+\subsection{Portfolio Optimization History \& Assumptions}
 
-    Kelly Criterion \cite{Kelly} is a great theoretical achievement, such a simple formula so
-    perfectly describes how to play a system in order to gain the most from it. In Fact
+    Kelly Criterion \cite{Kelly} is a great theoretical achievement. Such a simple formula so
+    perfectly describes how to play a system in order to gain the most from it. In fact
     it completely solves how to invest into a single stock. But alas
     stocks and trades are themselves not a repeatable and positive mathematical expectation
     game. Hence why we need to adapt the equations so that we can try to apply them to the
-    real world. As well as dealing with more than one stock.
+    real world, and deal with more than one stock.
 
-    A big assumption which is being made from now on, by other papers about portfolio optimization - sometimes implicitly,
-    is that we can model a stock as a random variable. This is a large assumption. It
+    A big assumption which is being made from now on, by other papers about portfolio
+    optimization - sometimes implicitly,
+    is that we can model a stock as a random variable. It
     implies, from past data, we can construct a model which will be able
     to predict the probabilities associated with different outcomes of future events.
     This differs from a normal random variable in a few key ways. A random variable in
@@ -120,14 +137,14 @@
 
     This furthermore means that as we gain new data, our model is constantly shifting.
     We do not have a fixed way to tell us probabilities of all future outcomes.
-    To top this, we made another assumption: That its feasible to use past data to predict
+    To top this, we made another assumption: that it's feasible to use past data to predict
     future events.
 
-    This line of thinking has been criticized by the famous book "A Random Walk Down
-    Wall Street" by Burton Malkiel \cite{BurtonMalkiel} it uses
+    This line of thinking has been criticized by the famous book ``A Random Walk Down
+    Wall Street" by Burton Malkiel \cite{BurtonMalkiel}. It uses
     key economic historical events and many studies to describe how investing and trading are
-    a futile game, compared to compound interest, or using an Index like S\&P 500. Which
-    simply is a summation of the top 500 stocks in the US stock market.
+    a futile game, compared to compound interest, or using an Index like S\&P 500. This is
+    simply a summation of the top 500 stocks in the US stock market.
 
     Instead of applying mathematics and statistics to your stock purchasing, the book
     suggests that this is contrary to the 
@@ -137,45 +154,49 @@
     if you examine stock prices in a given any period you can always find an arbitrary
     system that would produce a positive return for that period.
 
-    A system which will always work and produce a positive return, and be mathematically sound.
-    i.e. it will work infinitely. Is an impossibility. We do not have an infinite amount of
+    A system which will always work and produce a positive return, and be mathematically sound
+    (i.e. it will work infinitely) is an impossibility. We do not have an infinite amount of
     time to test our systems on infinite data.
 
     However, as much as I like the argument presented in the book and the complete contrast to
-    statistically minded way to analyze stocks. Ultimately a stock is buying a piece of an
-    actual business something which is valued on how it provides a product or service.
+    the statistically minded way to analyze stocks, buying a stock of an
+    actual business is valued on how the business provides a product or service.
     Looking back at businesses it becomes easier to see how the value of its stock is directly
     related to the people in it, the manning of the ship.
 
-    For me, the only way to reason to myself that statistics, and analysis are still 
-    useful. Follows this train of thought: A market is a system of people.
+    For me, the only way to reason to myself that statistics and analysis are still 
+    useful follows this train of thought: a market is a system of people.
     To predict this system accurately would require knowledge of every individual's
-    thought process. Once the system can have accurate predictions made about it's
+    thought process. Once the system can have accurate predictions made about its
     future, it is possible to perfectly predict the outcome of every stock. Then
     we simply invest in the highest performing stock - at zero risk. However, this
-    dream scenario seems so improbable, that we have to try a different approach
+    dream scenario seems so improbable that we have to try a different approach
     all together
     \footnote{A system of people is something I don't believe we will ever fully understand.
     Since it would require us to have full understanding of how the brain functions. Which
     is almost certainly beyond the scope of this project}.
 
-    Instead of looking at the causes of stock value. i.e. the people. We can try to look
+    Instead of looking at the causes of stock value. i.e. the people, we can try to look
     at the just the value of the stock and infer from that which stocks are more
     likely to continue similar behaviour. This 
-    Statistically and short term analysis can give us insights as to 
-    how it might work. Rather than determining the cause and effect. We just use the effect
+    statistical and short term analysis can give us insights as to 
+    how it might work. Rather than determining the cause and effect, we just use the effect
     to try and predict future effects.
 
     One does not need to understand gravity to predict a river running downhill. Merely
-    enough exposure to any kind of river will show the same effect. To the point where
-    the cause of rivers running downhill is unimportant to the prediction that all
+    enough exposure to any kind of river will show the same effect, all rivers you
+    encounter will run downhill. The fact that you don't understand the cause of rivers
+    running downhill is unimportant to the prediction that all
     rivers run downhill. Obviously this metaphor is not perfect, but it is in the
-    same vein as portfolio optimization. Understanding the causes of stock prices would
-    be far more helpful. As understanding gravity confirms that you will \textit{never}
-    see a river running uphill. Whereas there will always be some doubt without that
-    understanding, that you may find the elusive river which runs uphill.
+    same vein as portfolio optimization, understanding the causes of stock price changes
+    would be far more helpful. As understanding gravity is a far deeper and more useful
+    insight than the act of predicting rivers running downhill. Because gravity, confirms
+    that you will \textit{never} see a river running uphill. Therefore in the same
+    essence: understanding a stock price change requires understanding the force behind
+    it's change, or understanding the stock prices gravity equivalent. Alas, there is
+    currently no gravity equivalent for stock prices.
 
-\subsection{Optimal \(f\)}
+\subsection{Portfolio Optimization History Continued: Optimal \(f\)}
 
     \begin{displayquote}[Ralph Vince \cite{Ralph}] \textit {
         For any given independent trials situation where you have an edge (i.e. positive 
@@ -187,8 +208,8 @@
     And as Ralph proceeds, he explains how Kelly criterion is a perfect solution for 
     fixed size gambles with fixed wins and losses.
 
-    But then the book reaches the a different conclusion, it goes on to state that trades where 
-    the win or loss is always changing {(like the stock market)} then Kelly formula does find
+    But then the book reaches the a different conclusion. It goes on to state that for any system where 
+    the win or loss is always changing {(like the stock market)}, the Kelly formula does find
     the correct optimal \(f\).
     So instead the book proposes finding the optimal \(f\) by instead using the geometric
     mean. The geometric mean models the reinvestment technique over a series of trades.
@@ -216,16 +237,15 @@
     Equation from Ralph Vince's book\cite{Ralph}.
     To maximize our profit from a set of trades we want to optimize for the highest possible 
     geometric mean. Since \(f\) is a free standing variable which cannot be made the subject 
-    of the equation we can only use iteration to find a good estimate. Or genetic algorithms
-    as explained later.
+    of the equation, we can only use iteration to find a good estimate.
 
 
-\subsection{Portfolio's Compared to Single Stocks}
+\subsection{Portfolios Compared to Single Stocks}
 
-    Its a classical way of thinking to also consider diversification
+    It's a classical way of thinking to also consider diversification
     of your investments. Intuition tells us a single stock with a calculated optimal \(f\) that predicts
-    good results, may still have "unlucky streaks" in which you can run out of money before
-    your luck turns. This concept is intuitive, \textit{"Don't put all your eggs in
+    good results may still have ``unlucky streaks" in which you can run out of money before
+    your luck turns. This concept is intuitive, \textit{``Don't put all your eggs in
     one basket"}. Otherwise our problem would be solved, by using Kelly's
     formula \cite{Kelly} we find the return of each stock individually, choose
     the highest stock. Our portfolio is simply that stock.
@@ -243,32 +263,34 @@
 
     Therefore we want a way to reduce our \(f\) by the correct amount
     to account for large streaks. Additionally we use the left over unused money to invest in
-    another (ideally uncorrelated) stocks.
-    This complicates the problem of finding optimal \(f\)'s for a set of stocks. As we
-    need to find a set of \(f\)'s for each stock, to best diversify our portfolio, so
-    its most resistant to unlucky streaks. While still producing good geometric growth.
+    another (ideally uncorrelated) stock.
+    This complicates the problem of finding optimal \(f\)s for a set of stocks greatly.
+    An \(f\) for each stock needs to be found which best grows that specific stock, while
+    also considering the chance of that stocks failure, creating a balancing act of
+    risk versus reward over the entire set of \(f\)s.
 
     Thinking of the optimal \(f\) as a single point, inside a space of trades/bets. When we have 
     only a single trade/bet, we are doing calculations in a 2D space, and we have a line which 
-    represents out optimal \(f\). However as the number of trades/bets increases we gain
+    represents our optimal \(f\). However as the number of trades/bets increases we gain
     another dimension for each one.
 
-    Therefore instead a \(f\) which lies on a line, it lies on a plane, or a 3D object, 
-    and etc. If the \(f\) suddenly becomes a multi variable coordinate which must be 
+    Therefore instead a \(f\) which lies on a line, it lies on a plane, or a 3D object,
+    or a 4D object, 
+    etc. The \(f\) suddenly becomes a multi variable coordinate which must be 
     exactly correct. If a single axis is out then you can miss the hill of positive 
     growth, even if every other axis lined up.
 
-    This means we need to define a new function to find the individual \(f\)'s for all the bets,
+    This means we need to define a new function to find the individual \(f\)s for all the bets,
     but with relation to each other. We cannot compute each optimal \(f\) for every stock
     independently.
 
 
 \subsection{Risk - A New Interpretation}
 
-    Linking back to Kelly Criterion, the riskiness of a random variable is accounted for
-    when use Kelly's formula, equation \ref{eq:Kelly} needs no further calculations
+    Linking back to Kelly Criterion, the riskiness of a random variable is accounted for.
+    When using Kelly's formula, equation \ref{eq:Kelly} needs no further calculations
     to account for how risky the variable is. And this is also true of geometric mean growth
-    for stocks. The geometric accounts for the variance in the data of a single stock. As the
+    for stocks. The geometric mean accounts for the variance in the data of a single stock, as the
     equations \ref{eq:TWR} \& \ref{eq:GeoMean} are accounting for risk implicitly.
 
     But we need a new calculation to find the risk of the portfolio. And furthermore we would
@@ -277,7 +299,7 @@
 \subsubsection{Mathematical Definition}
 
     Given the motivation from our the above sections, we would now like to formally define our
-    evaluation function for how well a portfolio performs given a set of \(f\)'s. Which describes
+    evaluation function for how well a portfolio performs given a set of \(f\)s. Which describes
     how we spread our money over a set of stocks.
 
     \begin{equation}\label{eq:G}
@@ -308,14 +330,14 @@
     This equation is also from Ralph's Book \cite{Ralph}. Which is an excellent starting point,
     but it needs to be adapted to include this idea of correlation among stocks. And furthermore
     it needs to be decoupled, so that the risk of the overall portfolio is also found. The motivation
-    for such a thing, is because we would like to be able to create a range of  portfolio's with
-    differing levels of risk and reward. Allowing a choice inside this range.
+    for such a thing is because we would like to be able to create a range of portfolios with
+    differing levels of risk and reward, thus allowing a choice inside this range.
 
 
 \subsubsection{Calculating Risk} \label{section:CalcR}
 
     Here we are actually constructing the risk calculation for a stock in a more concrete form.
-    So must operate under some assumptions and natural patterns of a stock. 
+    So we must operate under some assumptions and natural patterns of a stock. 
 
     Proposed Model of a Stock: 
     \begin{itemize}
@@ -330,54 +352,58 @@
 
     \begin{align}
         \text{mean: }
-            \mu &= \frac{\sum^{i}_{n=1} PL_n}{i} \label{eq:StockMean} \\
+            \mu &= \frac{\sum^{n}_{i=1} PL_i}{n} \label{eq:StockMean} \\
         \text{variance: } 
-            \sigma^2 &= \frac{\sum^{i}_{n=1} (PL_n - \bar{PL})^2}{i} \label{eq:StockVar}
+            \sigma^2 &= \frac{\sum^{n}_{i=1} (PL_i - \overline{PL})^2}{n} \label{eq:StockVar}
     \end{align}
 
     where:
     \begin{flalign*}
-    i &= \text{The number of trades for a given time period in the stock } PL &&\\
+    n &= \text{The number of trades for a given time period in the stock } PL &&\\
     PL_n  &= \text{The result of trading the stock on the } n^{th} \text{ trade} &&\\
-    \bar{PL} &= \text{The mean of the stock } PL \text{ as calculated by equation \ref{eq:StockMean}} \\
+    \overline{PL} &= \text{The mean of the stock } PL \text{ as calculated by equation \ref{eq:StockMean}} \\
     \end{flalign*}
 
 
     Using this data we can transform a stock into a distribution which we can use to estimate
-    the likely hood of the next \(PL_i\) being above a certain value. In our case we transform
+    the likelihood of the next \(PL_i\) being above a certain value. In our case we transform
     the normal distribution using equations \ref{eq:StockMean} and \ref{eq:StockVar} to find
     the mean and variance of the stock, and hence change the normal distribution. Then it is
     simple enough to use tables to find probabilities we want. It should be noted that the
-    assumption that a stock is a normal distribution has sizable implications, it ties into
+    assumption that a stock is a normal distribution has sizable implications. It ties into
     our original assumption that stocks can be modeled as random variables.
 
     \begin{equation} \label{eq:StockProb}
         P (PL) = \big( PL \sim \Phi(\mu, \sigma^2) \big) < 0
     \end{equation}
-    
+
     where:
     \begin{flalign*}
     PL \sim \Phi (\mu, \sigma^2) &= \text{The cumulative normal distribution, adjusted to the mean } \mu \text{ and variance } \sigma^2 &&\\
     \text{ of the stock } PL\\
     \end{flalign*}
 
-    Since calculating \(\Phi (\mu, \sigma^2)\) is incredibly hard to calculate and
+    Since calculating \(\Phi (\mu, \sigma^2)\) is incredibly hard and
     a perfect value isn't critical, we can settle for using tables as a close enough
     estimate.
 
-    Accounting for 'holes' in the data, and the fact that older data may not be as relevant. Is
-    currently overlooked if we were just going to implement these functions as our risk. The
-    first change I am going to make is that we specify a time period and a range of time to
+    Currently two frequent problems are overlooked if we were to implement any risk
+    function: `holes' in the data, and older data becoming less relevant as time goes on.
+    To account for those problems a change to the implementation is that we specify a time
+    period and a range of time to
     take data from. This has multiple advantages, the first one being that we can choose to
     use only the most recent data about a stock. The second being that we can also choose
     how granular to make our risk calculation. It also builds directly into the algorithm
     the fact that the calculation will not use all available data from a stock, hence dealing
-    with 'holes' at the same time.
+    with `holes' at the same time. \textbf{Note:} This change to the algorithm does
+    not directly affect the actual equation, but the implementation specifically, hence
+    no reference will be made to `skipping' data in the equations succeeding.
 
-    Now for the more complex part of the risk calculation, while the algorithm for it is
+    Now for the more complex part of the risk calculation. While the algorithm for it is
     simple, finding the data for it is a hard problem in itself. The equation
-    \(P(i_k | j_k)\) hides the details behind the \(|\) symbol. Normally in statistics
-    and probability of \(P(X | Y)\) means 'The probability of \(X\) given \(Y\) has occurred'
+    \(P(i_k | j_k)\) (from equation \ref{eq:Prob_k}) hides the details behind the \(|\) symbol.
+    Normally in statistics
+    and the probability of \(P(X | Y)\) means `The probability of \(X\) given \(Y\) has occurred'
     which in a normal probability space is actually just a shorthand for:
 
     \begin{equation*}
@@ -401,10 +427,12 @@
     P( X ) &= \text{The probability of } X \text{ given by the equation \ref{eq:StockProb}} \\
     \end{flalign*}
 
-    However this doesn't work for lots of stocks as each probability is a smaller value 1, so
-    when we times them all together, the value gets ever smaller regardless if each chance was
+    However this doesn't work for lots of stocks as each probability is a smaller value than 1.
+    Hence when these probabilities are multiplied all together, the value gets ever smaller
+    regardless if each chance was
     actually quite high. For example, say we had 25 stocks, and each stock has a 0.9
-    chance to make money, and for simplicity each correlation to every stock is 0.8:
+    chance to make money, and for simplicity each correlation to every stock is 0.8. We would
+    expect the chance for a single stock correlated with other stocks to also be high, but:
 
     \begin{flalign*}
         \text{for all stocks } P &= 0.9 \times 0.9 \times 0.8 &&\\
@@ -415,9 +443,11 @@
     So even in this example, with really high odds, the overall chance will be incredibly low.
     Therefore we need to use something which both preserves
     the chances of every stock, while taking into account how correlated something is.
+    This is also important later as you will see why the correlation of all stocks matters
+    in equation \ref{eq:DecoupleR}.
 
     The solution is to use a weighted average over the stocks.
-    And in the case where the correlation is negative we simply do \(1 - P(PL)\)
+    In the case where the correlation is negative we simply do \(1 - P(PL)\)
     when we calculate the average.
 
     \begin{equation} \label{eq:StockWeight}
@@ -435,46 +465,52 @@
         \end{cases}
     \end{equation}
 
-    Which brings us back to the claim that the algorithm is simple - all we do is find a
-    weighted average of the stocks based on how correlated they are but, how do we find 
-    and calculate good values for the table \(C\)? Some solutions are:
+    This is our final equation to find \(P(i_k | j_k)\) (from equation \ref{eq:Prob_k})
+    as it has the behaviour we need considering all the other constraints that are needed.
 
+    Back to the claim that the algorithm is simple - all we do is find a
+    weighted average of the stocks based on how correlated they are. At a conceptual level
+    this is relatively simple. But, the complexity comes from how to find, and calculate,
+    good values for the table \(C\). Some non-perfect solutions are:
+
+    % TODO WILL
     \begin{enumerate}
-        \item{Calculating the actual correlation, either Spearman's, or some other mathematical technique}
-        \item{Using some form of NLP (Natural Language Parsing) to figure out how related the stocks are in the real world}
+        \item{Calculating the actual correlation: either Spearman's, or some other mathematical technique}
+        \item{Using some form of NLP (Natural Language Processing) to figure out how related the stocks are in the real world}
         \item{Grouping stocks by which industry they are in and assigning each group a correlation}
         \item{Assuming all stocks are independent}
         \item{Some other way of correlating stocks I haven't considered}
         \item{Or a combination of all the above}\label{item:C}
     \end{enumerate}
 
-    The answer to the question: how to find a good \(C\)? is probably worth its own paper, since
+    The answer to the question: how to find a good \(C\)? Is probably worth its own paper, since
     its almost definitely point \ref{item:C}. Which requires a more complex analysis of the systems
     that make up a stock. At the end of the day the numbers we can gather about a stock never
     tell the full story. A stock is a part of a business, and a business is simply a is a
     group of people working together to sell a product or service to other people.
-    And at the end of day using numbers to analyze how people will succeed in selling
+    Using numbers to analyze how people will succeed in selling
     a product or service will always come up short compared to knowing and understanding
     the people who are ultimately doing the selling.
 
-    For the sake of simplicity we will calculate the correlation as its mathematically defined.
+    For the sake of simplicity, because this is a proof of concept, we will calculate the
+    correlation as its mathematically defined.
     For example calculating the correlation between 2 stocks \(PL_1\) and \(PL_2\) is
     done as so:
 
     \begin{align}
         C_{PL_1, PL_2} = 
         \frac{
-            \displaystyle\sum^{n}_{i=1} (PL_{1, i} - \bar {PL_1})(PL_{2, i} - \bar {PL_2})
+            \displaystyle\sum^{n}_{i=1} (PL_{1, i} - \overline {PL_1})(PL_{2, i} - \overline {PL_2})
         }{
             \sqrt{
-                \displaystyle\sum^{n}_{i=1}(PL_{1,i} - \bar {PL_1})^2 
-                \displaystyle\sum^{n}_{i=1}(PL_{2,i} - \bar {PL_2})^2
+                \displaystyle\sum^{n}_{i=1}(PL_{1,i} - \overline {PL_1})^2 
+                \displaystyle\sum^{n}_{i=1}(PL_{2,i} - \overline {PL_2})^2
             }
         }
         \label{eq:Correlation}
     \end{align}
 
-\section{Decoupling \(G\)}
+\section{Decoupling \(G\)} \label{section:DecoupleG}
 
     In the original equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k}.
     \(G\) is coupled with the risk of the portfolio
@@ -517,8 +553,8 @@
 \subsection{Inspiration and Novelty?}
 
     Now we can use these functions separately to evaluate both risk and reward of the
-    portfolio. You get a Pareto Set \cite{Kaisa} - A non dominated efficient frontier. Fortunately
-    this is not a "problem" in some sense, as a choice of risk vs reward can then be made
+    portfolio. You get a Pareto Set \cite{Kaisa} - A non dominated efficient frontier. From
+    which a choice of risk vs reward can then be made
     by a human. To the best of my current knowledge, equation \ref{eq:DecoupleR} is a new
     way of thinking about the risk of the portfolio.
     Section \ref{section:CalcR} reaches a conclusion which I believe to be
@@ -534,7 +570,7 @@
 
 \section{Solving \(f\) with respect to \(G\) and \(R\)}
 
-    Solving the decoupled equations \ref{eq:DecoupleG}, \ref{eq:DecoupleR} for the highest
+    Solving the decoupled equations \ref{eq:DecoupleG} \& \ref{eq:DecoupleR} for the highest
     value of \(G\) and lowest value of \(R\) will give the best return on our portfolio
     given the current data.
     Intuition would suggest some form of iteration to check every combination of \(f\) to find
@@ -549,7 +585,8 @@
     Which in some scenarios may be feasible, but because of our second major problem. The computation
     time of our evaluation functions. It becomes completely impossible to actually calculate
     the mathematically correct solution in the lifetime of the universe.
-    What follows is the Big \(\bigO\) calculation:
+    What follows is the Big \(\bigO\) calculation for equations \ref{eq:DecoupleG} \&
+    \ref{eq:DecoupleR}:
 
     \begin{equation*}
         \text{Decoupled: } \bigO (
@@ -567,7 +604,8 @@
     in number of calculations incredibly quickly, in fact too quickly to ever be
     solved by a pure mathematical solution. So we end up with an equation we want
     to solve, with no mathematically helpful properties (differentiable being
-    the most important) to be able to do a heuristic or regression based approach.
+    the most important) to be able to do a either a heuristic, or a regression,
+    or a gradient based approach.
 
 
 \subsection{Genetic Algorithms}\label{section:GA}
@@ -581,7 +619,8 @@
     Genetic algorithms (GA), first 
     discussed by John Holland \cite{Holland} in 1975, then developed by so many
     others, such as Melanie Mitchell, Kalyanmoy Deb, and Albert Bethke
-    \cite{Mitchell, KalyanmoyDeb, Bethke}, to name a mere few. Are inspired by Darwinian
+    \cite{Mitchell, KalyanmoyDeb, Bethke, Goldberg, Grefenstette}, to name a mere few.
+    Are inspired by Darwinian
     principle of \textit{survival of the fittest}.
     First it is useful to define some biological terminology; in the context of
     genetic algorithms these terms are used in the same spirit as the real biology,
@@ -747,10 +786,12 @@
     and classify them by front. i.e. sorted according ascending level of non-domination.
 
     \begin{figure}[H]
-        % \centering
-        \includegraphics{NSGArank}
+        \centering
+        \includegraphics[width=.6\textwidth]{NSGArank}
+        \caption{An example of non-dominated ranking}\label{fig:NSGArank}
     \end{figure}
-    From this example graph, we have split the data up into 3 sets which are non-dominated
+    From this example graph (figure \ref{fig:NSGArank}), we have split the data up into 3 sets
+    which are non-dominated
     by each other. The set contained by the blue and first line is a non dominated sub set
     of the set between the two lines. The set between the two lines is also a non dominated
     sub set of the final set. This allows us to assign a rank to each band.
@@ -797,7 +838,10 @@
     to have some point of comparison, the obvious choice is to compare the GA to
     a complete naive spread i.e. evenly spread out the starting money over each stock.
     I also choose to compare the GA to the UK national interest rate \cite{BankOfE} . To give an
-    indication of how well the algorithm is performing compared to doing "nothing".
+    indication of how well the algorithm is performing compared to doing "nothing". Another
+    easy test to compare to is idea of a portfolio putting all its eggs into one basket.
+    Simply choose the best stock in terms of value increase. And your portfolio is
+    
 
 \subsection{Implementation Overview}
 
@@ -856,7 +900,7 @@
     the constraints specified by the laws of a portfolio, and the actual programming interface
     between the equations and the library code.
 
-\subsection{Testing Method}
+\subsection{Testing Method}\label{section:TestingMethod}
 
     The general testing method was as follows. Over the dataset, split it into moving windows
     where each window covers a certain time range of data. The windowing is done to emulate
@@ -970,8 +1014,7 @@
     \begin{figure}[H] % fig:MeanAndVarianceOfPortfolioTypes
         % \centering
         \includegraphics[width=\textwidth]{MeanAndVarianceOfPortfolioTypes}
-        \caption{Measuring the Variance and Average Results from the different Methods. See \ref{apd:MeanAndVarianceOfPortfolioTypes} for raw results.}
-            \label{fig:MeanAndVarianceOfPortfolioTypes}
+        \caption{Measuring the Variance and Average Results from the different Methods. See \ref{apd:MeanAndVarianceOfPortfolioTypes} for raw results.}\label{fig:MeanAndVarianceOfPortfolioTypes}
     \end{figure}
 
     Averaging out all of the windows to try and get a better picture how it generally
@@ -1011,8 +1054,8 @@
     "discovered" this property, but also against the spirit of what portfolio
     optimization aims to achieve. It may be worth testing with the additional
     constraint on the GA to ensure it always spends all the portfolio. The Medain
-    \(G/R\) portfolios never allocates more than \textasciitilde75\% of a portfolio,
-    and the Lowest \(R\) never allocates more than \textasciitilde50\%!
+    \(G/R\) portfolios allocates around 75\% of a portfolio,
+    and the Lowest \(R\) allocates around 50\% of all the initial wealth!
 
     Another key distinction when comparing the three graphs is that the change in
     portfolio distribution over time windows is vastly different. The Highest
@@ -1031,7 +1074,7 @@
     \begin{figure}[H] % fig:VarianceOfPortfoliosOverTests
         % \centering
         \includegraphics[width=\textwidth]{VarianceOfPortfoliosOverTests}
-        \caption{-}
+        \caption{The variance of the actual portfolios produced by the GA for each window}
             \label{fig:VarianceOfPortfoliosOverTests}
     \end{figure}
 
@@ -1048,11 +1091,76 @@
 
 \subsection{How Well Has This Algorithm Performed?}
 
+    Overall The performance leaves something to be desired. Figure
+    \ref{fig:AComparisonOfPortfolios} and \ref{fig:MeanAndVarianceOfPortfolioTypes}
+    shows how the actual performance was
+    sub par compared to some very basic portfolios. The average value of a portfolio
+    increased by 6.78\% using the highest gaining portfolios from the GA. This is lower
+    than the best stock method (20.56\%) and naive spread (15.45\%). This shows
+    that the GA doesn't actually achieve what we set out to do.
 
+    Despite this the GA shows some good traits. Which is that choosing portfolios
+    with a lower \(R\) value, actually correlates to less variance on the gain
+    of a portfolio. This is promising, the actual amount the variance is reduced
+    is significant. The highest risk portfolios were about 20 \(\times\) more
+    variable than the lowest risk portfolios. Combined with the fact that the
+    reduction in gain was only about 2 \(\times\) for this better
+    variance. Thus showing that the risk correlation at least works with a mathematical
+    interpretation.
 
-\subsection{Did The Implementation Accurately Implement The Algorithm?}
+\subsection{Evaluation Of The Implementation}
 
-\subsection{Is This Algorithm Actually Useful For Real World Portfolio Optimization?}
+    I am confident that both algorithms described in section \ref{section:DecoupleG}
+    are implemented bug-free over the set of assets used in testing. As explained
+    the purity of Haskell makes me very confident that once the code compiled - and
+    had matching types to that of the equations. Then it would be correct. A small
+    set of manual tests were then executed on the equations, testing edge cases,
+    and normal values. All of which passed.
+
+    However this does not mean that it is actually implemented perfectly. Additional
+    quick check tests \cite{QuickCheck} (Unit tests) could have been written to
+    much more concretely say that every equation was fully implemented. This is
+    one area that would need more work if algorithm was to have real world use.
+
+    In terms of the genetic algorithm, the fact that I used a library \cite{Moo}
+    which is already well tested. Made sure that the genetic part of the algorithm
+    was implemented correctly. The only section which could do with additional
+    quick check testing, is the constraints applied to the genes at each iteration
+    of the genetic algorithm. Since this was a custom implementation tailored to
+    this specific problem, it should also be tested throughly before this
+    would be used in the real world.
+
+\subsection{Evaluation of Testing Methods}
+
+    In terms of testing on the single data set \cite{Dataset} I believe enough
+    data was gathered to see how well the GA performed. Testing on different
+    windows allows a look into how the algorithm would adapt to new data,
+    say you used the algorithm to actually change your portfolio given a
+    new year of data. Furthermore looking at figure \ref{fig:VarianceOfPortfoliosOverTests}
+    the variance over the sets implies that each test run from the 10 tests was
+    fairly similar. This leads to the belief that 10 tests was enough and more tests
+    wouldn't have resulted in dramatically different portfolios, and therefore
+    different gains.
+
+    However more testing could be done, a data set which included more data from
+    different markets with different assets. This would be another really good test
+    to see if the GA just underperformed on this specific set of stocks. Or if its
+    in fact flawed and always under performs on any market. A Bigger selection
+    of assets is also worth testing against. As this dataset only had 28 individual
+    stocks in it. Whereas it's completely normal to have 500 assets in a portfolio.
+
+    Therefore I'd argue the actual testing done is conclusive about this set
+    of stocks. But to get a full conclusive test on the GA itself would
+    require the same test just with a much richer and broader data set as
+    the basis for the test.
+
+    Additionally this opens up the possibility of testing this GA with different
+    correlation techniques. As described in section \ref{section:CalcR} there
+    are many ways to calculate the correlation of stocks. And in this project,
+    only one method is ever tested. The mathematical correlation of stocks. If the
+    same tests were done with a different correlation method, and the results
+    showed more promise. Then it would be safe to say that the correlation
+    method would be superior if its results were better.
 
 \pagebreak
 \bibliographystyle{IEEEtran}
