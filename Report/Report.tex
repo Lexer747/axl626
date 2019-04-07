@@ -472,7 +472,6 @@
     this is relatively simple. But, the complexity comes from how to find, and calculate,
     good values for the table \(C\). Some non-perfect solutions are:
 
-    % TODO WILL
     \begin{enumerate}
         \item{Calculating the actual correlation: either Spearman's, or some other mathematical technique}
         \item{Using some form of NLP (Natural Language Processing) to figure out how related the stocks are in the real world}
@@ -483,7 +482,7 @@
     \end{enumerate}
 
     The answer to the question ``how to find a good \(C\)?" is probably worth its own paper, since
-    its almost definitely point \ref{item:C}. Which requires a more complex analysis of the systems
+    it's almost definitely point \ref{item:C}. This requires a more complex analysis of the systems
     that make up a stock. At the end of the day the numbers we can gather about a stock never
     tell the full story. A stock is a part of a business, and a business is simply a is a
     group of people working together to sell a product or service to other people.
@@ -511,14 +510,14 @@
 
 \section{Decoupling \(G\)} \label{section:DecoupleG}
 
-    In the original equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k}.
+    In the original equations \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k},
     \(G\) is coupled with the risk of the portfolio
     by raising the inner calculation to 1 over the sum of all risks for every stock.
     There is another approach, which is to keep the two equations separate and use multi-
     objective genetic algorithms to solve it. The motivation for this is to balance risk
     and reward independently, contrasting to the original \(G\) which lowers the gain
     by coupling it with the risk exponentially. We would also gain a Pareto set of
-    optimal portfolio's to choose from, if one was more risk averse then you could choose
+    optimal portfolios to choose from. If one was more risk averse then you could choose
     a less risky portfolio from the set.
 
     \begin{equation}\label{eq:DecoupleG}
@@ -552,8 +551,8 @@
 \subsection{Inspiration and Novelty?}
 
     Now we can use these functions separately to evaluate both risk and reward of the
-    portfolio. You get a Pareto Set \cite{Kaisa} - A non dominated efficient frontier. From
-    which a choice of risk vs reward can then be made
+    portfolio. You get a Pareto set \cite{Kaisa} - a non dominated efficient frontier. From
+    this a choice of risk vs reward can then be made
     by a human. To the best of my current knowledge, equation \ref{eq:DecoupleR} is a new
     way of thinking about the risk of the portfolio.
     Section \ref{section:CalcR} reaches a conclusion which I believe to be
@@ -563,7 +562,7 @@
 
     It was the most natural mathematical solution, given our stocks can not be fully modeled
     as a random variable. Estimating the chance of success using a normal distribution
-    adjusted to a stocks value, gives insight into the stock, which is useful for calculating
+    adjusted to a stock's value gives insight into the stock, which is useful for calculating
     a risk value for something which is inherently hard to quantify. The number calculated
     will never be a perfect representation of the risk, but can be a helpful indicator.
 
@@ -575,14 +574,14 @@
     Intuition would suggest some form of iteration to check every combination of \(f\) to find
     the best performing \(f\) is a good first solution. This has two major problems.
     The first problem with this solution is that for every stock we add to our portfolio, 
-    we gain fractorially many more combinations to check.
+    we gain factorially many more combinations to check.
 
     \begin{equation*}
         \text{Number of combinations to check for: } (f_1...f_m) = m!
     \end{equation*}
 
-    Which in some scenarios may be feasible, but because of our second major problem, the computation
-    time of our evaluation functions, it becomes completely impossible to actually calculate
+    This may be feasible in some scenarios, but because of our second major problem (the computation
+    time of our evaluation functions) it becomes completely impossible to actually calculate
     the mathematically correct solution in the lifetime of the universe.
     What follows is the Big \(\bigO\) calculation for equations \ref{eq:DecoupleG} \&
     \ref{eq:DecoupleR}:
@@ -599,7 +598,7 @@
     m &= \text{The number of stocks} &&
     \end{flalign*}
 
-    The decoupled equation grow
+    The decoupled equation grows
     in number of calculations incredibly quickly, in fact too quickly to ever be
     solved by a pure mathematical solution. So we end up with an equation we want
     to solve, with no mathematically helpful properties (differentiable being
@@ -615,21 +614,20 @@
         should use a method which is more general like genetic algorithms.
     } \end{displayquote}
 
-    Genetic algorithms (GA), first 
+    Genetic algorithms (GA) were first 
     discussed by John Holland \cite{Holland} in 1975, then developed by so many
     others, such as Melanie Mitchell, Kalyanmoy Deb, and Albert Bethke
     \cite{Mitchell, KalyanmoyDeb, Bethke, Goldberg, Grefenstette}, to name a mere few.
-    Are inspired by Darwinian
+    They are inspired by the Darwinian
     principle of \textit{survival of the fittest}.
-    First it is useful to define some biological terminology; in the context of
-    genetic algorithms these terms are used in the same spirit as the real biology,
-    but heavily simplified. In an attempt to emulate their nature as a living entity,
-    while being computationally easier to process.
+    First it is useful to define some biological terminology, but heavily simplified to suit the
+    context of genetic algorithms, instead of the real biological meaning. This allows us to
+    emulate their nature as a living entity, while being computationally easier to process.
 
     \begin{itemize}
-        \item{\textbf{Gene:} The encoding of a trait, and roughly it stores the current
+        \item{\textbf{Gene:} The encoding of a trait. Roughly it stores the current
             setting for the trait (e.g. eye colour, blue, brown, etc). There is a set
-            from which any single gene can pull its data from. In nature its the chemical
+            from which any single gene can pull its data from. In nature it's the chemical
             bases  of DNA}
         \item{\textbf{Genome:} The complete collection of all the genes is called a
             genome}
@@ -649,16 +647,16 @@
     \begin{figure}[H] % fig:GA
         \centering
         \includegraphics[width=\textwidth]{GA}
-        \caption{``Life Cycle" of A Genetic Algorithm}\label{fig:GA}
+        \caption{``Life Cycle" of a Genetic Algorithm}\label{fig:GA}
     \end{figure}
 
     One note about figure \ref{fig:GA} is that the decision to go to the ``Stop"
     state is determined by some outside factor i.e. execution time. Otherwise
-    it repeats infinitely - just like real life. Applying this generic algorithm to 
-    our specific problem. We simply need to
+    it repeats infinitely - just like real life. To apply this generic algorithm to 
+    our specific problem, we simply need to
     define each state in this diagram in the context of our problem.
 
-    The \textit{Genomes} state for our problem is the set of \(f\)'s. Each gene is an
+    The \textit{Genomes} state for our problem is the set of \(f\)s. Each gene is an
     \(f\) for a specific stock, but we have additional constraints, which is for 
     any genome \((f_1...f_m)\) made up of genes \(f_i\), the genome \textbf{must}
     abide by these laws:
@@ -675,13 +673,13 @@
     \end{align*}
 
     which more simply states, we can't bet more than our entire wealth over all the stocks or
-    a negative bet. And on a single stock we can't place a negative bet more than our
+    a negative bet. On a single stock we can't place a negative bet more than our
     entire portfolio. \textbf{Note:} This is very different from how most genetic algorithms
     are implemented. They tend to be implemented as sequence of binary digits which makes
     mutation, and crossover easier. 
 
     The \textit{Select} state is a function which takes all pairs of evaluated genomes
-    and their fitness. And based on how well each genome performs, will cull the
+    and their fitness. Based on how well each genome performs, it will cull the
     list of genomes to a smaller list. This smaller list is the list of genomes
     which act as parents for the next generation.
 
@@ -692,15 +690,17 @@
     This allows the best genome to always stay alive, and stops the GA from
     having to re-discover previously good results.
 
+    % TODO - explain crossover
     The \textit{Crossover} state can simply be the same as any generic GA implementation,
-    as we have no extra constraints to worry about. In the actual implementation
-    a single point crossover, of high chance of occurrence was chosen. This was
-    chosen arbitrarily, it could be worth a in-depth study to which crossover
-    method would best perform for this specific problem. Since there is no catch all
+    as we have no extra constraints to worry about. In the actual implementation,
+    a single point crossover of high chance of occurrence was chosen. This was
+    chosen arbitrarily; it could be worth a in-depth study to which crossover
+    method would best perform for this specific problem. There is no catch all
     ``best" crossover method.
 
-    The \textit{Mutate} state needs to make sure it follows the same constraints as
-    genomes states has to follow. Furthermore since this step is after crossover,
+    The \textit{Mutate} state needs to make sure it follows the same constraints over
+    the genomes as described earlier for the \textit{Genomes} state. Furthermore since this step is
+    after crossover,
     any genomes which violate the laws will be fixed in this step. Other than this,
     mutation can be any generic GA mutation. The specific mutation chosen was a
     simple Normal distributed mutation, which is randomly added or subtracted from
@@ -709,33 +709,33 @@
     the GA finds the solution. There is also no catch all ``best" mutation method.
 
     Finally the \textit{Calculate Objectives} state, which is the final product of all our
-    mathematical exploration. Here we have two options the single variable option: equations
-    \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k}. Or the decoupled multi-objective
-    option: equations \ref{eq:DecoupleG} and \ref{eq:DecoupleR}.
+    mathematical exploration. Here we have two options: the single variable option (equations
+    \ref{eq:G}, \ref{eq:HPR_k}, and \ref{eq:Prob_k}); or the decoupled multi-objective
+    option (equations \ref{eq:DecoupleG} and \ref{eq:DecoupleR}).
 
     Other than the mathematical difference between single and multi-objective,
     another key difference between single objective and multi-objective is that for a
     nontrivial problem such as ours, no single solution exists that simultaneously
     optimizes each objective. This case of conflicting objectives means there is
     a (possibly infinite) number of Pareto optimal solutions, forming a Pareto front.
-    The problem of sorting a set of genomes is complex problem, and furthermore
-    does not remove problem of fronts forming rather than complete solutions.
-    The way the results of our GA are sorted are according to the paper headed by
+    The problem of sorting a set of genomes is complex, and furthermore
+    does not remove the problem of fronts forming rather than complete solutions.
+    The results of our GA are sorted according to the paper headed by
     Kalyanmoy Deb \cite{DebPratapAgarwalMeyarivan} in which they propose the
     NSGA-II, the cutting edge of multi-objective solution finding. This actually
     has a direct impact on the selection step of the GA.
 
 \subsection{NSGA-II vs Other Multi-Objective Algorithms}
 
-    As there exists multiple Pareto optimal solutions for our problem, what it means to ``solve"
-    our problem, is not as simple as single objective problems. We actually want to create the
+    As there exist multiple Pareto optimal solutions for our problem, what it means to ``solve"
+    our problem is not as simple as single objective problems. We actually want to create the
     Pareto set of optimal solutions and then to form a single solution we have to choose one of
     the Pareto solutions from that set.
 
-    There are two methodologies to go about this selection of a single solution. A \textit{priori}
+    There are two methodologies to go about this selection of a single solution. \textit{A priori}
     methodology, in which the Pareto set is constrained by some rules provided by a user.
     These rules result in a single solution being used each step of GA. The other
-    methodology is the \textit{posteriori} methodology, in which
+    methodology is the \textit{a posteriori} methodology, in which
     the full set of Pareto optimal solutions is kept and a user must decide which individual
     solution is kept only after the GA has finished execution.
 
@@ -745,13 +745,13 @@
     To list a few: The simplest being a weighted average of all the objectives, from
     which a single objective if found. Another version is a single point is chosen
     in the answer space, then the distance to that point is calculated and used to
-    determine how good a solution is. A lower distance will mean its a better solution
+    determine how good a solution is. A lower distance will mean it's a better solution
     \cite{Buchanan}.
 
     To use utility functions as scalarizing solvers, this utility function will take
-    the resulting objectives and return and ordering of ranking. Upon which the highest
+    the resulting objectives and return an ordering of ranking. Following this, the highest
     ranked is considered the best solution. This requires the user to construct
-    a function which accurately represents the interests of user. A simple way
+    a function which accurately represents the interests of the user. A simple way
     to do this is to ask the user to list the objectives in a lexicographical order.
     But in practice a utility function is very hard to create, and the simple
     lexicographical solution is not well suited to our needs, as it requires
@@ -761,12 +761,12 @@
     Normal Constraint \cite{Messac}, Directed Search Domain \cite{Tohid}, and NSGA-II
     \cite{DebPratapAgarwalMeyarivan}. All except NSGA-II work by constructing several
     scalarizations, with each scalarization creating a Pareto optimal solution.
-    This also leads those algorithms to end up in local maximum far to often and
+    This also leads those algorithms to end up in local maxima far to often and
     don't get the full efficient frontier.
 
-    However NSGA-2 is different to the previous ones, and for the reason to be explained,
-    and because its specifically useful for our problem, this is the algorithm that
-    we use to find the Pareto frontier. To explain NSGA-2, first we need to explain
+    However NSGA-II is different to the previous ones for two reasons: it's specifically useful for our
+    problem, and it's the algorithm that
+    we use to find the Pareto frontier. To explain NSGA-II, first we need to explain
     NSGA, and non-domination.
 
     \textbf{Domination}: A solution \(x\) is said to dominate another solution \(y\) if:
@@ -776,13 +776,13 @@
         & x \text{ is strictly better than } y \text{ in at least one objective} \\
     \end{align*}
 
-    This is denoted in most papers as \(x \prec y\), to further this: Among a set of solutions \(P\)
+    This is denoted in most papers as \(x \prec y\). Among a set of solutions \(P\)
     the non-dominated sub set \(P'\) are those that are not dominated by any member of
-    set \(P\). To follow on from this the a non-dominated set of the multi-objective search
-    space, will be the global Pareto optimal set.
+    set \(P\). To follow on from this, the non-dominated set of the multi-objective search
+    space will be the global Pareto optimal set.
 
     NSGA-II has the following procedure: perform a non-dominated sorting in the population
-    and classify them by front. i.e. sorted according ascending level of non-domination.
+    and classify them by front. i.e. sorted by ascending level of non-domination.
 
     \begin{figure}[H]
         \centering
@@ -791,29 +791,28 @@
     \end{figure}
     From this example graph (figure \ref{fig:NSGArank}), we have split the data up into 3 sets
     which are non-dominated
-    by each other. The set contained by the blue and first line is a non-dominated sub set
+    by each other. The set contained by the blue and first line is a non-dominated subset
     of the set between the two lines. The set between the two lines is also a non-dominated
-    sub set of the final set. This allows us to assign a rank to each band.
+    subset of the final set. This allows us to assign a rank to each band.
 
     The next step is to make the next generation of parents from the front ranking
     set, as well as some random amount of the inferior bands. This population
     then goes under the next steps of the GA and the cycle is repeated.
 
     This method of multi-objective has some big advantages compared to the other methods,
-    the most important being that the pareto set is collected instead by using the non-dominated
-    sorting. While the solutions aren't guaranteed to be optimal pareto solutions, they
-    get very close. Furthermore this method was designed with GA's in mind and therefore is
-    optimized for this usage. Hence why I'm choosing to use NSGA-II in my solution.
-
+    the most important being that the Pareto set is collected instead by using the non-dominated
+    sorting. While the solutions aren't guaranteed to be optimal Pareto solutions, they
+    get very close. Furthermore this method was designed with GAs in mind and therefore is
+    optimized for this usage. This is why I'm choosing to use NSGA-II in my solution.
 
 \section{Implementation Details \& The Experiment}
 
-    Now that we have a problem, and a method to solve it, all thats left is to actually
+    Now that we have a problem, and a method to solve it, all that's left is to actually
     implement it, and then test it on some data, comparing our hypothesis to the results.
     I chose to implement the system using Haskell. This is definitely a personal
     choice, for the standard reasons: familiarity, ease of use, having the environments
     set-up, and the strong type system. When working with a lot of ``pure"
-    functions, as we would have to for this project. The implementation 
+    functions, as we would have to for this project, the implementation 
     of the mathematical part of this project was made significantly
     easier, less buggy, and probably more performant because of the language choice
     \footnote{Being pure makes parallelism a no cost feature \cite{HarrisMarlowJones, Chakravarty},
@@ -825,16 +824,16 @@
     in the maths.
 
     Another key choice made, was the use of Moo - a GA library \cite{Moo}. This came with all
-    the normal advantages and disadvantages of using a library, time saved, tested by others, etc.
+    the normal advantages and disadvantages of using a library: time saved, tested by others, etc.
     It still required a fairly large amount of work to correctly integrate the
     problem into the library. Additionally you do not have complete control over the code,
     so any ``mistakes" or differences in behaviour are out of your control. However,
     this meant that once this work was done the actual execution of the GA was more simple.
 
-    The experiment involved the following method. First I choose a portfolio I want to
-    analyze, in this case I used the data set provided by my supervisor \cite{Dataset}.
+    The experiment involved the following method. First I choose a market I want to
+    analyze; in this case I used the data set provided by my supervisor \cite{Dataset}.
     Obviously there are drawbacks to this as later explained in the results. The next step is
-    to have some point of comparison, the obvious choice is to compare the GA to
+    to have some point of comparison. The obvious choice is to compare the GA to
     a completely naive spread i.e. evenly spread out the starting money over each stock.
     I also choose to compare the GA to the UK national interest rate \cite{BankOfE} to give an
     indication of how well the algorithm is performing compared to doing ``nothing". Another
@@ -859,20 +858,20 @@
     basic statistical analysis to extract trades.
 
     \textit{Calculating Correlations} is the implementation of the equation \ref{eq:Correlation}.
-    Additionally we need to correlate every stock to every other stock. Because equation
+    Additionally we need to correlate every stock to every other stock, because equation
     \ref{eq:DecoupleR} requires every stock included in the risk calculation has some value of
     correlation for all other stocks.
 
     Therefore in the worst case we need to do \(m!\) correlation calculations, each one requiring a
     full traversal of all the trades in the stock. This gives a full time complexity of 
-    \(\bigO (nm!) \). This can be speed up a little bit in the actual implementation, firstly
-    equation \ref{eq:Correlation} can be done in a single pass instead of two. Secondly we can
-    half the number of permutations we need to do the correlation calculation for. Since we know
+    \(\bigO (nm!) \). This can be sped up a little bit in the actual implementation. Firstly,
+    equation \ref{eq:Correlation} can be done in a single pass instead of two. Secondly, we can
+    halve the number of permutations we need to do the correlation calculation for, since we know
     correlation is symmetric, i.e. if the correlation of \(C_{x,y} = z\) then the correlation
     of \(C_{y,x}\) also equals \(z\). While this doesn't change the time complexity, it still helps
     the execution time, as we only need half as many calculations. On top of this, and as explained
     earlier, this correlation calculation can be run in parallel using the pure nature of the function.
-    All of equation \ref{eq:Correlation} is done in a unique threads using Haskell to abstract away
+    All of equation \ref{eq:Correlation} is done in unique threads using Haskell to abstract away
     the thread management.
 
     Furthermore, we can calculate the correlations ahead of the GA execution so this only needs to be
@@ -891,12 +890,12 @@
     calculated once.
 
     \textit{Calculating Objectives} is the implementation of equation \ref{eq:DecoupleG} and the complete
-    implementation of equation \ref{eq:DecoupleR} using the earlier risk calculation, these
-    equations both take a list of \(f\)'s as their input to be able to calculate \(G\) and \(R\).
-    And once again, this implementation takes advantage of Haskell's low cost parallelism to speed
+    implementation of equation \ref{eq:DecoupleR} using the earlier risk calculation. These
+    equations both take a list of \(f\)s as their input to be able to calculate \(G\) and \(R\).
+    Once again, this implementation takes advantage of Haskell's low cost parallelism to speed
     up execution.
 
-    \textit{Executing the GA}, as explained earlier the Moo GA Library \cite{Moo} was used in
+    \textit{Executing the GA}: as explained earlier, the Moo GA Library \cite{Moo} was used in
     the implementation. The additional details added in my solution are the printing of the results,
     the constraints specified by the laws of a portfolio, and the actual programming interface
     between the equations and the library code.
@@ -909,10 +908,10 @@
     as an indicator of future events. The only piece of data that will be kept regardless
     of window size, is the \(BL\). This is to be more realistic about the worst case scenario.
     As it could be seen as reasonable to say the \(BL\) of any asset is \(\infty\), if
-    the value of the asset becomes unsellable, this rather extreme view however essentially means all
-    algorithms would tell you to bet nothing, since thats the superior strategy. Instead
-    this approach, takes into account the worst \(BL\) of any one stock over its lifetime.
-    Since almost every asset has the potential to fall as far as it once did. Even if we only
+    the value of the asset becomes unsellable. This rather extreme view however essentially means all
+    algorithms would tell you to bet nothing, since that's the superior strategy. Instead,
+    this approach takes into account the worst \(BL\) of any one stock over its lifetime,
+    since almost every asset has the potential to fall as far as it once did. Even if we only
     consider its most recent results in the window, it is helpful to suspect an asset could
     do that poorly again.
 
@@ -920,13 +919,13 @@
     In my case I used my supervisor's dataset \cite{Dataset} and I elected to choose a window
     size of 3 years.
 
-    After the window size and dataset is chosen the next stage is to run preliminary tests with
+    After the window size and dataset are chosen, the next stage is to run preliminary tests with
     differing lengths of time to find the a reasonable amount of time to run the GA based on
-    the hardware. From that you have make a human decision to compromise the amount of time
+    the hardware. From that, you have to make a human decision to compromise the amount of time
     you allow the GA to find a solution and how much time you actually have to test the GA.
 
     Next, you actually run the GA from the start of your dataset over every window and record
-    the results. All thats left would be to compare these results the naive spread of the
+    the results. All that's left would be to compare these results to the naive spread of the
     portfolio, or any other investment strategy for that matter.
 
     The actual evaluation I am going to use is forward testing the portfolio. This means that
@@ -940,7 +939,7 @@
 
     First the preliminary results of running the GA over 1 window (of 3 years) with different
     times to determine how much time to spend. It is also useful as this graph also shows
-    the full pareto frontier.
+    the full Pareto frontier.
 
     \begin{figure}[H] % fig:HowTheParetoFrontierChangesWithGADuration_2017-1Window
         % \centering
@@ -954,7 +953,7 @@
     more time. There was a significant jump in results from 1 minute to 3 minutes,
     therefore I chose to do all future tests with 3 minutes. Once again this is slightly
     arbitrary, since if wanted the ``best" results I would've chosen 20 minutes (1200 seconds).
-    But that amount of time for a single run is a bit extreme. Furthermore the sample size for
+    However, that amount of time for a single run is a bit extreme. Furthermore the sample size for
     each duration is only 1, so 3 minutes was more a estimated timing based loosely
     on this result.
 
@@ -962,81 +961,81 @@
     The comparisons I have chosen are: A naive spread, which splits up its initial wealth
     evenly over every stock; a litmus test method, which simply takes the ``best" performing
     stock from the window, and puts all its wealth on that stock; and finally
-    comparing it to putting you money in a bank offering UK national interest rates
+    comparing it to putting your money in a bank offering UK national interest rates
     \cite{BankOfE}.
 
     For verification, by attempting to ensure the results aren't an anomaly, the GA was run 10
     times for each window. This is to help determine how consistent the GA is at producing
     similar performing portfolios and to compare how diverse the actual allocation
     of the stocks is. It was also run over many windows, to get more information
-    on how different economic climates affect the performance. Finally, from the pareto
+    on how different economic climates affect the performance. Finally, from the Pareto
     set of portfolios produced by the GA, only 3 are chosen. It could have been worth
     it to test all of the portfolios produced by the GA but since you can only
-    chose a single portfolio from the set, its realistically unfeasible to expect a
-    test of all the portfolios. Since a human should make a choice about how much
+    chose a single portfolio from the set, it's realistically infeasible to expect a
+    test of all the portfolios. Normally a human should make a choice about how much
     they prefer \(G\) (gain) or \(R\) (risk) and then choose a portfolio which most
     aligns with their preferred values. To emulate this human I will chose 3
-    portfolios to test, representing 3 different peoples decision making; a risk
-    averse person, a risk neutral person, and a risk sensitive person. Obviously
+    portfolios to test, representing 3 different people's decision making; a risk
+    taking person, a risk neutral person, and a risk sensitive person. Obviously
     this is a simplification of decision making, however, some method of choosing
     test portfolios is needed.
 
-    To do this, the pareto set is sorted lexicographically, with the \(G\) and \(R\)
-    values for the comparison method, where \(R\) was minimized. I then elected to choose,
+    To do this, the Pareto set is sorted lexicographically, with the \(G\) and \(R\)
+    values for the comparison method, where \(R\) was minimized. I then elected to choose
     the first element from this set, the middle element, and the last element.
     These 3 portfolios were then carried forward and tested. From here on out
     these 3 portfolios are referred to as Highest \(G\) (the first element),
     the Median \(G/R\) (the middle element), and the Lowest \(R\) (the last element).
-    Hence representing the 3 different people.
+    These represent the 3 different people.
 
     \begin{figure}[H] % fig:AComparisonOfPortfolios 
         % \centering
         \includegraphics[width=\textwidth]{AComparisonOfPortfolios}
-        \caption{Results from The Test. See appendix \ref{apd:AComparisonOfPortfoliosTable} for raw values}
+        \caption{Results from the test. See appendix \ref{apd:AComparisonOfPortfoliosTable} for raw values}
             \label{fig:AComparisonOfPortfolios}
     \end{figure}
 
-    Its evident from this graph that one result is missing and goes off the graph. This
+    It's evident from this graph that one result is missing and goes off the graph. This
     is the result from the 2007 window, and the appendix \ref{apd:AComparisonOfPortfoliosTable}
     shows the gain was 436.23\%. This result made the graph unreadable. Analyzing
     from these results we can see that the GA doesn't consistently outperform our basic
     tests. There are years which it is outperformed by either the best stock, or a naive
-    spread, or UK interest. And there are years in which it outperforms those methods.
+    spread, or UK interest. There are also years in which it outperforms those methods.
     Taking a closer
     look at one window, say 2004, we can see the prominence of the best stock method
-    failing dramatically here, losing 29.71\% of the portfolios value. Whereas
-    the portfolios chosen by the naive spread, risk averse, risk neutral, risk
-    sensitive, and interest rate, all increase the value of the portfolio. However
+    failing dramatically here, losing 29.71\% of the portfolio's value. Whereas
+    the portfolios chosen by each of \textbf{(1)} naive spread,\textbf{(2)} risk taking, \textbf{(3)} risk neutral, \textbf{(4)} risk
+    sensitive, \textbf{(5)} interest rate, all increase the value of the portfolio. However
     what's disappointing is that the best performing portfolio was simply the naive spread.
-    Even the risk averse portfolio, only performs half as well as the naive spread.
+    Even the risk taking portfolio only performs half as well as the naive spread.
 
     \begin{figure}[H] % fig:MeanAndVarianceOfPortfolioTypes
         % \centering
         \includegraphics[width=\textwidth]{MeanAndVarianceOfPortfolioTypes}
-        \caption{Measuring the Variance and Average Results from the different Methods. See \ref{apd:MeanAndVarianceOfPortfolioTypes} for raw results.}\label{fig:MeanAndVarianceOfPortfolioTypes}
+        \caption{Measuring the variance and average results from the different methods. See \ref{apd:MeanAndVarianceOfPortfolioTypes} for raw results.}\label{fig:MeanAndVarianceOfPortfolioTypes}
     \end{figure}
 
-    Averaging out all of the windows to try and get a better picture how it generally
+    Averaging out all of the windows to try and get a better picture of how it generally
     performs is done in figure \ref{fig:MeanAndVarianceOfPortfolioTypes}. In this graph
-    we can see that on average: the naive spread and the best stock actually performed
-    better than any other option, this is disappointing for our algorithm.
+    we can see that, on average, the naive spread and the best stock actually performed
+    better than any other option - this is disappointing for our algorithm.
 
-    The variance of the portfolios produced by the GA are not only lower, meaning that
+    The variances of the portfolios produced by the GA are not only lower, meaning that
     when it loses, it losses far less money than the other portfolios. However, when the GA wins
     it also wins far less money than the other portfolios. This is a
     desirable trait for the algorithm to have. Furthermore the risk formulation
     actually appears to work. The portfolios which elected to have lower \(R\)
     had a lower variance and hence are less risky. The lowest risk portfolios
     had a 10\(\times\) improvement in risk compared to the median portfolios, and 20\(\times\)
-    compared to the highest \(G\) portfolios. As you can also see from the graph the best
+    compared to the highest \(G\) portfolios. As you can also see from the graph, the best
     stock method was incredibly variable. This is partly due to the outlier in the 2007
     window and also due to large losses in 2006 and 2015. The best stock method
     is much riskier, which explains its extremely high variance of 129.94\%.
 
     This also links into the graph drawn in appendix \ref{apd:PerformanceOfPortfolioTypes}
     which takes the best portfolio from each window, and counts the number of each.
-    And as is evident from the graph, the portfolios produced by the GA, do not
-    do very well. Highest \(G\) portfolios manage to win 4 times, but both
+    And as is evident from the graph, the portfolios produced by the GA do not
+    perform very well. Highest \(G\) portfolios manage to win 4 times, but both
     Median \(G/R\) and Lowest \(R\) fail to win a single time. Furthermore 3
     times UK interest (a.k.a the doing nothing with your money strategy)
     also wins, which shows how every method is still not consistent enough to
@@ -1049,17 +1048,17 @@
     \ref{apd:LowestRPortolioDistributions}. The obvious takeaway from these is that
     emergent property of less variance can be explained by the GA's ``choice" to
     simply not invest when minimizing \(R\). Humorously the fact that this is emergent
-    is a simple fact that you risk less, by playing less. Which is good that the GA
+    is a simple fact that you risk less by playing less. It is good that the GA
     ``discovered" this property, but also against the spirit of what portfolio
     optimization aims to achieve. It may be worth testing with the additional
-    constraint on the GA to ensure it always spends all the portfolio. The Medain
-    \(G/R\) portfolios allocates around 75\% of a portfolio,
-    and the Lowest \(R\) allocates around 50\% of all the initial wealth!
+    constraint on the GA to ensure it always spends all the portfolio. The Median
+    \(G/R\) portfolios allocate around 75\% of their portfolio,
+    and the Lowest \(R\) allocate around 50\% of all their initial wealth!
 
     Another key distinction when comparing the three graphs is that the change in
     portfolio distribution over time windows is vastly different. The Highest
     \(G\) graph, \ref{apd:HighestGPortfolioDistributions}, show large amounts
-    of variation year on year. Which looks like an attempt to adapt the portfolio
+    of variation year on year. This looks like an attempt to adapt the portfolio
     to best stocks at the cost of riskier gains. Whereas the Lowest \(R\) graph
     shows good consistency across the years. This is very intriguing as the
     GA was still run on the exact same data, i.e. both only had 3 years of data to
@@ -1082,15 +1081,15 @@
     portfolios from the 10 tests, then considering the value assigned by the 10 tests for 1 stock in
     particular; calculate the variance of those values from the 10 tests. Now do this for every stock and find the
     average of these variances. This value is then plotted to Figure
-    \ref{fig:VarianceOfPortfoliosOverTests}. From this graph its important to note the scale of
+    \ref{fig:VarianceOfPortfoliosOverTests}. From this graph it's important to note the scale of
     the y-axis, which is very small. The actual variance of the portfolios appears to be very
-    good, if slightly random. Although this is expected of a genetic algorithm.
+    good, if slightly random, although this is expected of a genetic algorithm.
 
 \section{Conclusion}
 
 \subsection{How Well Has This Algorithm Performed?}
 
-    Overall The performance leaves something to be desired. Figure
+    Overall the performance leaves something to be desired. Figure
     \ref{fig:AComparisonOfPortfolios} and \ref{fig:MeanAndVarianceOfPortfolioTypes}
     shows how the actual performance was
     sub par compared to some very basic portfolios. The average value of a portfolio
@@ -1098,10 +1097,10 @@
     than the best stock method (20.56\%) and naive spread (15.45\%). This shows
     that the GA doesn't actually achieve what we set out to do.
 
-    Despite this the GA shows some good traits. Which is that choosing portfolios
-    with a lower \(R\) value, actually correlates to less variance on the gain
-    of a portfolio. This is promising, the actual amount the variance is reduced
-    is significant. The highest risk portfolios were about 20 \(\times\) more
+    Despite this the GA shows promise, because choosing portfolios
+    with a lower \(R\) value actually correlates to less variance on the gain
+    of a portfolio. The actual amount by which the variance is reduced
+    is significant: the highest risk portfolios were about 20 \(\times\) more
     variable than the lowest risk portfolios. Combined with the fact that the
     reduction in gain was only about 2 \(\times\) for this better
     variance. Thus showing that the risk correlation at least works with a mathematical
@@ -1112,9 +1111,9 @@
     I am confident that both algorithms described in section \ref{section:DecoupleG}
     are implemented bug-free over the set of assets used in testing. As explained
     the purity of Haskell makes me very confident that once the code compiled - and
-    had matching types to that of the equations. Then it would be correct. A small
+    had matching types to that of the equations - then it would be correct. A small
     set of manual tests were then executed on the equations, testing edge cases,
-    and normal values. All of which passed.
+    and normal values, all of which passed.
 
     However this does not mean that it is actually implemented perfectly. Additional
     quick check tests \cite{QuickCheck} (Unit tests) could have been written to
@@ -1122,9 +1121,9 @@
     one area that would need more work if algorithm was to have real world use.
 
     In terms of the genetic algorithm, the fact that I used a library \cite{Moo}
-    which is already well tested. Made sure that the genetic part of the algorithm
+    which is already well tested made sure that the genetic part of the algorithm
     was implemented correctly. The only section which could do with additional
-    quick check testing, is the constraints applied to the genes at each iteration
+    quick check testing is the constraints applied to the genes at each iteration
     of the genetic algorithm. Since this was a custom implementation tailored to
     this specific problem, it should also be tested throughly before this
     would be used in the real world.
@@ -1133,20 +1132,20 @@
 
     In terms of testing on the single data set \cite{Dataset} I believe enough
     data was gathered to see how well the GA performed. Testing on different
-    windows allows a look into how the algorithm would adapt to new data,
-    say you used the algorithm to actually change your portfolio given a
+    windows allows a look into how the algorithm would adapt to new data over time.
+    You could use the algorithm to actually change your portfolio given a
     new year of data. Furthermore looking at figure \ref{fig:VarianceOfPortfoliosOverTests}
     the variance over the sets implies that each test run from the 10 tests was
     fairly similar. This leads to the belief that 10 tests was enough and more tests
     wouldn't have resulted in dramatically different portfolios, and therefore
     different gains.
 
-    However more testing could be done, a data set which included more data from
-    different markets with different assets. This would be another really good test
-    to see if the GA just underperformed on this specific set of stocks. Or if its
-    in fact flawed and always under performs on any market. A Bigger selection
-    of assets is also worth testing against. As this dataset only had 28 individual
-    stocks in it. Whereas it's completely normal to have 500 assets in a portfolio.
+    However, more testing could be done, i.e. a data set which included more data from
+    different markets with different assets would be beneficial. This would be another really good test
+    to see if the GA just underperformed on this specific set of stocks, or if it's
+    in fact flawed and always underperforms on any market. A bigger selection
+    of assets is also worth testing against; this dataset only had 28 individual
+    stocks in it, whereas it's completely normal to have 500 assets in a portfolio.
 
     Therefore I'd argue the actual testing done is conclusive about this set
     of stocks. But to get a full conclusive test on the GA itself would
@@ -1155,10 +1154,10 @@
 
     Additionally this opens up the possibility of testing this GA with different
     correlation techniques. As described in section \ref{section:CalcR} there
-    are many ways to calculate the correlation of stocks. And in this project,
-    only one method is ever tested. The mathematical correlation of stocks. If the
+    are many ways to calculate the correlation of stocks. In this project,
+    only one method is ever tested: the mathematical correlation of stocks. If the
     same tests were done with a different correlation method, and the results
-    showed more promise. Then it would be safe to say that the correlation
+    showed more promise, then it would be safe to say that the correlation
     method would be superior if its results were better.
 
 \pagebreak
