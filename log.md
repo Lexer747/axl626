@@ -48,7 +48,8 @@ More literature review. Some rough prototyping of the stats.
 
 # Week 11 (25/01/2019)
 
-Implementation, switched to haskell, reads the CSV
+Implementation, switched to haskell, reads the CSV. {Looking back this is when the project shifted from
+the original analysis to a more paper based project}
 
 # Week 12 (1/02/2019)
 
@@ -61,7 +62,7 @@ Finished basic implementation of G calculation. Formalized and worked on lit rev
 # Week 14 (15/02/2019)
 
 More work on lit review, its almost turning into a report. Making decisions about machine
-learning:
+learning.
 
 # Week 15 (22/02.2019)
 
@@ -86,3 +87,11 @@ A lot of report write up, analysis of the results.
 
 After Demo, the testing was realised to be flawed. Re-wrote the test code, and ran a much
 bigger sample size. Also improved one of the algorithms efficiency.
+
+# week 20 (29/03/2019)
+
+Even more write-up - creating graphs from the test data. Analyzing said graphs etc.
+
+# week 21 (5/04/2019)
+
+Essentially finished write-up - just editing and grammar before the final deadline.
